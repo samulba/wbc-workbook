@@ -5,9 +5,11 @@ import { ColorSwatch } from "@/components/ui/ColorSwatch";
 import { Input } from "@/components/ui/Input";
 import { cn } from "@/lib/utils";
 import type { Module1Data } from "@/lib/types/module1";
+import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
-  data: Module1Data;
+  data:     Module1Data;
+  roomType: string;
   onChange: (patch: Partial<Module1Data>) => void;
 }
 
@@ -21,7 +23,7 @@ const MATERIAL_OPTIONS = [
   { value: "sonstiges", label: "Sonstiges", emoji: "✏️" },
 ];
 
-export function Step06({ data, onChange }: Props) {
+export function Step06({ data, roomType, onChange }: Props) {
   const primary   = (data.primary_colors   ?? ["", ""]) as [string, string];
   const secondary = (data.secondary_colors ?? ["", ""]) as [string, string];
   const accent    = data.accent_color ?? "";
@@ -248,6 +250,14 @@ export function Step06({ data, onChange }: Props) {
           </div>
         )}
       </section>
+
+      {/* Product recommendations */}
+      <ProductRecommendations
+        roomType={roomType}
+        mainEffect={data.main_effect}
+        roomId={data.room_id ?? null}
+        heading="Produkte in deiner Farbwelt"
+      />
 
     </div>
   );

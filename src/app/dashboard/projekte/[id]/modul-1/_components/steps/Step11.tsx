@@ -15,6 +15,7 @@ import {
   Ruler,
   Leaf,
 } from "lucide-react";
+import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
   data: Module1Data;
@@ -315,6 +316,14 @@ export function Step11({ data, projectId, projectName, roomType, roomName }: Pro
           ))}
         </div>
       </div>
+
+      {/* ── Product recommendations ──────────────────────── */}
+      <ProductRecommendations
+        roomType={roomType}
+        mainEffect={data.main_effect}
+        roomId={data.room_id ?? null}
+        heading="Starte dein Konzept mit diesen Produkten"
+      />
 
       {/* ── Action buttons ────────────────────────────────── */}
       <div className="flex flex-col gap-3">

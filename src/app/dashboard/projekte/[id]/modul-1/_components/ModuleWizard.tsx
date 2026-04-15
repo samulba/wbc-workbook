@@ -161,11 +161,11 @@ function StepContent({
     case 3:
       return <Step03 />;
     case 4:
-      return <Step04 data={data} onChange={onChange} />;
+      return <Step04 data={data} roomType={roomType} onChange={onChange} />;
     case 5:
       return <Step05 data={data} />;
     case 6:
-      return <Step06 data={data} onChange={onChange} />;
+      return <Step06 data={data} roomType={roomType} onChange={onChange} />;
     case 7:
       return <Step07 data={data} />;
     case 8:

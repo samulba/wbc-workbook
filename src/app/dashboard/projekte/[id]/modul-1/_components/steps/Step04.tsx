@@ -4,13 +4,15 @@ import { cn } from "@/lib/utils";
 import { EFFECTS, type RoomEffect } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
 import { Info } from "lucide-react";
+import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
-  data: Module1Data;
+  data:     Module1Data;
+  roomType: string;
   onChange: (patch: Partial<Module1Data>) => void;
 }
 
-export function Step04({ data, onChange }: Props) {
+export function Step04({ data, roomType, onChange }: Props) {
   const selected = data.main_effect ?? null;
 
   function select(value: RoomEffect) {
@@ -107,6 +109,19 @@ export function Step04({ data, onChange }: Props) {
           Wirkung, die am stärksten im Vordergrund stehen soll.
         </p>
       </div>
+
+      {/* Product recommendations – shown once an effect is selected */}
+      <ProductRecommendations
+        roomType={roomType}
+        mainEffect={data.main_effect}
+        roomId={data.room_id ?? null}
+        heading={
+          selected
+            ? `Passende Produkte für ${EFFECTS.find((e) => e.value === selected)?.label ?? "deine Wirkung"}`
+            : "Produktempfehlungen"
+        }
+        requireEffect
+      />
 
     </div>
   );

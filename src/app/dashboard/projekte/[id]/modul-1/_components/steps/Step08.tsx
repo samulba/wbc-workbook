@@ -6,6 +6,7 @@ import { EFFECTS } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
 import type { RoomEffect } from "../effectsConfig";
 import { Lightbulb, Sun, Sunset, ToggleLeft } from "lucide-react";
+import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
   data: Module1Data;
@@ -260,6 +261,14 @@ export function Step08({ data, roomType, roomName, onChange }: Props) {
           hint="Besondere Objekte, die deinen Raum zu deinem machen."
         />
       </div>
+
+      {/* Product recommendations */}
+      <ProductRecommendations
+        roomType={roomType}
+        mainEffect={data.main_effect}
+        roomId={data.room_id ?? null}
+        heading="Empfehlungen für dein Konzept"
+      />
 
     </div>
   );
