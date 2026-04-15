@@ -49,6 +49,7 @@ export type Module1Data = {
 
   // ── Step 11: Abschluss ─────────────────────────────────────
   status: string;
+  current_step: number;
 
   // ── Legacy / future fields ─────────────────────────────────
   desired_effects: string[];

@@ -38,7 +38,10 @@ export function ModuleWizard({
   initialData,
 }: Props) {
   const router = useRouter();
-  const [step, setStep]       = useState(1);
+  const [step, setStep]       = useState(() => {
+    const saved = initialData.current_step ?? 1;
+    return Math.min(Math.max(saved, 1), TOTAL_STEPS);
+  });
   const [visible, setVisible] = useState(true);
   const [data, setData]       = useState<Module1Data>(initialData);
   const [saving, setSaving]   = useState(false);
@@ -52,7 +55,11 @@ export function ModuleWizard({
   async function transition(nextStep: number) {
     setSaving(true);
 
-    const payload = buildStepPayload(step, data);
+    const stepPayload = buildStepPayload(step, data);
+    // Track furthest step reached (never go backwards in the DB counter)
+    const payload = nextStep > step
+      ? { ...stepPayload, current_step: Math.min(nextStep, TOTAL_STEPS) }
+      : stepPayload;
     const result  = await saveModule1Step(moduleId, payload);
 
     setSaving(false);

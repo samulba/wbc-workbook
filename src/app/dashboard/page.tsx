@@ -2,17 +2,8 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { NewProjectButton } from "./_components/NewProjectButton";
 import { ProjectCard } from "./_components/ProjectCard";
+import type { ProjectCardProps } from "./_components/ProjectCard";
 import { ModuleOverview } from "./_components/ModuleOverview";
-
-type ProjectRow = {
-  id: string;
-  name: string;
-  description: string | null;
-  status: "entwurf" | "aktiv" | "abgeschlossen" | "archiviert";
-  budget: number | null;
-  deadline: string | null;
-  created_at: string;
-};
 
 export const metadata: Metadata = { title: "Mein Raumkonzept" };
 
@@ -23,7 +14,10 @@ export default async function DashboardPage() {
     supabase.auth.getUser(),
     supabase
       .from("projects")
-      .select("id, name, description, status, budget, deadline, created_at")
+      .select(`
+        id, name, description, status, budget, deadline, created_at,
+        rooms ( id, module1_analysis ( status, current_step ) )
+      `)
       .order("created_at", { ascending: false }),
   ]);
 
@@ -84,7 +78,7 @@ export default async function DashboardPage() {
         ) : (
           /* Project grid */
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(projects as ProjectRow[]).map((project) => (
+            {(projects as ProjectCardProps[]).map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export type CreateProjectResult = { error: string } | { projectId: string };
+export type DeleteProjectResult = { ok: true } | { ok: false; error: string };
 
 export async function createProject(
   _prev: CreateProjectResult | null,
@@ -67,4 +68,28 @@ export async function createProject(
 
   // ── Redirect to Modul 1 ────────────────────────────────────
   redirect(`/dashboard/projekte/${project.id}/modul-1`);
+}
+
+export async function deleteProject(projectId: string): Promise<DeleteProjectResult> {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { ok: false, error: "Nicht angemeldet" };
+
+  // RLS ensures only the owner can delete, but we add user_id check for safety
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", projectId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Project deletion error:", error);
+    return { ok: false, error: "Löschen fehlgeschlagen. Bitte erneut versuchen." };
+  }
+
+  return { ok: true };
 }

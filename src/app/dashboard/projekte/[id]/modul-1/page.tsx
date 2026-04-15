@@ -27,6 +27,7 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
   moodboard_prompt: "",
   moodboard_urls:   [],
   status:           "in_progress",
+  current_step:     1,
   desired_effects:  [],
   current_situation:"",
   color_preferences:[],
