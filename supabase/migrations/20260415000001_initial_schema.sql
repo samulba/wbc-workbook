@@ -35,6 +35,9 @@ CREATE TYPE public.room_type AS ENUM (
   'flur',
   'keller',
   'buero',
+  'yogaraum',
+  'wellness',
+  'studio',
   'sonstiges'
 );
 

@@ -1,7 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 interface Props {
@@ -9,12 +6,10 @@ interface Props {
 }
 
 export function NewProjectButton({ variant = "inline" }: Props) {
-  const router = useRouter();
-
   if (variant === "empty") {
     return (
-      <button
-        onClick={() => router.push("/dashboard/projekte/neu")}
+      <Link
+        href="/dashboard/projekte/neu"
         className="group w-full rounded-2xl border-2 border-dashed border-sand/60 hover:border-mint hover:bg-mint/5 transition-all p-10 flex flex-col items-center gap-4 text-center"
       >
         <div className="w-14 h-14 rounded-full bg-forest/5 group-hover:bg-mint/20 flex items-center justify-center transition-colors">
@@ -25,26 +20,25 @@ export function NewProjectButton({ variant = "inline" }: Props) {
             Erstes Projekt starten
           </p>
           <p className="text-sm text-gray/70 font-sans max-w-xs">
-            Beginne dein Raumkonzept – wähle einen Raum und arbeite dich Schritt
-            für Schritt durch die Module.
+            Beginne dein Raumkonzept – wähle einen Raum und arbeite dich
+            Schritt für Schritt durch die Module.
           </p>
         </div>
         <span className="mt-2 inline-flex items-center gap-2 bg-forest text-cream text-sm font-sans font-medium px-5 py-2.5 rounded-lg group-hover:bg-forest/90 transition-colors">
           <Plus className="w-4 h-4" />
           Neues Projekt starten
         </span>
-      </button>
+      </Link>
     );
   }
 
   return (
-    <Button
-      onClick={() => router.push("/dashboard/projekte/neu")}
-      size="lg"
-      className="gap-2"
+    <Link
+      href="/dashboard/projekte/neu"
+      className="inline-flex items-center gap-2 h-10 px-4 text-sm font-sans font-medium rounded-lg bg-forest text-cream hover:bg-forest/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2"
     >
       <Plus className="w-4 h-4" />
       Neues Projekt starten
-    </Button>
+    </Link>
   );
 }
