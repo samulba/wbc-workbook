@@ -12,6 +12,7 @@
     "create-test-user": "tsx scripts/create-test-user.ts"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.5.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.2",
     "clsx": "^2.1.1",

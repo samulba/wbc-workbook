@@ -18,6 +18,7 @@ import {
 
 interface Props {
   data: Module1Data;
+  projectId: string;
   projectName: string;
   roomType: string;
   roomName: string;
@@ -71,13 +72,38 @@ const DOTS = [
   { left: "4%",  top: "65%", size: "w-2 h-2",   color: "bg-sand/50",       delay: "1.5s"  },
 ];
 
-export function Step11({ data, projectName, roomType, roomName }: Props) {
-  const [mounted, setMounted] = useState(false);
+export function Step11({ data, projectId, projectName, roomType, roomName }: Props) {
+  const [mounted, setMounted]       = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError]     = useState<string | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
     return () => clearTimeout(t);
   }, []);
+
+  async function handlePdfExport() {
+    setPdfLoading(true);
+    setPdfError(null);
+    try {
+      const res = await fetch(`/api/export/raumidee/${projectId}`);
+      if (!res.ok) throw new Error("Export fehlgeschlagen");
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      const today = new Date().toLocaleDateString("de-DE").replace(/\./g, "-");
+      a.download = `Raumidee-${projectName}-${today}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      setPdfError("PDF konnte nicht erstellt werden. Bitte erneut versuchen.");
+    } finally {
+      setPdfLoading(false);
+    }
+  }
 
   const effect     = data.main_effect as RoomEffect | null;
   const effectMeta = effect ? EFFECTS.find((e) => e.value === effect) : null;
@@ -292,19 +318,35 @@ export function Step11({ data, projectName, roomType, roomName }: Props) {
 
       {/* ── Action buttons ────────────────────────────────── */}
       <div className="flex flex-col gap-3">
-        {/* PDF export – placeholder */}
+        {/* PDF export */}
+        {pdfError && (
+          <p className="text-xs text-terracotta font-sans bg-terracotta/5 rounded-lg px-3 py-2 text-center">
+            {pdfError}
+          </p>
+        )}
         <button
           type="button"
-          disabled
+          onClick={handlePdfExport}
+          disabled={pdfLoading}
           className={cn(
-            "w-full flex items-center justify-center gap-2 rounded-xl border-2 border-dashed",
-            "border-sand/40 bg-transparent px-5 py-3.5",
-            "text-sm font-sans font-medium text-gray/40 cursor-not-allowed"
+            "w-full flex items-center justify-center gap-2 rounded-xl border-2 px-5 py-3.5",
+            "text-sm font-sans font-medium transition-all",
+            pdfLoading
+              ? "border-sand/40 bg-sand/10 text-gray/50 cursor-not-allowed"
+              : "border-forest/30 bg-forest/5 text-forest hover:bg-forest/10 hover:border-forest/50"
           )}
         >
-          <Download className="w-4 h-4" strokeWidth={1.5} />
-          PDF exportieren
-          <span className="ml-auto text-xs text-sand/60 font-normal">Demnächst</span>
+          {pdfLoading ? (
+            <>
+              <span className="w-4 h-4 rounded-full border-2 border-forest/30 border-t-forest animate-spin shrink-0" />
+              PDF wird erstellt …
+            </>
+          ) : (
+            <>
+              <Download className="w-4 h-4" strokeWidth={1.5} />
+              Raumidee als PDF exportieren
+            </>
+          )}
         </button>
 
         {/* Modul 2 – disabled */}

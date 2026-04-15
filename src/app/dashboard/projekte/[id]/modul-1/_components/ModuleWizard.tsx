@@ -107,6 +107,7 @@ export function ModuleWizard({
         <StepContent
           step={step}
           data={data}
+          projectId={projectId}
           projectName={projectName}
           roomName={roomName}
           roomType={roomType}
@@ -130,6 +131,7 @@ export function ModuleWizard({
 function StepContent({
   step,
   data,
+  projectId,
   projectName,
   roomName,
   roomType,
@@ -137,6 +139,7 @@ function StepContent({
 }: {
   step: number;
   data: Module1Data;
+  projectId: string;
   projectName: string;
   roomName: string;
   roomType: string;
@@ -189,6 +192,7 @@ function StepContent({
       return (
         <Step11
           data={data}
+          projectId={projectId}
           projectName={projectName}
           roomType={roomType}
           roomName={roomName}
