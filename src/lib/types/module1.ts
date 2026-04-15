@@ -40,7 +40,17 @@ export type Module1Data = {
   light_mood: string;
   special_elements: string;
 
-  // ── Step 9+: future ────────────────────────────────────────
+  // ── Step 9: Moodboard erstellen (no input) ────────────────
+  // (no fields – pure info step)
+
+  // ── Step 10: Moodboard-Prompt ──────────────────────────────
+  moodboard_prompt: string;
+  moodboard_urls: string[];
+
+  // ── Step 11: Abschluss ─────────────────────────────────────
+  status: string;
+
+  // ── Legacy / future fields ─────────────────────────────────
   desired_effects: string[];
   current_situation: string;
   color_preferences: string[];
@@ -49,7 +59,6 @@ export type Module1Data = {
   material_preferences: string[];
   material_avoid: string[];
   material_notes: string;
-  moodboard_urls: string[];
   moodboard_notes: string;
   notes: string;
 };
@@ -65,9 +74,9 @@ export const STEP_CONFIG = [
   { step: 6,  title: "Deine Farbwelt",             subtitle: "Farben & Materialien",   built: true  },
   { step: 7,  title: "Inspiration für deine Wirkung", subtitle: "Design-Merkmale",      built: true  },
   { step: 8,  title: "Dein Raum-Briefing",         subtitle: "Zusammenfassung & Licht", built: true  },
-  { step: 9,  title: "Licht",                      subtitle: "Helligkeit & Stimmung",  built: false },
-  { step: 10, title: "Akustik & Duft",             subtitle: "Sinnesebene",            built: false },
-  { step: 11, title: "Zusammenfassung",            subtitle: "Dein Raumkonzept",       built: false },
+  { step: 9,  title: "Moodboard erstellen",          subtitle: "Dein Konzept",           built: true  },
+  { step: 10, title: "Moodboard-Prompt",            subtitle: "KI-Vorlage",             built: true  },
+  { step: 11, title: "Deine Raumidee steht!",       subtitle: "Modul 1 abgeschlossen",  built: true  },
 ] as const;
 
 export const TOTAL_STEPS = STEP_CONFIG.length;

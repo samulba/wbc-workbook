@@ -12,6 +12,9 @@ import { Step05 } from "./steps/Step05";
 import { Step06 } from "./steps/Step06";
 import { Step07 } from "./steps/Step07";
 import { Step08 } from "./steps/Step08";
+import { Step09 } from "./steps/Step09";
+import { Step10 } from "./steps/Step10";
+import { Step11 } from "./steps/Step11";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
 import { saveModule1Step } from "@/app/actions/module1";
 import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
@@ -108,6 +111,7 @@ export function ModuleWizard({
         currentStep={step}
         saving={saving}
         savedAt={savedAt}
+        nextLabel={step === 9 ? "Prompt generieren" : undefined}
         onBack={() => transition(step - 1)}
         onNext={() => transition(step + 1)}
       />
@@ -163,6 +167,26 @@ function StepContent({
           onChange={onChange}
         />
       );
+    case 9:
+      return <Step09 data={data} />;
+    case 10:
+      return (
+        <Step10
+          data={data}
+          roomType={roomType}
+          roomName={roomName}
+          onChange={onChange}
+        />
+      );
+    case 11:
+      return (
+        <Step11
+          data={data}
+          projectName={projectName}
+          roomType={roomType}
+          roomName={roomName}
+        />
+      );
     default: {
       const config = STEP_CONFIG[step - 1];
       return config ? <StepPlaceholder step={config} /> : null;
@@ -208,6 +232,17 @@ function buildStepPayload(step: number, data: Module1Data) {
       return {
         light_mood:       data.light_mood,
         special_elements: data.special_elements,
+      };
+    case 9:
+      return {}; // info-only step
+    case 10:
+      return {
+        moodboard_prompt: data.moodboard_prompt,
+        moodboard_urls:   data.moodboard_urls,
+      };
+    case 11:
+      return {
+        status: "completed",
       };
     default:
       return {};

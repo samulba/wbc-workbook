@@ -24,6 +24,9 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
   materials:        [],
   light_mood:       "",
   special_elements: "",
+  moodboard_prompt: "",
+  moodboard_urls:   [],
+  status:           "in_progress",
   desired_effects:  [],
   current_situation:"",
   color_preferences:[],
@@ -32,7 +35,6 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
   material_preferences: [],
   material_avoid:   [],
   material_notes:   "",
-  moodboard_urls:   [],
   moodboard_notes:  "",
   notes:            "",
 };

@@ -6,11 +6,12 @@ interface Props {
   currentStep: number;
   saving: boolean;
   savedAt: string | null;
+  nextLabel?: string;
   onBack: () => void;
   onNext: () => void;
 }
 
-export function StepNav({ currentStep, saving, savedAt, onBack, onNext }: Props) {
+export function StepNav({ currentStep, saving, savedAt, nextLabel, onBack, onNext }: Props) {
   const isLast = currentStep === TOTAL_STEPS;
 
   return (
@@ -52,7 +53,7 @@ export function StepNav({ currentStep, saving, savedAt, onBack, onNext }: Props)
           loading={saving}
           className="gap-1.5"
         >
-          {isLast ? "Abschließen" : "Weiter"}
+          {isLast ? "Abschließen" : (nextLabel ?? "Weiter")}
           {!isLast && <ArrowRight className="w-4 h-4" />}
         </Button>
       </div>
