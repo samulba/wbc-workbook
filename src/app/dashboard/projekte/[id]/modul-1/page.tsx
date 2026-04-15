@@ -97,11 +97,11 @@ export default async function Modul1Page({
     <div className="mx-auto max-w-6xl px-6 lg:px-8 py-10">
       {/* Back */}
       <Link
-        href="/dashboard"
+        href={`/dashboard/projekte/${project.id}`}
         className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-10"
       >
         <ArrowLeft className="w-4 h-4" />
-        Dashboard
+        {project.name}
       </Link>
 
       {/* Module header */}
