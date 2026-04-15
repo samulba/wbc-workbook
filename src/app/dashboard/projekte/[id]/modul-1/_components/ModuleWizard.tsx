@@ -8,6 +8,8 @@ import { Step01 } from "./steps/Step01";
 import { Step02 } from "./steps/Step02";
 import { Step03 } from "./steps/Step03";
 import { Step04 } from "./steps/Step04";
+import { Step05 } from "./steps/Step05";
+import { Step06 } from "./steps/Step06";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
 import { saveModule1Step } from "@/app/actions/module1";
 import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
@@ -144,6 +146,10 @@ function StepContent({
       return <Step03 />;
     case 4:
       return <Step04 data={data} onChange={onChange} />;
+    case 5:
+      return <Step05 data={data} />;
+    case 6:
+      return <Step06 data={data} onChange={onChange} />;
     default: {
       const config = STEP_CONFIG[step - 1];
       return config ? <StepPlaceholder step={config} /> : null;
@@ -173,6 +179,15 @@ function buildStepPayload(step: number, data: Module1Data) {
     case 4:
       return {
         main_effect: data.main_effect,
+      };
+    case 5:
+      return {}; // info-only step
+    case 6:
+      return {
+        primary_colors:   data.primary_colors,
+        secondary_colors: data.secondary_colors,
+        accent_color:     data.accent_color,
+        materials:        data.materials,
       };
     default:
       return {};

@@ -24,7 +24,16 @@ export type Module1Data = {
   // ── Step 4: Hauptwirkung ───────────────────────────────────
   main_effect: RoomEffect | null;
 
-  // ── Step 5+: future ────────────────────────────────────────
+  // ── Step 5: Exkurs Farbwelten (no input) ──────────────────
+  // (no fields – pure info step)
+
+  // ── Step 6: Farbwelt definieren ────────────────────────────
+  primary_colors: string[];
+  secondary_colors: string[];
+  accent_color: string;
+  materials: string[];
+
+  // ── Step 7+: future ────────────────────────────────────────
   desired_effects: string[];
   current_situation: string;
   color_preferences: string[];
@@ -45,8 +54,8 @@ export const STEP_CONFIG = [
   { step: 2,  title: "Warum verändern?",           subtitle: "Deine Motivation",       built: true  },
   { step: 3,  title: "Raumwirkungen verstehen",    subtitle: "Atmosphäre & Gefühl",    built: true  },
   { step: 4,  title: "Hauptwirkung festlegen",     subtitle: "Deine Wahl",             built: true  },
-  { step: 5,  title: "Farbwelt",                   subtitle: "Deine Palette",          built: false },
-  { step: 6,  title: "Materialien",                subtitle: "Haptik & Oberflächen",   built: false },
+  { step: 5,  title: "Exkurs: Farbwelten",         subtitle: "Farbsystem & Inspiration", built: true },
+  { step: 6,  title: "Deine Farbwelt",             subtitle: "Farben & Materialien",   built: true  },
   { step: 7,  title: "Moodboard",                  subtitle: "Visuelle Inspiration",   built: false },
   { step: 8,  title: "Möbel & Einrichtung",        subtitle: "Funktion & Form",        built: false },
   { step: 9,  title: "Licht",                      subtitle: "Helligkeit & Stimmung",  built: false },
