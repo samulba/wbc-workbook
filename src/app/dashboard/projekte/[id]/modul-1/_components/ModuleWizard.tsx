@@ -10,6 +10,8 @@ import { Step03 } from "./steps/Step03";
 import { Step04 } from "./steps/Step04";
 import { Step05 } from "./steps/Step05";
 import { Step06 } from "./steps/Step06";
+import { Step07 } from "./steps/Step07";
+import { Step08 } from "./steps/Step08";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
 import { saveModule1Step } from "@/app/actions/module1";
 import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
@@ -150,6 +152,17 @@ function StepContent({
       return <Step05 data={data} />;
     case 6:
       return <Step06 data={data} onChange={onChange} />;
+    case 7:
+      return <Step07 data={data} />;
+    case 8:
+      return (
+        <Step08
+          data={data}
+          roomType={roomType}
+          roomName={roomName}
+          onChange={onChange}
+        />
+      );
     default: {
       const config = STEP_CONFIG[step - 1];
       return config ? <StepPlaceholder step={config} /> : null;
@@ -188,6 +201,13 @@ function buildStepPayload(step: number, data: Module1Data) {
         secondary_colors: data.secondary_colors,
         accent_color:     data.accent_color,
         materials:        data.materials,
+      };
+    case 7:
+      return {}; // info-only step
+    case 8:
+      return {
+        light_mood:       data.light_mood,
+        special_elements: data.special_elements,
       };
     default:
       return {};

@@ -22,6 +22,8 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
   secondary_colors: ["", ""],
   accent_color:     "",
   materials:        [],
+  light_mood:       "",
+  special_elements: "",
   desired_effects:  [],
   current_situation:"",
   color_preferences:[],

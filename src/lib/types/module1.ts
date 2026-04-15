@@ -33,7 +33,14 @@ export type Module1Data = {
   accent_color: string;
   materials: string[];
 
-  // ── Step 7+: future ────────────────────────────────────────
+  // ── Step 7: Inspiration (no input) ────────────────────────
+  // (no fields – pure info step)
+
+  // ── Step 8: Raum-Briefing ──────────────────────────────────
+  light_mood: string;
+  special_elements: string;
+
+  // ── Step 9+: future ────────────────────────────────────────
   desired_effects: string[];
   current_situation: string;
   color_preferences: string[];
@@ -56,8 +63,8 @@ export const STEP_CONFIG = [
   { step: 4,  title: "Hauptwirkung festlegen",     subtitle: "Deine Wahl",             built: true  },
   { step: 5,  title: "Exkurs: Farbwelten",         subtitle: "Farbsystem & Inspiration", built: true },
   { step: 6,  title: "Deine Farbwelt",             subtitle: "Farben & Materialien",   built: true  },
-  { step: 7,  title: "Moodboard",                  subtitle: "Visuelle Inspiration",   built: false },
-  { step: 8,  title: "Möbel & Einrichtung",        subtitle: "Funktion & Form",        built: false },
+  { step: 7,  title: "Inspiration für deine Wirkung", subtitle: "Design-Merkmale",      built: true  },
+  { step: 8,  title: "Dein Raum-Briefing",         subtitle: "Zusammenfassung & Licht", built: true  },
   { step: 9,  title: "Licht",                      subtitle: "Helligkeit & Stimmung",  built: false },
   { step: 10, title: "Akustik & Duft",             subtitle: "Sinnesebene",            built: false },
   { step: 11, title: "Zusammenfassung",            subtitle: "Dein Raumkonzept",       built: false },
