@@ -17,6 +17,7 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
   more_of:          "",
   less_of:          "",
   change_reason:    "",
+  main_effect:      null,
   desired_effects:  [],
   current_situation:"",
   color_preferences:[],

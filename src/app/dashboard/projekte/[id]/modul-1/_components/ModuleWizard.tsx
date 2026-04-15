@@ -6,6 +6,8 @@ import { ProgressBar } from "./ProgressBar";
 import { StepNav } from "./StepNav";
 import { Step01 } from "./steps/Step01";
 import { Step02 } from "./steps/Step02";
+import { Step03 } from "./steps/Step03";
+import { Step04 } from "./steps/Step04";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
 import { saveModule1Step } from "@/app/actions/module1";
 import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
@@ -29,44 +31,39 @@ export function ModuleWizard({
   initialData,
 }: Props) {
   const router = useRouter();
-  const [step, setStep]         = useState(1);
-  const [visible, setVisible]   = useState(true);
-  const [data, setData]         = useState<Module1Data>(initialData);
-  const [saving, setSaving]     = useState(false);
-  const [savedAt, setSavedAt]   = useState<string | null>(null);
+  const [step, setStep]       = useState(1);
+  const [visible, setVisible] = useState(true);
+  const [data, setData]       = useState<Module1Data>(initialData);
+  const [saving, setSaving]   = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
 
-  // Merge partial updates into data
   const handleChange = useCallback((patch: Partial<Module1Data>) => {
     setData((prev) => ({ ...prev, ...patch }));
-    setSavedAt(null); // clear stale indicator on any change
+    setSavedAt(null);
   }, []);
 
-  // Save current step data, animate transition, move to next step
   async function transition(nextStep: number) {
     setSaving(true);
 
-    // Build payload for current step only (avoids overwriting future steps)
     const payload = buildStepPayload(step, data);
-    const result = await saveModule1Step(moduleId, payload);
+    const result  = await saveModule1Step(moduleId, payload);
 
     setSaving(false);
 
     if (!result.ok) {
-      // Stay on current step, show error via savedAt
       setSavedAt(null);
       return;
     }
 
     setSavedAt(result.savedAt);
 
-    if (nextStep < 1 || nextStep > TOTAL_STEPS) {
-      if (nextStep > TOTAL_STEPS) {
-        router.push(`/dashboard/projekte/${projectId}`);
-      }
+    if (nextStep < 1) return;
+
+    if (nextStep > TOTAL_STEPS) {
+      router.push(`/dashboard/projekte/${projectId}`);
       return;
     }
 
-    // Animate out → switch → animate in
     setVisible(false);
     setTimeout(() => {
       setStep(nextStep);
@@ -79,15 +76,10 @@ export function ModuleWizard({
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Progress */}
       <ProgressBar currentStep={step} />
 
       {/* Step header */}
-      <div
-        className={`transition-all duration-200 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-        }`}
-      >
+      <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
         <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand mb-2">
           {currentConfig?.subtitle}
         </p>
@@ -97,11 +89,7 @@ export function ModuleWizard({
       </div>
 
       {/* Step content */}
-      <div
-        className={`transition-all duration-200 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-        }`}
-      >
+      <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
         <StepContent
           step={step}
           data={data}
@@ -112,7 +100,6 @@ export function ModuleWizard({
         />
       </div>
 
-      {/* Navigation */}
       <StepNav
         currentStep={step}
         saving={saving}
@@ -124,7 +111,7 @@ export function ModuleWizard({
   );
 }
 
-// ── Step router ──────────────────────────────────────────────────────────────
+// ── Step router ───────────────────────────────────────────────────────────────
 function StepContent({
   step,
   data,
@@ -153,6 +140,10 @@ function StepContent({
       );
     case 2:
       return <Step02 data={data} onChange={onChange} />;
+    case 3:
+      return <Step03 />;
+    case 4:
+      return <Step04 data={data} onChange={onChange} />;
     default: {
       const config = STEP_CONFIG[step - 1];
       return config ? <StepPlaceholder step={config} /> : null;
@@ -176,6 +167,12 @@ function buildStepPayload(step: number, data: Module1Data) {
         more_of:        data.more_of,
         less_of:        data.less_of,
         change_reason:  data.change_reason,
+      };
+    case 3:
+      return {}; // info-only step
+    case 4:
+      return {
+        main_effect: data.main_effect,
       };
     default:
       return {};
