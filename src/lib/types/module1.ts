@@ -51,6 +51,9 @@ export type Module1Data = {
   status: string;
   current_step: number;
 
+  // ── Step notes (per-step personal notes) ──────────────────
+  step_notes: Record<string, string>;
+
   // ── Legacy / future fields ─────────────────────────────────
   desired_effects: string[];
   current_situation: string;
@@ -102,6 +105,7 @@ export const EMPTY_MODULE1_DATA: Omit<Module1Data, "id" | "room_id"> = {
   moodboard_urls:      [],
   status:              "in_progress",
   current_step:        1,
+  step_notes:          {},
   desired_effects:     [],
   current_situation:   "",
   color_preferences:   [],

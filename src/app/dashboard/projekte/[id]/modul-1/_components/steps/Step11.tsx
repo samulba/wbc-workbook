@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { EFFECTS } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
 import type { RoomEffect } from "../effectsConfig";
+import { STEP_CONFIG } from "@/lib/types/module1";
 import {
   CheckCircle2,
   Download,
@@ -19,6 +20,7 @@ import {
   ArrowRight,
   Share2,
   PhoneCall,
+  PenLine,
 } from "lucide-react";
 import Link from "next/link";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
@@ -396,6 +398,36 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
           ))}
         </div>
       </div>
+
+      {/* ── Step notes summary ───────────────────────────── */}
+      {(() => {
+        const notes = data.step_notes ?? {};
+        const entries = STEP_CONFIG.filter(({ step }) => notes[String(step)]?.trim());
+        if (entries.length === 0) return null;
+        return (
+          <div className="rounded-2xl border border-sand/30 bg-sand/8 overflow-hidden">
+            <div className="border-b border-sand/20 px-5 py-3 flex items-center gap-2">
+              <PenLine className="w-3.5 h-3.5 text-sand" strokeWidth={1.5} />
+              <span className="font-headline text-sm text-forest/80">Deine Notizen</span>
+              <span className="ml-auto text-[10px] font-sans text-sand/70 bg-sand/20 px-2 py-0.5 rounded-full">
+                {entries.length} {entries.length === 1 ? "Notiz" : "Notizen"}
+              </span>
+            </div>
+            <div className="divide-y divide-sand/15">
+              {entries.map(({ step, title }) => (
+                <div key={step} className="px-5 py-4">
+                  <p className="text-[10px] font-sans uppercase tracking-wider text-gray/40 mb-1.5">
+                    Schritt {step} – {title}
+                  </p>
+                  <p className="text-sm font-sans text-forest/70 leading-relaxed whitespace-pre-wrap">
+                    {notes[String(step)]}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Product recommendations ──────────────────────── */}
       <ProductRecommendations

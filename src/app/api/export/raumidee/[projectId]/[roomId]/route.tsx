@@ -76,7 +76,7 @@ export async function GET(
         main_effect,
         primary_colors, secondary_colors, accent_color,
         materials, light_mood, special_elements,
-        moodboard_urls
+        moodboard_urls, step_notes
       )
     `)
     .eq("id", params.roomId)
@@ -96,6 +96,7 @@ export async function GET(
     light_mood: string | null;
     special_elements: string | null;
     moodboard_urls: string[] | null;
+    step_notes: Record<string, string> | null;
   };
 
   const m1 = (room.module1_analysis as M1Row[] | null)?.[0];
@@ -115,6 +116,18 @@ export async function GET(
   const rawMoodboardUrl = (m1?.moodboard_urls ?? [])[0] ?? "";
   const isValidUrl      = /^https?:\/\//i.test(rawMoodboardUrl);
 
+  // Build step notes for PDF: filter to non-empty entries
+  const STEP_LABELS: Record<number, string> = {
+    1: "Projekt-Steckbrief", 2: "Warum verändern?", 3: "Raumwirkungen",
+    4: "Hauptwirkung", 5: "Exkurs Farbwelten", 6: "Deine Farbwelt",
+    7: "Inspiration", 8: "Raum-Briefing", 9: "Moodboard erstellen",
+    10: "Moodboard-Prompt", 11: "Abschluss",
+  };
+  const stepNotesForPDF = Object.entries(m1?.step_notes ?? {})
+    .filter(([, v]) => v?.trim())
+    .sort(([a], [b]) => Number(a) - Number(b))
+    .map(([k, v]) => ({ stepNumber: Number(k), stepTitle: STEP_LABELS[Number(k)] ?? `Schritt ${k}`, text: v }));
+
   const pdfProps: RaumideePDFProps = {
     projectName:     project.name,
     createdAt,
@@ -130,6 +143,7 @@ export async function GET(
     lightMoodLabel:  lightLabel,
     specialElements: m1?.special_elements ?? "",
     moodboardUrl:    isValidUrl ? rawMoodboardUrl : undefined,
+    stepNotes:       stepNotesForPDF.length > 0 ? stepNotesForPDF : undefined,
   };
 
   let buffer: Buffer;

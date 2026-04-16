@@ -50,6 +50,7 @@ export function SharedExportButton({
     color_preferences: [], color_avoid: [], color_notes: "",
     material_preferences: [], material_avoid: [], material_notes: "",
     moodboard_notes: "", notes: "",
+    step_notes: {},
   } satisfies Module1Data;
 
   async function handleExport() {

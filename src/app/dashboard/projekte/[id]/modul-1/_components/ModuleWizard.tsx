@@ -11,6 +11,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { ProgressBar } from "./ProgressBar";
 import { StepNav } from "./StepNav";
+import { StepNotePanel } from "./StepNotePanel";
 import { Step01 } from "./steps/Step01";
 import { Step02 } from "./steps/Step02";
 import { Step03 } from "./steps/Step03";
@@ -179,6 +180,7 @@ export function ModuleWizard({
 
       <ProgressBar
         currentStep={step}
+        stepNotes={data.step_notes}
         editMode={editMode}
         onStepClick={(s) => transition(s)}
       />
@@ -207,6 +209,12 @@ export function ModuleWizard({
           shareToken={shareToken ?? null}
           isShared={isShared}
           onChange={handleChange}
+        />
+        <StepNotePanel
+          moduleId={moduleId}
+          stepNumber={step}
+          allNotes={data.step_notes ?? {}}
+          onNotesChange={(notes) => handleChange({ step_notes: notes })}
         />
       </div>
 

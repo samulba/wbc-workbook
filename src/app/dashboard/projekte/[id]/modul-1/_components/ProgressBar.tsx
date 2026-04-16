@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   currentStep: number; // 1-based
+  stepNotes?:  Record<string, string>;
   editMode?: boolean;
   onStepClick?: (step: number) => void;
 }
 
-export function ProgressBar({ currentStep, editMode, onStepClick }: Props) {
+export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: Props) {
   const pct = Math.round((currentStep / STEP_CONFIG.length) * 100);
 
   return (
@@ -56,40 +57,43 @@ export function ProgressBar({ currentStep, editMode, onStepClick }: Props) {
       {/* Desktop: dot/segment track */}
       <div className="hidden sm:flex items-center gap-1">
         {STEP_CONFIG.map(({ step, title }) => {
-          const done   = step < currentStep;
-          const active = step === currentStep;
+          const done    = step < currentStep;
+          const active  = step === currentStep;
+          const hasNote = Boolean(stepNotes?.[String(step)]?.trim());
 
           if (editMode && onStepClick) {
             return (
               <button
                 key={step}
                 type="button"
-                title={`Zu Schritt ${step}: ${title}`}
+                title={`Zu Schritt ${step}: ${title}${hasNote ? " · Notiz vorhanden" : ""}`}
                 onClick={() => onStepClick(step)}
-                className="flex-1 group"
+                className="flex-1 group flex flex-col items-center gap-0.5"
               >
                 <div
                   className={cn(
-                    "rounded-full transition-all duration-200",
-                    active && "h-2 w-full bg-forest",
-                    done   && "h-1.5 w-full bg-mint group-hover:bg-forest/50 group-hover:h-2",
-                    !active && !done && "h-1.5 w-full bg-sand/30 group-hover:bg-sand/60 group-hover:h-2"
+                    "rounded-full transition-all duration-200 w-full",
+                    active && "h-2 bg-forest",
+                    done   && "h-1.5 bg-mint group-hover:bg-forest/50 group-hover:h-2",
+                    !active && !done && "h-1.5 bg-sand/30 group-hover:bg-sand/60 group-hover:h-2"
                   )}
                 />
+                <div className={cn("w-1 h-1 rounded-full transition-all", hasNote ? "bg-sand/70" : "bg-transparent")} />
               </button>
             );
           }
 
           return (
-            <div key={step} className="flex-1">
+            <div key={step} className="flex-1 flex flex-col items-center gap-0.5" title={hasNote ? `Schritt ${step}: Notiz vorhanden` : undefined}>
               <div
                 className={cn(
-                  "rounded-full transition-all duration-300",
-                  active && "h-2 w-full bg-forest",
-                  done   && "h-1.5 w-full bg-mint",
-                  !active && !done && "h-1.5 w-full bg-sand/30"
+                  "rounded-full transition-all duration-300 w-full",
+                  active && "h-2 bg-forest",
+                  done   && "h-1.5 bg-mint",
+                  !active && !done && "h-1.5 bg-sand/30"
                 )}
               />
+              <div className={cn("w-1 h-1 rounded-full transition-all", hasNote ? "bg-sand/70" : "bg-transparent")} />
             </div>
           );
         })}

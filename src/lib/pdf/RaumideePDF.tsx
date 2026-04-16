@@ -201,6 +201,24 @@ const s = StyleSheet.create({
     maxHeight: 220,
   },
 
+  // ── Notes section ──
+  noteEntry: {
+    marginBottom: 12,
+  },
+  noteStepLabel: {
+    fontSize: 7.5,
+    fontFamily: "Helvetica-Bold",
+    color: C.sand,
+    letterSpacing: 1.2,
+    marginBottom: 3,
+  },
+  noteText: {
+    fontSize: 9.5,
+    color: C.forest,
+    lineHeight: 1.55,
+    opacity: 0.8,
+  },
+
   // ── Footer ──
   footer: {
     position: "absolute",
@@ -227,6 +245,8 @@ const s = StyleSheet.create({
 });
 
 // ── Props ──────────────────────────────────────────────────────────────────────
+export type StepNoteEntry = { stepNumber: number; stepTitle: string; text: string };
+
 export interface RaumideePDFProps {
   projectName:    string;
   createdAt:      string;
@@ -242,6 +262,7 @@ export interface RaumideePDFProps {
   specialElements:string;
   moodboardUrl?:  string;
   exportDate:     string;
+  stepNotes?:     StepNoteEntry[];
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -308,6 +329,7 @@ export function RaumideePDF({
   specialElements,
   moodboardUrl,
   exportDate,
+  stepNotes,
 }: RaumideePDFProps) {
   const hasColors =
     primaryColors.some(Boolean) ||
@@ -428,6 +450,24 @@ export function RaumideePDF({
               {/* eslint-disable-next-line jsx-a11y/alt-text */}
               <Image src={moodboardUrl} style={s.moodboardImage} />
             </View>
+          )}
+
+          {/* Step notes */}
+          {stepNotes && stepNotes.length > 0 && (
+            <>
+              <View style={s.divider} />
+              <View style={s.sectionWrap}>
+                <SectionLabel label="Persönliche Notizen" />
+                {stepNotes.map((n) => (
+                  <View key={n.stepNumber} style={s.noteEntry}>
+                    <Text style={s.noteStepLabel}>
+                      SCHRITT {n.stepNumber} – {n.stepTitle.toUpperCase()}
+                    </Text>
+                    <Text style={s.noteText}>{n.text}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
           )}
 
         </View>

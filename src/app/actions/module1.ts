@@ -29,3 +29,24 @@ export async function saveModule1Step(
 
   return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
 }
+
+export async function saveStepNote(
+  moduleId: string,
+  stepNotes: Record<string, string>
+): Promise<SaveResult> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("module1_analysis")
+    .update({ step_notes: stepNotes, updated_at: new Date().toISOString() })
+    .eq("id", moduleId);
+
+  if (error) {
+    console.error("step note save error:", error);
+    return { ok: false, error: "Notiz konnte nicht gespeichert werden." };
+  }
+
+  return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
+}
