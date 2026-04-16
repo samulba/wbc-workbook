@@ -50,7 +50,7 @@ function ProductCard({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "group shrink-0 w-44 flex flex-col",
+        "group shrink-0 w-40 sm:w-44 flex flex-col",
         "rounded-2xl border border-sand/25 bg-white",
         "shadow-sm hover:shadow-[0_4px_20px_rgba(68,92,73,0.12)]",
         "transition-all duration-200 hover:-translate-y-0.5",
@@ -79,11 +79,12 @@ function ProductCard({
           onClick={handleHeart}
           className={cn(
             "absolute top-2 right-2",
-            "w-7 h-7 rounded-full flex items-center justify-center",
+            "w-9 h-9 sm:w-7 sm:h-7 rounded-full flex items-center justify-center",
             "bg-white/85 backdrop-blur-sm border border-white/60",
             "shadow-sm transition-all duration-150",
             heartPop && "scale-125",
-            isFavorite ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            // Always visible on mobile (no hover on touch), hover-reveal on desktop
+            isFavorite ? "opacity-100" : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
           )}
           aria-label={isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
         >

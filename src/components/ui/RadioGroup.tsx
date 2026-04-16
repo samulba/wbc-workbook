@@ -35,7 +35,8 @@ export function RadioGroup({
             <label
               key={option.value}
               className={cn(
-                "flex items-start gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-all",
+                // min-h-[52px] = comfortable touch target
+                "flex items-center gap-3 rounded-lg border px-4 py-3.5 cursor-pointer transition-all min-h-[52px]",
                 checked
                   ? "border-forest bg-forest/5"
                   : "border-sand/50 bg-cream hover:border-mint hover:bg-mint/5"
@@ -52,12 +53,12 @@ export function RadioGroup({
               {/* Custom radio dot */}
               <span
                 className={cn(
-                  "mt-0.5 flex-shrink-0 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors",
+                  "flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors",
                   checked ? "border-forest" : "border-sand"
                 )}
               >
                 {checked && (
-                  <span className="w-2 h-2 rounded-full bg-forest" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-forest" />
                 )}
               </span>
               <span className="flex flex-col">
@@ -65,7 +66,7 @@ export function RadioGroup({
                   {option.label}
                 </span>
                 {option.description && (
-                  <span className="text-xs text-gray/60 font-sans mt-0.5">
+                  <span className="text-xs text-gray/60 font-sans mt-0.5 leading-relaxed">
                     {option.description}
                   </span>
                 )}

@@ -7,11 +7,11 @@ export const metadata: Metadata = { title: "Neues Projekt" };
 
 export default function NewProjectPage() {
   return (
-    <div className="mx-auto max-w-6xl px-6 lg:px-8 py-10">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Back link */}
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-10"
+        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-8 sm:mb-10 min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" />
         Zurück zum Dashboard
@@ -19,11 +19,11 @@ export default function NewProjectPage() {
 
       <div className="max-w-[600px]">
         {/* Page header */}
-        <div className="mb-10">
+        <div className="mb-8 sm:mb-10">
           <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand mb-3">
             Schritt 1 von 1
           </p>
-          <h1 className="font-headline text-4xl md:text-5xl text-forest leading-none mb-4">
+          <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl text-forest leading-none mb-4">
             Neues Projekt
           </h1>
           <p className="text-gray/70 font-sans text-base leading-relaxed">

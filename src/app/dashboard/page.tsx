@@ -24,44 +24,46 @@ export default async function DashboardPage() {
   const firstName = user?.email?.split("@")[0] ?? null;
 
   return (
-    <div className="mx-auto max-w-6xl px-6 lg:px-8">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
       {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="py-12 md:py-16 border-b border-sand/30">
+      <section className="py-10 sm:py-14 md:py-20 border-b border-sand/25">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             {firstName && (
-              <p className="text-sm font-sans text-sand uppercase tracking-[0.2em] mb-3">
+              <p className="text-xs font-sans text-sand uppercase tracking-[0.25em] mb-3 sm:mb-4">
                 Willkommen zurück, {firstName}
               </p>
             )}
-            <h1 className="font-headline text-5xl md:text-6xl text-forest leading-none">
-              Dein Raumkonzept
+            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-ink leading-[0.95] tracking-tight">
+              Dein
+              <br />
+              <span className="text-forest">Raumkonzept</span>
             </h1>
-            <p className="mt-4 text-gray/70 font-sans text-lg leading-relaxed max-w-lg">
+            <p className="mt-4 text-[#525252]/80 font-sans text-sm sm:text-base leading-relaxed max-w-sm">
               Entwickle Schritt für Schritt dein ganzheitliches Raumkonzept –
               von der ersten Idee bis zur fertigen Gestaltung.
             </p>
           </div>
 
-          {/* Decorative accent */}
-          <div className="flex gap-2 shrink-0">
-            <div className="w-2 h-16 rounded-full bg-mint" />
-            <div className="w-2 h-10 rounded-full bg-sand self-end" />
-            <div className="w-2 h-12 rounded-full bg-terracotta self-center" />
-            <div className="w-2 h-8 rounded-full bg-forest/30 self-start" />
+          {/* Decorative accent — hidden on mobile */}
+          <div className="hidden md:flex gap-2 shrink-0 pb-1">
+            <div className="w-2 h-20 rounded-full bg-mint/70" />
+            <div className="w-2 h-12 rounded-full bg-sand/60 self-end" />
+            <div className="w-2 h-16 rounded-full bg-terracotta/50 self-center" />
+            <div className="w-2 h-9  rounded-full bg-forest/25 self-start" />
           </div>
         </div>
       </section>
 
       {/* ── Projects ───────────────────────────────────────────── */}
-      <section className="py-10 border-b border-sand/30">
-        <div className="flex items-center justify-between mb-6">
+      <section className="py-8 sm:py-12 border-b border-sand/25">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
-            <h2 className="font-headline text-2xl text-forest">
+            <h2 className="font-headline text-xl sm:text-2xl text-ink">
               Deine Projekte
             </h2>
-            <p className="text-sm text-gray/60 font-sans mt-0.5">
+            <p className="text-sm text-[#525252]/60 font-sans mt-0.5">
               {projects && projects.length > 0
                 ? `${projects.length} ${projects.length === 1 ? "Projekt" : "Projekte"}`
                 : "Noch kein Projekt angelegt"}
@@ -73,11 +75,9 @@ export default async function DashboardPage() {
         </div>
 
         {!projects || projects.length === 0 ? (
-          /* Empty state */
           <NewProjectButton variant="empty" />
         ) : (
-          /* Project grid */
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {(projects as ProjectCardProps[]).map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -86,7 +86,7 @@ export default async function DashboardPage() {
       </section>
 
       {/* ── Module overview ────────────────────────────────────── */}
-      <section className="py-10 pb-16">
+      <section className="py-8 sm:py-12 pb-16 sm:pb-20">
         <ModuleOverview />
       </section>
 

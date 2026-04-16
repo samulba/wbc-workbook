@@ -78,7 +78,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
   // ── Delete confirmation overlay ─────────────────────────
   if (confirmDelete) {
     return (
-      <div className="rounded-2xl bg-white/80 border-2 border-terracotta/30 p-6 flex flex-col gap-4">
+      <div className="rounded-2xl bg-white border-2 border-terracotta/25 shadow-warm-sm p-6 flex flex-col gap-4">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 rounded-xl bg-terracotta/10 border border-terracotta/20 flex items-center justify-center shrink-0 mt-0.5">
             <AlertTriangle className="w-4 h-4 text-terracotta" strokeWidth={1.5} />
@@ -129,7 +129,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
 
   // ── Normal card ─────────────────────────────────────────
   return (
-    <div className="group relative rounded-2xl bg-white/60 border border-sand/30 hover:border-mint/50 hover:shadow-sm transition-all overflow-hidden">
+    <div className="group relative rounded-2xl bg-white border border-sand/20 shadow-warm-sm hover:shadow-warm-md hover:scale-[1.015] transition-all duration-200 overflow-hidden">
 
       {/* Top bar: status badge + delete */}
       <div className="flex items-center justify-between px-5 pt-4 pb-0">
@@ -160,7 +160,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
       <Link href={modul1Href} className="block px-5 pt-3 pb-5">
 
         {/* Project name */}
-        <h3 className="font-headline text-xl text-forest leading-snug mb-0.5 group-hover:text-forest/80 transition-colors">
+        <h3 className="font-headline text-xl text-ink leading-snug mb-0.5">
           {project.name}
         </h3>
         {project.description && (
@@ -188,7 +188,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
           </div>
 
           {/* Progress track */}
-          <div className="h-1.5 rounded-full bg-sand/30 overflow-hidden">
+          <div className="h-1 rounded-full bg-sand/25 overflow-hidden">
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",

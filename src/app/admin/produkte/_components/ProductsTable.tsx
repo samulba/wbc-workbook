@@ -161,7 +161,7 @@ export function ProductsTable({ products }: Props) {
       </p>
 
       {/* ── Table ────────────────────────────────────────────── */}
-      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden overflow-x-auto">
         {filtered.length === 0 ? (
           <div className="px-6 py-16 text-center">
             <p className="text-sm text-slate-400">Keine Produkte gefunden.</p>

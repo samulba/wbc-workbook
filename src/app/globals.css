@@ -2,19 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ALTA font – place alta.woff2 in /public/fonts/ */
-@font-face {
-  font-family: "ALTA";
-  src: url("/fonts/alta.woff2") format("woff2"),
-       url("/fonts/alta.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --background: #f6ede2;
-  --foreground: #445c49;
+  --foreground: #2d2d2d;
 
   /* CI palette */
   --color-mint: #94c1a4;
@@ -23,24 +13,43 @@
   --color-sand: #cba178;
   --color-cream: #f6ede2;
   --color-gray: #737373;
+  --color-ink: #2d2d2d;
 }
 
 @layer base {
   body {
-    @apply bg-cream text-forest font-sans antialiased;
+    @apply font-sans antialiased;
+    background: linear-gradient(160deg, #f6ede2 0%, #f0e6d8 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #525252;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
+    color: #2d2d2d;
   }
-
-  h1 { @apply text-4xl md:text-5xl lg:text-6xl; }
-  h2 { @apply text-3xl md:text-4xl; }
-  h3 { @apply text-2xl md:text-3xl; }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Hide scrollbar while keeping functionality */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe-area padding for notch / home indicator */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 }

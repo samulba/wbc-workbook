@@ -18,7 +18,7 @@ export function DashboardNav({ favoriteCount }: Props) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex items-center gap-1">
+    <nav className="flex items-stretch h-full gap-0.5">
       {NAV_ITEMS.map(({ href, label, Icon, exact }) => {
         const isActive = exact ? pathname === href : pathname.startsWith(href);
         const isFav    = href === "/dashboard/favoriten";
@@ -28,10 +28,11 @@ export function DashboardNav({ favoriteCount }: Props) {
             key={href}
             href={href}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-sans font-medium transition-colors",
+              "flex items-center gap-1.5 px-3 text-sm font-sans font-medium transition-colors",
+              "border-b-2 whitespace-nowrap",
               isActive
-                ? "bg-forest/10 text-forest"
-                : "text-gray/60 hover:text-forest hover:bg-forest/5"
+                ? "border-forest text-forest"
+                : "border-transparent text-gray/55 hover:text-forest hover:border-forest/25"
             )}
           >
             <Icon
@@ -48,7 +49,7 @@ export function DashboardNav({ favoriteCount }: Props) {
                   "min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold leading-none flex items-center justify-center",
                   isActive
                     ? "bg-terracotta text-white"
-                    : "bg-sand/40 text-forest/70"
+                    : "bg-sand/35 text-forest/70"
                 )}
               >
                 {favoriteCount > 99 ? "99+" : favoriteCount}

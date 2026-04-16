@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { ProgressBar } from "./ProgressBar";
 import { StepNav } from "./StepNav";
 import { Step01 } from "./steps/Step01";
@@ -27,6 +28,7 @@ interface Props {
   roomName: string;
   roomType: string;
   initialData: Module1Data;
+  editMode?: boolean;
 }
 
 export function ModuleWizard({
@@ -36,6 +38,7 @@ export function ModuleWizard({
   roomName,
   roomType,
   initialData,
+  editMode = false,
 }: Props) {
   const router = useRouter();
   const [step, setStep]       = useState(() => {
@@ -89,15 +92,31 @@ export function ModuleWizard({
   const currentConfig = STEP_CONFIG[step - 1];
 
   return (
-    <div className="flex flex-col gap-8">
-      <ProgressBar currentStep={step} />
+    // pb-24 on mobile reserves space above the fixed StepNav bar
+    <div className="flex flex-col gap-6 sm:gap-8 pb-24 sm:pb-0">
+
+      {/* Edit mode banner */}
+      {editMode && (
+        <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-mint/12 border border-mint/25">
+          <Pencil className="w-3.5 h-3.5 text-forest/60 shrink-0" strokeWidth={1.5} />
+          <p className="text-xs font-sans text-forest/70 leading-relaxed">
+            Du bearbeitest dein abgeschlossenes Konzept – Änderungen werden beim Navigieren gespeichert.
+          </p>
+        </div>
+      )}
+
+      <ProgressBar
+        currentStep={step}
+        editMode={editMode}
+        onStepClick={(s) => transition(s)}
+      />
 
       {/* Step header */}
       <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
         <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand mb-2">
           {currentConfig?.subtitle}
         </p>
-        <h2 className="font-headline text-3xl md:text-4xl text-forest leading-tight">
+        <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl text-forest leading-tight">
           {currentConfig?.title}
         </h2>
       </div>
@@ -111,6 +130,7 @@ export function ModuleWizard({
           projectName={projectName}
           roomName={roomName}
           roomType={roomType}
+          editMode={editMode}
           onChange={handleChange}
         />
       </div>
@@ -119,6 +139,7 @@ export function ModuleWizard({
         currentStep={step}
         saving={saving}
         savedAt={savedAt}
+        editMode={editMode}
         nextLabel={step === 9 ? "Prompt generieren" : undefined}
         onBack={() => transition(step - 1)}
         onNext={() => transition(step + 1)}
@@ -135,6 +156,7 @@ function StepContent({
   projectName,
   roomName,
   roomType,
+  editMode,
   onChange,
 }: {
   step: number;
@@ -143,6 +165,7 @@ function StepContent({
   projectName: string;
   roomName: string;
   roomType: string;
+  editMode: boolean;
   onChange: (patch: Partial<Module1Data>) => void;
 }) {
   switch (step) {
@@ -196,6 +219,7 @@ function StepContent({
           projectName={projectName}
           roomType={roomType}
           roomName={roomName}
+          editMode={editMode}
         />
       );
     default: {

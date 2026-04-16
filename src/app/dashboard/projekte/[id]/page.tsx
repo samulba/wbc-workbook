@@ -285,7 +285,11 @@ export default async function ProjectPage({
 
         {/* ── Modul 1 – active ──────────────────────────────── */}
         <Link
-          href={`/dashboard/projekte/${project.id}/modul-1`}
+          href={
+            m1Completed
+              ? `/dashboard/projekte/${project.id}/modul-1?edit=true`
+              : `/dashboard/projekte/${project.id}/modul-1`
+          }
           className={cn(
             "group relative rounded-2xl border bg-white/60 p-6 transition-all",
             "hover:shadow-md hover:bg-white/80",
@@ -364,7 +368,7 @@ export default async function ProjectPage({
 
           {/* CTA */}
           <div className="flex items-center justify-end gap-1 text-sm font-sans font-medium text-forest/50 group-hover:text-forest transition-colors">
-            {m1Started ? "Fortsetzen" : "Starten"}
+            {m1Completed ? "Bearbeiten" : m1Started ? "Fortsetzen" : "Starten"}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
           </div>
         </Link>

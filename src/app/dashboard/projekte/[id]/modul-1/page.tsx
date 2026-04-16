@@ -42,9 +42,12 @@ const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
 
 export default async function Modul1Page({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { edit?: string };
 }) {
+  const editMode = searchParams.edit === "true";
   const supabase = createClient();
 
   const {
@@ -94,19 +97,19 @@ export default async function Modul1Page({
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 lg:px-8 py-10">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Back */}
       <Link
         href={`/dashboard/projekte/${project.id}`}
-        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-10"
+        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-6 sm:mb-10 min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" />
         {project.name}
       </Link>
 
       {/* Module header */}
-      <div className="flex items-center gap-4 mb-10">
-        <span className="font-headline text-6xl text-mint/60 leading-none select-none">01</span>
+      <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
+        <span className="font-headline text-4xl sm:text-6xl text-mint/60 leading-none select-none">01</span>
         <div className="h-px flex-1 bg-sand/30" />
         <span className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
           Modul 1
@@ -122,6 +125,7 @@ export default async function Modul1Page({
           roomName={room.name}
           roomType={room.room_type}
           initialData={initialData}
+          editMode={editMode}
         />
       </div>
     </div>

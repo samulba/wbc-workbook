@@ -37,8 +37,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const sizes = {
-      sm: "h-8 px-3 text-sm",
-      md: "h-10 px-4 text-sm",
+      // sm: compact for admin tables / secondary actions
+      sm: "h-9 px-3 text-sm",
+      // md: primary touch target — 44px minimum
+      md: "h-11 px-4 text-sm",
+      // lg: prominent CTA
       lg: "h-12 px-6 text-base",
     };
 

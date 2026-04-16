@@ -20,7 +20,6 @@ export function ColorSwatch({
 }: ColorSwatchProps) {
   const pickerRef = useRef<HTMLInputElement>(null);
 
-  // Determine display color: use value if it looks like a hex, else white
   const isHex = /^#[0-9a-fA-F]{3,6}$/.test(value);
   const displayColor = isHex ? value : "#f6ede2";
   const isEmpty = !value.trim();
@@ -34,13 +33,13 @@ export function ColorSwatch({
       )}
 
       <div className="flex items-center gap-3">
-        {/* Swatch circle – click to open native color picker */}
+        {/* Swatch circle — 48px touch target */}
         <button
           type="button"
           onClick={() => pickerRef.current?.click()}
           title="Farbe wählen"
           className={cn(
-            "w-11 h-11 shrink-0 rounded-full border-2 transition-all hover:scale-105 active:scale-95 shadow-sm",
+            "w-12 h-12 shrink-0 rounded-full border-2 transition-all hover:scale-105 active:scale-95 shadow-sm",
             isEmpty
               ? "border-dashed border-sand/60 bg-cream"
               : "border-sand/40 hover:border-forest/40"
@@ -62,14 +61,14 @@ export function ColorSwatch({
           aria-hidden
         />
 
-        {/* Text input */}
+        {/* Text input — text-base prevents iOS zoom */}
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "flex-1 h-10 rounded-lg border border-sand/60 bg-cream px-3 text-sm text-forest",
+            "flex-1 h-12 rounded-lg border border-sand/60 bg-cream px-3 text-base text-forest",
             "placeholder:text-gray/35 focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent",
             "transition-colors"
           )}

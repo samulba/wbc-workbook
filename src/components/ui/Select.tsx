@@ -23,7 +23,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={id}
             className={cn(
-              "h-10 w-full appearance-none rounded-lg border border-sand/60 bg-cream px-3 pr-9 text-sm text-forest",
+              // h-12 = 48px touch target; text-base = 16px prevents iOS zoom
+              "h-12 w-full appearance-none rounded-lg border border-sand/60 bg-cream px-3 pr-9 text-base text-forest",
               "focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent",
               "disabled:cursor-not-allowed disabled:opacity-50",
               !props.value && "text-gray/50",

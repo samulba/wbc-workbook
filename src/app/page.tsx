@@ -129,29 +129,29 @@ const TESTIMONIALS = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-cream flex flex-col">
+    <div className="min-h-screen flex flex-col">
 
       {/* ── Nav ───────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-20 bg-cream/90 backdrop-blur-md border-b border-sand/25">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
           <Link href="/" className="flex flex-col leading-none group">
-            <span className="font-headline text-lg text-forest group-hover:text-forest/80 transition-colors">
+            <span className="font-headline text-base sm:text-lg text-forest group-hover:text-forest/80 transition-colors">
               Wellbeing Workbook
             </span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-sand font-sans">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-sand font-sans hidden sm:block">
               Raumgestaltung
             </span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
-              className="text-sm font-sans text-gray/60 hover:text-forest transition-colors hidden sm:block"
+              className="min-h-[44px] inline-flex items-center text-sm font-sans text-gray/60 hover:text-forest transition-colors px-2 hidden sm:inline-flex"
             >
               Anmelden
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-1.5 h-9 px-4 bg-forest text-cream text-sm font-sans font-medium rounded-lg hover:bg-forest/90 transition-colors"
+              className="inline-flex items-center gap-1.5 min-h-[44px] px-4 sm:px-5 bg-forest text-cream text-sm font-sans font-medium rounded-xl hover:bg-forest/90 transition-colors"
             >
               Registrieren
             </Link>
@@ -162,21 +162,21 @@ export default function HomePage() {
       <main className="flex-1">
 
         {/* ── Hero ──────────────────────────────────────────────── */}
-        <section className="pt-20 pb-24 md:pt-28 md:pb-32 relative overflow-hidden">
+        <section className="pt-12 pb-16 sm:pt-20 sm:pb-24 md:pt-28 md:pb-32 relative overflow-hidden">
           {/* Subtle bg decoration */}
           <div aria-hidden className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-mint/8 -translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-sand/12 translate-x-1/3 translate-y-1/3" />
           </div>
 
-          <div className="relative mx-auto max-w-4xl px-6 lg:px-8 text-center">
+          <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             {/* Brand label */}
-            <p className="font-sans text-xs uppercase tracking-[0.3em] text-sand mb-8">
+            <p className="font-sans text-xs uppercase tracking-[0.3em] text-sand mb-6 sm:mb-8">
               Wellbeing Concepts · Raumgestaltung
             </p>
 
-            {/* Decorative bars */}
-            <div aria-hidden className="flex justify-center gap-2.5 mb-10">
+            {/* Decorative bars — hidden on small mobile */}
+            <div aria-hidden className="hidden sm:flex justify-center gap-2.5 mb-10">
               <div className="w-1.5 h-14 rounded-full bg-mint" />
               <div className="w-1.5 h-9 rounded-full bg-sand self-end" />
               <div className="w-1.5 h-11 rounded-full bg-terracotta self-center" />
@@ -184,42 +184,41 @@ export default function HomePage() {
             </div>
 
             {/* Headline */}
-            <h1 className="font-headline text-5xl md:text-6xl lg:text-7xl text-forest leading-[1.08] tracking-tight mb-6 text-balance">
+            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-forest leading-[1.05] tracking-tight mb-5 sm:mb-6 text-balance">
               Räume, die wirken.
               <br />
               <span className="text-mint">Wohlbefinden, das bleibt.</span>
             </h1>
 
             {/* Subtext */}
-            <p className="font-sans text-lg md:text-xl text-gray/65 leading-relaxed max-w-xl mx-auto mb-10">
+            <p className="font-sans text-base sm:text-lg md:text-xl text-gray/65 leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10">
               Entwickle Schritt für Schritt dein persönliches Raumkonzept –
               von der ersten Idee bis zur fertigen Gestaltung.
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
+            {/* CTAs — stacked on mobile */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-10 sm:mb-12 px-2 sm:px-0">
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-2 h-12 px-8 bg-forest text-cream text-base font-sans font-medium rounded-xl hover:bg-forest/90 transition-colors shadow-sm"
+                className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-forest text-cream text-base font-sans font-medium rounded-xl hover:bg-forest/90 transition-colors shadow-warm-sm"
               >
                 Jetzt kostenlos starten
-                <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+                <ArrowRight className="w-4 h-4 shrink-0" strokeWidth={1.5} />
               </Link>
               <Link
                 href="/login"
-                className="inline-flex items-center h-12 px-6 text-base font-sans text-gray/60 hover:text-forest transition-colors"
+                className="inline-flex items-center justify-center h-12 px-6 text-base font-sans text-gray/60 hover:text-forest transition-colors"
               >
                 Bereits registriert · Anmelden
               </Link>
             </div>
 
             {/* Feature badges */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-sans text-gray/45 uppercase tracking-wider">
-              {["4 Module", "11 Schritte", "KI-Prompt", "PDF-Export"].map((f, i, a) => (
-                <span key={f} className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-sans text-gray/45 uppercase tracking-wider">
+              {["4 Module", "11 Schritte", "KI-Prompt", "PDF-Export"].map((f) => (
+                <span key={f} className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-mint shrink-0" strokeWidth={2} />
                   {f}
-                  {i < a.length - 1 && <span aria-hidden className="hidden sm:inline text-sand/40">·</span>}
                 </span>
               ))}
             </div>
@@ -227,16 +226,16 @@ export default function HomePage() {
         </section>
 
         {/* ── Benefits strip ────────────────────────────────────── */}
-        <section className="py-16 bg-forest/5 border-y border-sand/20">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="grid sm:grid-cols-3 gap-8 lg:gap-12">
+        <section className="py-12 sm:py-16 bg-forest/5 border-y border-sand/20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
               {BENEFITS.map(({ Icon, title, body }) => (
-                <div key={title} className="flex flex-col items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-forest/8 border border-forest/10 flex items-center justify-center shrink-0">
+                <div key={title} className="flex flex-row sm:flex-col items-start gap-4">
+                  <div className="w-11 h-11 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-forest/8 border border-forest/10 flex items-center justify-center">
                     <Icon className="w-5 h-5 text-forest/60" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="font-headline text-lg text-forest mb-2 leading-snug">
+                    <h3 className="font-headline text-base sm:text-lg text-forest mb-1.5 leading-snug">
                       {title}
                     </h3>
                     <p className="font-sans text-sm text-gray/65 leading-relaxed">
@@ -250,29 +249,29 @@ export default function HomePage() {
         </section>
 
         {/* ── Modules ───────────────────────────────────────────── */}
-        <section className="py-20 md:py-24">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="text-center mb-14">
+        <section className="py-16 sm:py-20 md:py-24">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10 sm:mb-14">
               <p className="font-sans text-xs uppercase tracking-[0.25em] text-sand mb-3">
                 Der Weg zum Raumkonzept
               </p>
-              <h2 className="font-headline text-4xl md:text-5xl text-forest mb-4 leading-tight">
+              <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl text-forest mb-4 leading-tight">
                 Die 4 Module
               </h2>
-              <p className="font-sans text-gray/60 max-w-md mx-auto leading-relaxed">
+              <p className="font-sans text-gray/60 max-w-md mx-auto leading-relaxed text-sm sm:text-base">
                 Vier aufeinander aufbauende Module führen dich zur ganzheitlichen Raumgestaltung.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-5">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
               {MODULES.map((mod) => (
                 <div
                   key={mod.number}
-                  className={`relative rounded-2xl border p-6 ${mod.border} ${mod.bg} ${mod.available ? "hover:shadow-sm transition-all" : "opacity-75"}`}
+                  className={`relative rounded-2xl border p-5 sm:p-6 ${mod.border} ${mod.bg} ${mod.available ? "hover:shadow-warm-sm transition-all" : "opacity-75"}`}
                 >
                   {/* Number + badge */}
                   <div className="flex items-start justify-between mb-4">
-                    <span className={`font-headline text-5xl leading-none ${mod.numberColor}`}>
+                    <span className={`font-headline text-4xl sm:text-5xl leading-none ${mod.numberColor}`}>
                       {mod.number}
                     </span>
                     <span className={`text-xs font-sans font-medium px-2.5 py-1 rounded-full ${mod.badge}`}>
@@ -281,7 +280,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-headline text-xl text-forest mb-2 leading-snug">
+                  <h3 className="font-headline text-lg sm:text-xl text-forest mb-2 leading-snug">
                     {mod.title}
                   </h3>
                   <p className="font-sans text-sm text-gray/65 leading-relaxed mb-4">
@@ -310,22 +309,22 @@ export default function HomePage() {
         </section>
 
         {/* ── How it works ──────────────────────────────────────── */}
-        <section className="py-20 md:py-24 bg-forest text-cream">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="text-center mb-16">
+        <section className="py-16 sm:py-20 md:py-24 bg-forest text-cream">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
               <p className="font-sans text-xs uppercase tracking-[0.25em] text-mint/70 mb-3">
                 So funktioniert es
               </p>
-              <h2 className="font-headline text-4xl md:text-5xl text-cream mb-4 leading-tight">
+              <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl text-cream mb-4 leading-tight">
                 In 3 Schritten zum Raumkonzept
               </h2>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-8 lg:gap-12">
+            <div className="grid sm:grid-cols-3 gap-8 sm:gap-12">
               {STEPS.map(({ n, title, body }) => (
                 <div key={n} className="flex flex-col gap-4">
                   <div className="flex items-center gap-3">
-                    <span className="w-9 h-9 rounded-full border-2 border-mint/40 text-mint font-headline text-lg flex items-center justify-center shrink-0">
+                    <span className="w-10 h-10 sm:w-9 sm:h-9 rounded-full border-2 border-mint/40 text-mint font-headline text-lg flex items-center justify-center shrink-0">
                       {n}
                     </span>
                     <div className="flex-1 h-px bg-mint/15" />
@@ -343,22 +342,23 @@ export default function HomePage() {
         </section>
 
         {/* ── Testimonials ──────────────────────────────────────── */}
-        <section className="py-20 md:py-24">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="text-center mb-14">
+        <section className="py-16 sm:py-20 md:py-24">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10 sm:mb-14">
               <p className="font-sans text-xs uppercase tracking-[0.25em] text-sand mb-3">
                 Stimmen aus der Community
               </p>
-              <h2 className="font-headline text-4xl md:text-5xl text-forest mb-4 leading-tight">
+              <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl text-forest mb-4 leading-tight">
                 Das sagen unsere Nutzerinnen
               </h2>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-5">
+            {/* Horizontal scroll on mobile, grid on sm+ */}
+            <div className="flex sm:grid sm:grid-cols-3 gap-4 sm:gap-5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {TESTIMONIALS.map(({ quote, name, role }, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-sand/30 bg-white/50 p-6 flex flex-col gap-4"
+                  className="min-w-[280px] sm:min-w-0 rounded-2xl border border-sand/30 bg-white/50 p-5 sm:p-6 flex flex-col gap-4 shrink-0 sm:shrink"
                 >
                   {/* Stars */}
                   <div className="flex gap-0.5" aria-label="5 von 5 Sternen">
@@ -389,15 +389,14 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Disclaimer */}
-            <p className="text-center text-xs text-gray/30 font-sans mt-6">
+            <p className="text-center text-xs text-gray/30 font-sans mt-5">
               Platzhalter-Testimonials · werden mit echten Nutzerstimmen ersetzt
             </p>
           </div>
         </section>
 
         {/* ── Final CTA ─────────────────────────────────────────── */}
-        <section className="py-20 md:py-28 bg-gradient-to-br from-forest to-forest/90 relative overflow-hidden">
+        <section className="py-16 sm:py-20 md:py-28 bg-gradient-to-br from-forest to-forest/90 relative overflow-hidden">
           {/* Decorative */}
           <div aria-hidden className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-mint/8 translate-x-1/2 -translate-y-1/2" />
@@ -412,22 +411,22 @@ export default function HomePage() {
             <div className="flex-1 bg-forest/60" />
           </div>
 
-          <div className="relative mx-auto max-w-2xl px-6 lg:px-8 text-center">
-            <p className="font-sans text-xs uppercase tracking-[0.3em] text-mint/70 mb-5">
+          <div className="relative mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
+            <p className="font-sans text-xs uppercase tracking-[0.3em] text-mint/70 mb-4 sm:mb-5">
               Bereit anfangen?
             </p>
-            <h2 className="font-headline text-4xl md:text-5xl text-cream mb-6 leading-tight">
+            <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl text-cream mb-5 sm:mb-6 leading-tight">
               Dein Raumkonzept wartet.
             </h2>
-            <p className="font-sans text-cream/60 text-lg leading-relaxed mb-10 max-w-sm mx-auto">
+            <p className="font-sans text-cream/60 text-base sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-sm mx-auto">
               Starte heute kostenlos und entwickle Schritt für Schritt deine persönliche Raumgestaltung.
             </p>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 h-13 px-10 py-3.5 bg-mint text-forest text-base font-sans font-semibold rounded-xl hover:bg-mint/90 transition-colors shadow-md"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto h-12 px-10 bg-mint text-forest text-base font-sans font-semibold rounded-xl hover:bg-mint/90 transition-colors shadow-md"
             >
               Jetzt kostenlos starten
-              <ArrowRight className="w-4 h-4" strokeWidth={2} />
+              <ArrowRight className="w-4 h-4 shrink-0" strokeWidth={2} />
             </Link>
             <p className="mt-5 text-xs text-cream/35 font-sans">
               Kostenlos · Kein Abo · Jederzeit kündbar
@@ -438,8 +437,8 @@ export default function HomePage() {
       </main>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="bg-cream border-t border-sand/25 py-10">
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+      <footer className="border-t border-sand/25 py-10">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Top row */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8 pb-8 border-b border-sand/20">
             {/* Brand */}
@@ -456,29 +455,29 @@ export default function HomePage() {
             </div>
 
             {/* Links */}
-            <div className="flex flex-col sm:flex-row gap-8">
-              <div className="flex flex-col gap-2.5">
+            <div className="flex gap-12 sm:gap-8">
+              <div className="flex flex-col gap-3">
                 <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-sand mb-1">
                   Produkt
                 </p>
-                <Link href="/signup" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors">
+                <Link href="/signup" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors min-h-[40px] flex items-center sm:min-h-0">
                   Registrieren
                 </Link>
-                <Link href="/login" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors">
+                <Link href="/login" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors min-h-[40px] flex items-center sm:min-h-0">
                   Anmelden
                 </Link>
               </div>
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-3">
                 <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-sand mb-1">
                   Rechtliches
                 </p>
-                <Link href="/impressum" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors">
+                <Link href="/impressum" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors min-h-[40px] flex items-center sm:min-h-0">
                   Impressum
                 </Link>
-                <Link href="/datenschutz" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors">
+                <Link href="/datenschutz" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors min-h-[40px] flex items-center sm:min-h-0">
                   Datenschutzerklärung
                 </Link>
-                <Link href="/kontakt" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors">
+                <Link href="/kontakt" className="text-sm text-gray/60 hover:text-forest font-sans transition-colors min-h-[40px] flex items-center sm:min-h-0">
                   Kontakt
                 </Link>
               </div>
@@ -486,7 +485,7 @@ export default function HomePage() {
           </div>
 
           {/* Bottom row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-6">
             <p className="font-sans text-xs text-gray/40">
               © 2026 Wellbeing Concepts · Alle Rechte vorbehalten
             </p>

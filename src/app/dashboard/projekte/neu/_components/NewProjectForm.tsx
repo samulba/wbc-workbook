@@ -140,7 +140,7 @@ export function NewProjectForm() {
           name="deadline"
           type="date"
           min={new Date().toISOString().split("T")[0]}
-          className="h-10 w-full rounded-lg border border-sand/60 bg-cream px-3 text-sm text-forest focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent [color-scheme:light]"
+          className="h-12 w-full rounded-lg border border-sand/60 bg-cream px-3 text-base text-forest focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent [color-scheme:light]"
         />
         <p className="text-xs text-gray/50 font-sans">
           Bis wann soll das Projekt abgeschlossen sein?

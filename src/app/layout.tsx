@@ -1,16 +1,29 @@
-import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Montserrat, Syne } from "next/font/google";
 import "./globals.css";
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
+  subsets:  ["latin"],
   variable: "--font-montserrat",
-  display: "swap",
+  display:  "swap",
 });
+
+const syne = Syne({
+  subsets:  ["latin"],
+  variable: "--font-syne",
+  weight:   ["700", "800"],
+  display:  "swap",
+});
+
+export const viewport: Viewport = {
+  width:        "device-width",
+  initialScale: 1,
+  viewportFit:  "cover",
+};
 
 export const metadata: Metadata = {
   title: {
-    default: "Wellbeing Workbook",
+    default:  "Wellbeing Workbook",
     template: "%s | Wellbeing Workbook",
   },
   description:
@@ -18,22 +31,15 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://workbooks.wellbeing-concepts.de"),
   openGraph: {
     siteName: "Wellbeing Workbook",
-    locale: "de_DE",
+    locale:   "de_DE",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="de" className={montserrat.variable}>
-      {/*
-        ALTA font is loaded via @font-face in globals.css.
-        Place alta.woff2 (and alta.woff) in /public/fonts/
-        to activate the headline font.
-      */}
+    <html lang="de" className={`${montserrat.variable} ${syne.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -23,6 +23,7 @@ interface Props {
   projectName: string;
   roomType: string;
   roomName: string;
+  editMode?: boolean;
 }
 
 const ROOM_LABELS: Record<string, string> = {
@@ -73,7 +74,7 @@ const DOTS = [
   { left: "4%",  top: "65%", size: "w-2 h-2",   color: "bg-sand/50",       delay: "1.5s"  },
 ];
 
-export function Step11({ data, projectId, projectName, roomType, roomName }: Props) {
+export function Step11({ data, projectId, projectName, roomType, roomName, editMode }: Props) {
   const [mounted, setMounted]       = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError]     = useState<string | null>(null);
@@ -120,81 +121,102 @@ export function Step11({ data, projectId, projectName, roomType, roomName }: Pro
   return (
     <div className="flex flex-col gap-10">
 
-      {/* ── Celebration hero ──────────────────────────────── */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-forest to-forest/80 px-6 py-10 text-center">
-        {/* Decorative dots */}
-        {DOTS.map((d, i) => (
-          <span
-            key={i}
-            aria-hidden
-            className={cn(
-              "absolute rounded-full animate-pulse pointer-events-none",
-              d.size,
-              d.color
-            )}
-            style={{
-              left: d.left,
-              top: d.top,
-              animationDelay: d.delay,
-              animationDuration: "2.5s",
-            }}
-          />
-        ))}
-
-        {/* Checkmark */}
-        <div className="flex justify-center mb-5">
-          <div
-            className={cn(
-              "w-20 h-20 rounded-full bg-white/15 border-2 border-white/30",
-              "flex items-center justify-center transition-all duration-500",
-              mounted ? "scale-100 opacity-100" : "scale-0 opacity-0"
-            )}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="w-10 h-10"
-              fill="none"
-              stroke="white"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12l5 5 9-9" />
-            </svg>
+      {/* ── Hero: celebration (normal) or compact overview (edit mode) ── */}
+      {editMode ? (
+        /* Edit mode: compact header instead of celebration */
+        <div className="rounded-2xl border border-forest/20 bg-forest/5 px-5 py-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-forest/10 border border-forest/15 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-forest/60" strokeWidth={1.5} />
+          </div>
+          <div>
+            <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-forest/40 mb-0.5">
+              Modul 1 abgeschlossen
+            </p>
+            <h2 className="font-headline text-lg text-forest leading-snug">
+              {projectName}
+            </h2>
+            <p className="text-xs text-gray/50 font-sans">
+              {roomName} · {ROOM_LABELS[roomType] ?? roomType}
+            </p>
           </div>
         </div>
+      ) : (
+        /* Normal mode: full celebration */
+        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-forest to-forest/80 px-6 py-10 text-center">
+          {/* Decorative dots */}
+          {DOTS.map((d, i) => (
+            <span
+              key={i}
+              aria-hidden
+              className={cn(
+                "absolute rounded-full animate-pulse pointer-events-none",
+                d.size,
+                d.color
+              )}
+              style={{
+                left: d.left,
+                top: d.top,
+                animationDelay: d.delay,
+                animationDuration: "2.5s",
+              }}
+            />
+          ))}
 
-        <h2
-          className={cn(
-            "font-headline text-3xl text-white mb-2 transition-all duration-500 delay-150",
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-          )}
-        >
-          {projectName}
-        </h2>
-        <p
-          className={cn(
-            "font-sans text-sm text-white/65 transition-all duration-500 delay-200",
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-          )}
-        >
-          {roomName} · {ROOM_LABELS[roomType] ?? roomType}
-        </p>
+          {/* Checkmark */}
+          <div className="flex justify-center mb-5">
+            <div
+              className={cn(
+                "w-20 h-20 rounded-full bg-white/15 border-2 border-white/30",
+                "flex items-center justify-center transition-all duration-500",
+                mounted ? "scale-100 opacity-100" : "scale-0 opacity-0"
+              )}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="w-10 h-10"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12l5 5 9-9" />
+              </svg>
+            </div>
+          </div>
 
-        {/* Status badge */}
-        <div
-          className={cn(
-            "inline-flex items-center gap-1.5 mt-5 bg-white/20 border border-white/30 rounded-full px-3.5 py-1.5",
-            "transition-all duration-500 delay-300",
-            mounted ? "opacity-100 scale-100" : "opacity-0 scale-75"
-          )}
-        >
-          <CheckCircle2 className="w-3.5 h-3.5 text-mint" strokeWidth={2} />
-          <span className="text-xs font-sans font-semibold text-white uppercase tracking-widest">
-            Modul 1 abgeschlossen
-          </span>
+          <h2
+            className={cn(
+              "font-headline text-3xl text-white mb-2 transition-all duration-500 delay-150",
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+            )}
+          >
+            {projectName}
+          </h2>
+          <p
+            className={cn(
+              "font-sans text-sm text-white/65 transition-all duration-500 delay-200",
+              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+            )}
+          >
+            {roomName} · {ROOM_LABELS[roomType] ?? roomType}
+          </p>
+
+          {/* Status badge */}
+          <div
+            className={cn(
+              "inline-flex items-center gap-1.5 mt-5 bg-white/20 border border-white/30 rounded-full px-3.5 py-1.5",
+              "transition-all duration-500 delay-300",
+              mounted ? "opacity-100 scale-100" : "opacity-0 scale-75"
+            )}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5 text-mint" strokeWidth={2} />
+            <span className="text-xs font-sans font-semibold text-white uppercase tracking-widest">
+              Modul 1 abgeschlossen
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── Summary card ──────────────────────────────────── */}
       <div className="rounded-2xl border border-sand/30 bg-white/50 overflow-hidden">
@@ -376,7 +398,9 @@ export function Step11({ data, projectId, projectName, roomType, roomName }: Pro
         </div>
 
         <p className="text-xs text-gray/35 font-sans text-center">
-          Klicke auf &ldquo;Abschließen&rdquo; unten, um Modul 1 zu speichern und zum Projekt zurückzukehren.
+          {editMode
+            ? "Klicke auf \u201eSpeichern\u00a0&\u00a0Zur\u00fcck\u201c unten, um deine \u00c4nderungen zu speichern."
+            : "Klicke auf \u201eAbschlie\u00dfen\u201c unten, um Modul\u00a01 zu speichern und zum Projekt zur\u00fcckzukehren."}
         </p>
       </div>
 
