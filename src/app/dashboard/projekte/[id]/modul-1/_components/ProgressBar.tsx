@@ -30,17 +30,21 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
             ))}
           </select>
         ) : (
-          <span className="sm:hidden text-xs font-sans uppercase tracking-[0.2em] text-sand">
-            Schritt {currentStep} / {STEP_CONFIG.length}
+          <span className="sm:hidden text-xs font-sans text-sand">
+            Schritt {currentStep}/{STEP_CONFIG.length}
+            <span className="mx-1.5 opacity-40">·</span>
+            <span className="font-semibold">{pct}%</span>
           </span>
         )}
 
-        {/* Desktop left: always plain label */}
-        <span className="hidden sm:block text-xs font-sans uppercase tracking-[0.2em] text-sand">
-          Schritt {currentStep} / {STEP_CONFIG.length}
+        {/* Desktop left: step + percentage */}
+        <span className="hidden sm:flex items-center gap-2 text-xs font-sans text-sand">
+          <span className="uppercase tracking-[0.2em]">Schritt {currentStep} / {STEP_CONFIG.length}</span>
+          <span className="opacity-40">·</span>
+          <span className="font-semibold tabular-nums">{pct}%</span>
         </span>
 
-        {/* Right: current step title */}
+        {/* Right: current step title (desktop only) */}
         <span className="text-xs font-sans text-gray/50 hidden sm:block truncate max-w-[200px]">
           {STEP_CONFIG[currentStep - 1]?.title}
         </span>
@@ -49,7 +53,10 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
       {/* Mobile: simple progress bar */}
       <div className="h-1 rounded-full bg-sand/25 overflow-hidden sm:hidden">
         <div
-          className="h-full rounded-full bg-forest transition-all duration-300"
+          className={cn(
+            "h-full rounded-full transition-all duration-300",
+            pct >= 100 ? "bg-forest" : pct >= 50 ? "bg-forest/70" : "bg-mint"
+          )}
           style={{ width: `${pct}%` }}
         />
       </div>

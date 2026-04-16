@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { deleteProject } from "@/app/actions/projects";
 import { ArrowRight, Trash2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { CircleProgress } from "@/components/CircleProgress";
 
 type ProjectStatus = "entwurf" | "aktiv" | "abgeschlossen" | "archiviert";
 
@@ -178,31 +179,33 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
         )}
 
         {/* Module 1 progress */}
-        <div className="mt-3 flex flex-col gap-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-sans font-medium text-gray-500">Modul 1</span>
-            {m1Completed ? (
-              <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest">
-                <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
-                Fertig
-              </span>
-            ) : m1Started ? (
-              <span className="text-[11px] font-sans text-gray-400">
-                Schritt {m1Step} / {TOTAL_STEPS}
-              </span>
-            ) : (
-              <span className="text-[11px] font-sans text-gray-400 italic">Nicht gestartet</span>
-            )}
-          </div>
-
-          <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
-            <div
-              className={cn(
-                "h-full rounded-full transition-all duration-500",
-                m1Completed ? "bg-forest" : "bg-mint"
+        <div className="mt-3 flex items-center gap-3">
+          <CircleProgress pct={m1Pct} size={38} stroke={3} labelSize="text-[9px]" />
+          <div className="flex-1 min-w-0 flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-sans font-medium text-gray-500">Modul 1</span>
+              {m1Completed ? (
+                <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest">
+                  <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
+                  Abgeschlossen
+                </span>
+              ) : m1Started ? (
+                <span className="text-[11px] font-sans text-gray-400">
+                  {m1Pct}% · Schritt {m1Step}/{TOTAL_STEPS}
+                </span>
+              ) : (
+                <span className="text-[11px] font-sans text-gray-400 italic">Nicht gestartet</span>
               )}
-              style={{ width: `${m1Pct}%` }}
-            />
+            </div>
+            <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+              <div
+                className={cn(
+                  "h-full rounded-full transition-all duration-500",
+                  m1Completed ? "bg-forest" : m1Pct >= 50 ? "bg-forest/70" : "bg-mint"
+                )}
+                style={{ width: `${m1Pct}%` }}
+              />
+            </div>
           </div>
         </div>
 

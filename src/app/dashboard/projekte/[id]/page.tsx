@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { RoomCard } from "./_components/RoomCard";
 import type { RoomCardData } from "./_components/RoomCard";
+import { CircleProgress } from "@/components/CircleProgress";
 
 type ProjectStatus = "entwurf" | "aktiv" | "abgeschlossen" | "archiviert";
 
@@ -116,6 +117,16 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   const m1Step      = m1Completed ? 11 : (m1?.current_step ?? 0);
   const m1Pct       = Math.min(100, Math.round((m1Step / 11) * 100));
   const m1Started   = m1Step > 0;
+
+  // Average m1 progress across ALL rooms
+  const avgM1Pct = rooms.length === 0 ? 0 : Math.round(
+    rooms.reduce((sum, r) => {
+      const ra = r.module1_analysis?.[0];
+      const completed = ra?.status === "completed";
+      const step = completed ? 11 : (ra?.current_step ?? 0);
+      return sum + Math.min(100, Math.round((step / 11) * 100));
+    }, 0) / rooms.length
+  );
 
   const primaryRoom = firstRoom;
   const RoomIcon    = ROOM_ICONS[primaryRoom?.room_type ?? ""] ?? Home;
@@ -271,20 +282,34 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               {MODULES[0].description}
             </p>
 
-            <div className="flex flex-col gap-1.5 mb-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-sans text-gray-400">
-                  {rooms.length > 1 ? "Erster Raum · Fortschritt" : "Fortschritt"}
-                </span>
-                <span className={cn("text-xs font-sans font-medium", m1Completed ? "text-forest" : "text-gray-400")}>
-                  {m1Completed ? "11/11 ✓" : m1Started ? `${m1Step}/11` : "–"}
-                </span>
-              </div>
-              <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
-                <div
-                  className={cn("h-full rounded-full transition-all duration-700", m1Completed ? "bg-forest" : "bg-mint")}
-                  style={{ width: `${m1Pct}%` }}
-                />
+            <div className="flex items-center gap-4 mb-4">
+              {/* Ring for average across all rooms */}
+              <CircleProgress
+                pct={rooms.length > 1 ? avgM1Pct : m1Pct}
+                size={52}
+                stroke={4}
+                labelSize="text-[11px]"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-sans text-gray-400 mb-1">
+                  {rooms.length > 1 ? `Durchschnitt · ${rooms.length} Räume` : "Fortschritt Modul 1"}
+                </p>
+                <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-700",
+                      (rooms.length > 1 ? avgM1Pct : m1Pct) >= 100 ? "bg-forest"
+                      : (rooms.length > 1 ? avgM1Pct : m1Pct) >= 50   ? "bg-forest/70"
+                      : "bg-mint"
+                    )}
+                    style={{ width: `${rooms.length > 1 ? avgM1Pct : m1Pct}%` }}
+                  />
+                </div>
+                {rooms.length > 1 && (
+                  <p className="text-[11px] font-sans text-gray-400 mt-1">
+                    {rooms.filter(r => r.module1_analysis?.[0]?.status === "completed").length}/{rooms.length} Räume abgeschlossen
+                  </p>
+                )}
               </div>
             </div>
 

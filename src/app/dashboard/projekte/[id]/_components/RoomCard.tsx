@@ -13,6 +13,7 @@ import {
   ImagePlus, X, SplitSquareHorizontal, Share2,
 } from "lucide-react";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
+import { CircleProgress } from "@/components/CircleProgress";
 import type { LucideIcon } from "lucide-react";
 
 const ROOM_LABELS: Record<string, string> = {
@@ -239,15 +240,13 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
       )}
 
       {/* Main content link */}
-      <Link href={href} className="flex items-center gap-4 px-4 py-3.5 pr-10">
-        {/* Room icon */}
-        <div className="w-9 h-9 rounded-lg bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">
-          <RoomIcon className="w-4 h-4 text-forest/60" strokeWidth={1.5} />
-        </div>
+      <Link href={href} className="flex items-center gap-3 px-4 py-3.5 pr-10">
+        {/* Circle progress */}
+        <CircleProgress pct={m1Pct} size={34} stroke={2.5} labelSize="text-[8px]" />
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center justify-between mb-1">
             <div className="min-w-0">
               <span className="text-sm font-sans font-semibold text-gray-900 truncate block leading-tight">
                 {room.name}
@@ -261,7 +260,7 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
               </span>
             ) : m1Started ? (
               <span className="text-[11px] font-sans text-gray-400 shrink-0 ml-3">
-                Schritt {m1Step}/{TOTAL_STEPS}
+                {m1Pct}% · Schritt {m1Step}/{TOTAL_STEPS}
               </span>
             ) : (
               <span className="text-[11px] font-sans text-gray-400 italic shrink-0 ml-3">
@@ -270,11 +269,11 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
             )}
           </div>
 
-          <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-0.5 rounded-full bg-gray-100 overflow-hidden">
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
-                m1Completed ? "bg-forest" : "bg-mint"
+                m1Completed ? "bg-forest" : m1Pct >= 50 ? "bg-forest/70" : "bg-mint"
               )}
               style={{ width: `${m1Pct}%` }}
             />

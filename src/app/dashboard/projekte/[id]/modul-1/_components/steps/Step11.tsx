@@ -77,14 +77,18 @@ const TIPS = [
   },
 ];
 
-// Confetti-like decorative dots
-const DOTS = [
-  { left: "6%",  top: "18%", size: "w-3 h-3",   color: "bg-mint/50",       delay: "0s"    },
-  { left: "88%", top: "12%", size: "w-2 h-2",   color: "bg-terracotta/50", delay: "0.6s"  },
-  { left: "18%", top: "8%",  size: "w-2.5 h-2.5", color: "bg-sand/70",     delay: "1.2s"  },
-  { left: "78%", top: "28%", size: "w-2 h-2",   color: "bg-forest/30",     delay: "0.9s"  },
-  { left: "92%", top: "55%", size: "w-3 h-3",   color: "bg-mint/40",       delay: "0.3s"  },
-  { left: "4%",  top: "65%", size: "w-2 h-2",   color: "bg-sand/50",       delay: "1.5s"  },
+// Confetti pieces (celebration header only)
+const CONFETTI = [
+  { left: "6%",  top: "18%", size: "w-3 h-3",     color: "bg-mint/60",       delay: "0s",    shape: "rounded-full"    },
+  { left: "88%", top: "12%", size: "w-2 h-2",     color: "bg-terracotta/60", delay: "0.6s",  shape: "rounded-sm"      },
+  { left: "18%", top: "8%",  size: "w-2.5 h-2.5", color: "bg-sand/80",       delay: "1.2s",  shape: "rounded-full"    },
+  { left: "78%", top: "28%", size: "w-2 h-2",     color: "bg-white/40",      delay: "0.9s",  shape: "rounded-sm"      },
+  { left: "92%", top: "55%", size: "w-3 h-3",     color: "bg-mint/50",       delay: "0.3s",  shape: "rounded-full"    },
+  { left: "4%",  top: "65%", size: "w-2 h-2",     color: "bg-sand/60",       delay: "1.5s",  shape: "rounded-full"    },
+  { left: "50%", top: "6%",  size: "w-2 h-2",     color: "bg-white/50",      delay: "0.7s",  shape: "rounded-sm"      },
+  { left: "65%", top: "72%", size: "w-1.5 h-1.5", color: "bg-terracotta/40", delay: "1.0s",  shape: "rounded-full"    },
+  { left: "30%", top: "75%", size: "w-2 h-2",     color: "bg-mint/40",       delay: "0.4s",  shape: "rounded-sm"      },
+  { left: "75%", top: "5%",  size: "w-1.5 h-1.5", color: "bg-white/60",      delay: "1.3s",  shape: "rounded-full"    },
 ];
 
 export function Step11({ data, projectId, projectName, roomId, roomType, roomName, editMode, shareToken, isShared = false }: Props) {
@@ -191,21 +195,20 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
       ) : (
         /* Normal mode: full celebration */
         <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-forest to-forest/80 px-6 py-10 text-center">
-          {/* Decorative dots */}
-          {DOTS.map((d, i) => (
+          {/* Confetti */}
+          {CONFETTI.map((c, i) => (
             <span
               key={i}
               aria-hidden
               className={cn(
-                "absolute rounded-full animate-pulse pointer-events-none",
-                d.size,
-                d.color
+                "absolute animate-pulse pointer-events-none",
+                c.size, c.color, c.shape
               )}
               style={{
-                left: d.left,
-                top: d.top,
-                animationDelay: d.delay,
-                animationDuration: "2.5s",
+                left: c.left,
+                top: c.top,
+                animationDelay: c.delay,
+                animationDuration: "2s",
               }}
             />
           ))}
@@ -250,18 +253,23 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
             {roomName} · {ROOM_LABELS[roomType] ?? roomType}
           </p>
 
-          {/* Status badge */}
+          {/* 100% badge */}
           <div
             className={cn(
-              "inline-flex items-center gap-1.5 mt-5 bg-white/20 border border-white/30 rounded-full px-3.5 py-1.5",
+              "inline-flex items-center gap-2 mt-5",
               "transition-all duration-500 delay-300",
               mounted ? "opacity-100 scale-100" : "opacity-0 scale-75"
             )}
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-mint" strokeWidth={2} />
-            <span className="text-xs font-sans font-semibold text-white uppercase tracking-widest">
-              Modul 1 abgeschlossen
-            </span>
+            <div className="flex items-center gap-1.5 bg-white/20 border border-white/30 rounded-full px-3.5 py-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-mint" strokeWidth={2} />
+              <span className="text-xs font-sans font-semibold text-white uppercase tracking-widest">
+                Modul 1 abgeschlossen
+              </span>
+            </div>
+            <div className="bg-mint/25 border border-mint/40 rounded-full px-2.5 py-1.5">
+              <span className="text-xs font-sans font-bold text-white tabular-nums">100%</span>
+            </div>
           </div>
         </div>
       )}
@@ -580,7 +588,7 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
         <p className="text-xs text-gray/35 font-sans text-center">
           {editMode
             ? "Klicke auf \u201eSpeichern\u00a0&\u00a0Zur\u00fcck\u201c unten, um deine \u00c4nderungen zu speichern."
-            : "Klicke auf \u201eAbschlie\u00dfen\u201c unten, um Modul\u00a01 zu speichern und zum Projekt zur\u00fcckzukehren."}
+            : "Klicke auf \u201eAbschlie\u00dfen\u201c unten, um Modul\u00a01 zu speichern und zum Projekt zur\u00fcckzukehren. \uD83C\uDF89"}
         </p>
       </div>
 
