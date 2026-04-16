@@ -90,7 +90,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     .select(`
       id, name, description, status, budget, deadline, created_at,
       rooms (
-        id, name, room_type,
+        id, name, room_type, before_image_url, after_image_url,
         module1_analysis ( status, current_step )
       )
     `)
@@ -102,6 +102,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
   type RoomRow = {
     id: string; name: string; room_type: string;
+    before_image_url: string | null; after_image_url: string | null;
     module1_analysis: { status: string | null; current_step: number | null }[] | null;
   };
 

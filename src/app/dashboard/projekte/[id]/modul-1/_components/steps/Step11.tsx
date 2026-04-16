@@ -14,7 +14,10 @@ import {
   Layers,
   Ruler,
   Leaf,
+  Camera,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
@@ -360,6 +363,28 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
         roomId={data.room_id ?? null}
         heading="Starte dein Konzept mit diesen Produkten"
       />
+
+      {/* ── Before-photo hint ─────────────────────────────── */}
+      <div className="rounded-xl border border-sand/30 bg-sand/8 px-4 py-3.5 flex items-start gap-3">
+        <div className="w-8 h-8 rounded-lg bg-sand/20 border border-sand/25 flex items-center justify-center shrink-0 mt-0.5">
+          <Camera className="w-4 h-4 text-sand" strokeWidth={1.5} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-sans font-semibold text-forest/80 mb-0.5">
+            Tipp: Lade ein Vorher-Foto hoch
+          </p>
+          <p className="text-xs text-gray/50 font-sans leading-relaxed">
+            Halte den aktuellen Zustand fest – damit kannst du später den Unterschied sehen.
+          </p>
+        </div>
+        <Link
+          href={`/dashboard/projekte/${projectId}`}
+          className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest/60 hover:text-forest transition-colors shrink-0 mt-0.5"
+        >
+          Jetzt
+          <ArrowRight className="w-3 h-3" strokeWidth={1.5} />
+        </Link>
+      </div>
 
       {/* ── Action buttons ────────────────────────────────── */}
       <div className="flex flex-col gap-3">

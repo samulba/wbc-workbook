@@ -4,10 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export type CreateProjectResult = { error: string } | { projectId: string };
-export type DeleteProjectResult = { ok: true } | { ok: false; error: string };
-export type AddRoomResult    = { error: string } | { roomId: string };
-export type DeleteRoomResult = { ok: true } | { ok: false; error: string };
+export type CreateProjectResult    = { error: string } | { projectId: string };
+export type DeleteProjectResult    = { ok: true } | { ok: false; error: string };
+export type AddRoomResult          = { error: string } | { roomId: string };
+export type DeleteRoomResult       = { ok: true } | { ok: false; error: string };
+export type UpdateRoomPhotoResult  = { ok: true } | { ok: false; error: string };
 
 export async function createProject(
   _prev: CreateProjectResult | null,
@@ -136,6 +137,51 @@ export async function addRoom(
 
   revalidatePath(`/dashboard/projekte/${projectId}`);
   redirect(`/dashboard/projekte/${projectId}/raum/${room.id}/modul-1`);
+}
+
+export async function updateRoomPhoto(
+  roomId: string,
+  type: "before" | "after",
+  url: string | null
+): Promise<UpdateRoomPhotoResult> {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Nicht angemeldet" };
+
+  // Verify ownership via project chain
+  const { data: roomRow } = await supabase
+    .from("rooms")
+    .select("project_id")
+    .eq("id", roomId)
+    .single();
+
+  if (!roomRow) return { ok: false, error: "Raum nicht gefunden." };
+
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("id", roomRow.project_id)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { ok: false, error: "Keine Berechtigung." };
+
+  const column = type === "before" ? "before_image_url" : "after_image_url";
+  const { error } = await supabase
+    .from("rooms")
+    .update({ [column]: url })
+    .eq("id", roomId);
+
+  if (error) {
+    console.error("Update room photo error:", error);
+    return { ok: false, error: "Speichern fehlgeschlagen." };
+  }
+
+  revalidatePath(`/dashboard/projekte/${roomRow.project_id}`);
+  return { ok: true };
 }
 
 export async function deleteRoom(roomId: string): Promise<DeleteRoomResult> {
