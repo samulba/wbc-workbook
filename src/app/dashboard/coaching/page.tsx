@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, CalendarDays, Clock, Plus, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CancelBookingButton } from "./_components/CancelBookingButton";
 
@@ -20,11 +20,6 @@ const STATUS_CONFIG = {
 const WEEKDAY_SHORT = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] as const;
 const MONTH_SHORT   = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
                         "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"] as const;
-
-function formatDate(iso: string) {
-  const d = new Date(iso + "T00:00");
-  return `${WEEKDAY_SHORT[d.getDay()]}, ${d.getDate()}. ${MONTH_SHORT[d.getMonth()]}`;
-}
 
 function canCancel(bookingDate: string, bookingTime: string, status: string) {
   if (status === "completed" || status === "cancelled") return false;

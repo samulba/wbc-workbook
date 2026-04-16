@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { RadioGroup } from "@/components/ui/RadioGroup";
@@ -38,13 +38,6 @@ function formatBudget(raw: number): string {
   return raw.toLocaleString("de-DE");
 }
 
-/** Parse German-formatted budget string to integer, returns NaN if invalid */
-function parseBudget(input: string): number {
-  const cleaned = input.replace(/\./g, "").replace(/,/g, "").trim();
-  if (!cleaned) return NaN;
-  const n = parseInt(cleaned, 10);
-  return isNaN(n) || n < 0 || n > 1_000_000 ? NaN : n;
-}
 
 const initialState: CreateProjectResult | null = null;
 

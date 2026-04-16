@@ -7,14 +7,10 @@ import { cn } from "@/lib/utils";
 import { deleteRoom, updateRoomPhoto } from "@/app/actions/projects";
 import {
   CheckCircle2, ArrowRight, Trash2, AlertTriangle,
-  Home, Sofa, Moon, Monitor, Star, Droplets,
-  ChefHat, UtensilsCrossed, DoorOpen, Package,
-  Briefcase, Leaf, Sparkles, Camera,
-  ImagePlus, X, SplitSquareHorizontal, Share2, BrainCircuit,
+  Sparkles, ImagePlus, X, SplitSquareHorizontal, Share2, BrainCircuit,
 } from "lucide-react";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
 import { CircleProgress } from "@/components/CircleProgress";
-import type { LucideIcon } from "lucide-react";
 
 const ROOM_LABELS: Record<string, string> = {
   wohnzimmer: "Wohnzimmer", schlafzimmer: "Schlafzimmer",
@@ -23,16 +19,6 @@ const ROOM_LABELS: Record<string, string> = {
   flur: "Flur", keller: "Keller", buero: "Büro",
   yogaraum: "Yogaraum", wellness: "Wellness",
   studio: "Studio", sonstiges: "Sonstiges",
-};
-
-const ROOM_ICONS: Record<string, LucideIcon> = {
-  wohnzimmer: Sofa, schlafzimmer: Moon,
-  arbeitszimmer: Monitor, kinderzimmer: Star,
-  badezimmer: Droplets, kueche: ChefHat,
-  esszimmer: UtensilsCrossed, flur: DoorOpen,
-  keller: Package, buero: Briefcase,
-  yogaraum: Leaf, wellness: Sparkles,
-  studio: Camera, sonstiges: Home,
 };
 
 export type RoomCardData = {
@@ -75,7 +61,6 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
   const m1Step      = m1Completed ? TOTAL_STEPS : (m1?.current_step ?? 0);
   const m1Started   = m1Step > 0;
   const m1Pct       = Math.min(100, Math.round((m1Step / TOTAL_STEPS) * 100));
-  const RoomIcon    = ROOM_ICONS[room.room_type] ?? Home;
   const roomLabel   = ROOM_LABELS[room.room_type] ?? room.room_type;
   const href        = m1Completed
     ? `/dashboard/projekte/${projectId}/raum/${room.id}/modul-1?edit=true`
