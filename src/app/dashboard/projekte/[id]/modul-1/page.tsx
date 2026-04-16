@@ -1,53 +1,17 @@
-import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { ModuleWizard } from "./_components/ModuleWizard";
-import type { Module1Data } from "@/lib/types/module1";
 
-export const metadata: Metadata = { title: "Modul 1 – Analyse & Vorbereitung" };
-
-const EMPTY_DATA: Omit<Module1Data, "id" | "room_id"> = {
-  wishes:           ["", "", ""],
-  support_friends:  false,
-  support_external: false,
-  support_person:   "",
-  current_issues:   "",
-  more_of:          "",
-  less_of:          "",
-  change_reason:    "",
-  main_effect:      null,
-  primary_colors:   ["", ""],
-  secondary_colors: ["", ""],
-  accent_color:     "",
-  materials:        [],
-  light_mood:       "",
-  special_elements: "",
-  moodboard_prompt: "",
-  moodboard_urls:   [],
-  status:           "in_progress",
-  current_step:     1,
-  desired_effects:  [],
-  current_situation:"",
-  color_preferences:[],
-  color_avoid:      [],
-  color_notes:      "",
-  material_preferences: [],
-  material_avoid:   [],
-  material_notes:   "",
-  moodboard_notes:  "",
-  notes:            "",
-};
-
-export default async function Modul1Page({
+/**
+ * Legacy redirect: /projekte/[id]/modul-1 → /projekte/[id]/raum/[roomId]/modul-1
+ * Kept for backwards compat (bookmarks, old links).
+ */
+export default async function Modul1RedirectPage({
   params,
   searchParams,
 }: {
   params: { id: string };
   searchParams: { edit?: string };
 }) {
-  const editMode = searchParams.edit === "true";
   const supabase = createClient();
 
   const {
@@ -55,79 +19,19 @@ export default async function Modul1Page({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Load project + rooms + module1 in one query
   const { data: project } = await supabase
     .from("projects")
-    .select(`
-      id,
-      name,
-      rooms (
-        id,
-        name,
-        room_type,
-        module1_analysis (*)
-      )
-    `)
+    .select("id, rooms(id)")
     .eq("id", params.id)
     .eq("user_id", user.id)
     .single();
 
   if (!project) notFound();
 
-  type RoomRow = {
-    id: string;
-    name: string;
-    room_type: string;
-    module1_analysis: Module1Data[] | null;
-  };
-  const room = (project.rooms as RoomRow[])?.[0];
-  if (!room) notFound();
+  type RoomRow = { id: string };
+  const firstRoom = (project.rooms as RoomRow[])?.[0];
+  if (!firstRoom) notFound();
 
-  const module1Raw = room.module1_analysis?.[0];
-  if (!module1Raw) notFound();
-
-  // Merge DB data over empty defaults (handles missing columns gracefully)
-  const initialData: Module1Data = {
-    ...EMPTY_DATA,
-    ...module1Raw,
-    wishes: (module1Raw.wishes?.length === 3
-      ? module1Raw.wishes
-      : ["", "", ""]
-    ) as [string, string, string],
-  };
-
-  return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      {/* Back */}
-      <Link
-        href={`/dashboard/projekte/${project.id}`}
-        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-6 sm:mb-10 min-h-[44px]"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {project.name}
-      </Link>
-
-      {/* Module header */}
-      <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
-        <span className="font-headline text-4xl sm:text-6xl text-mint/60 leading-none select-none">01</span>
-        <div className="h-px flex-1 bg-sand/30" />
-        <span className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
-          Modul 1
-        </span>
-      </div>
-
-      {/* Wizard – max width for comfortable reading */}
-      <div className="max-w-2xl">
-        <ModuleWizard
-          moduleId={initialData.id}
-          projectId={project.id}
-          projectName={project.name}
-          roomName={room.name}
-          roomType={room.room_type}
-          initialData={initialData}
-          editMode={editMode}
-        />
-      </div>
-    </div>
-  );
+  const editSuffix = searchParams.edit === "true" ? "?edit=true" : "";
+  redirect(`/dashboard/projekte/${params.id}/raum/${firstRoom.id}/modul-1${editSuffix}`);
 }

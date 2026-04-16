@@ -4,13 +4,15 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, Lock,
-  CalendarDays, Euro, Clock,
+  CalendarDays, Euro, Clock, Plus,
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
   Briefcase, Leaf, Sparkles, Camera,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { RoomCard } from "./_components/RoomCard";
+import type { RoomCardData } from "./_components/RoomCard";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -151,39 +153,46 @@ export default async function ProjectPage({
     module1_analysis: { status: string | null; current_step: number | null }[] | null;
   };
 
-  const room = (project.rooms as RoomRow[])?.[0];
-  const m1   = room?.module1_analysis?.[0];
+  const rooms     = (project.rooms as RoomRow[]) ?? [];
+  const firstRoom = rooms[0];
 
-  const statusCfg   = STATUS_CONFIG[project.status as ProjectStatus] ?? STATUS_CONFIG.entwurf;
-  const RoomIcon    = ROOM_ICONS[room?.room_type ?? ""] ?? Home;
-  const roomLabel   = ROOM_LABELS[room?.room_type ?? ""] ?? room?.room_type ?? "–";
-
-  const createdAt = new Date(project.created_at).toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-  const deadline = project.deadline
-    ? new Date(project.deadline).toLocaleDateString("de-DE", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : null;
-
-  // Module 1 progress
+  // Derive progress from first room for the module card
+  const m1   = firstRoom?.module1_analysis?.[0];
   const m1Completed = m1?.status === "completed";
   const m1Step      = m1Completed ? 11 : (m1?.current_step ?? 0);
   const m1Pct       = Math.min(100, Math.round((m1Step / 11) * 100));
   const m1Started   = m1Step > 0;
 
+  // For the info chips — summarize rooms
+  const primaryRoom = firstRoom;
+  const RoomIcon    = ROOM_ICONS[primaryRoom?.room_type ?? ""] ?? Home;
+  const roomLabel   = ROOM_LABELS[primaryRoom?.room_type ?? ""] ?? primaryRoom?.room_type ?? "–";
+
+  const statusCfg = STATUS_CONFIG[project.status as ProjectStatus] ?? STATUS_CONFIG.entwurf;
+
+  const createdAt = new Date(project.created_at).toLocaleDateString("de-DE", {
+    day: "2-digit", month: "long", year: "numeric",
+  });
+  const deadline = project.deadline
+    ? new Date(project.deadline).toLocaleDateString("de-DE", {
+        day: "2-digit", month: "long", year: "numeric",
+      })
+    : null;
+
+  // Module 1 CTA link (first room)
+  const m1Href = firstRoom
+    ? m1Completed
+      ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-1?edit=true`
+      : `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-1`
+    : "#";
+
   return (
-    <div className="mx-auto max-w-6xl px-6 lg:px-8 py-10">
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 
       {/* ── Back ──────────────────────────────────────────────── */}
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm text-gray/55 hover:text-forest transition-colors font-sans mb-10"
+        className="inline-flex items-center gap-2 text-sm text-gray/55 hover:text-forest transition-colors font-sans mb-8 sm:mb-10 min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" />
         Dashboard
@@ -192,7 +201,6 @@ export default async function ProjectPage({
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div className="flex flex-col gap-2">
-          {/* Status badge */}
           <span
             className={cn(
               "self-start inline-flex items-center gap-1.5 text-xs font-sans font-medium",
@@ -203,7 +211,6 @@ export default async function ProjectPage({
             <span className={cn("w-1.5 h-1.5 rounded-full", statusCfg.dot)} />
             {statusCfg.label}
           </span>
-          {/* Project name */}
           <h1 className="font-headline text-4xl md:text-5xl text-forest leading-tight">
             {project.name}
           </h1>
@@ -214,7 +221,6 @@ export default async function ProjectPage({
           )}
         </div>
 
-        {/* Bearbeiten – placeholder */}
         <button
           type="button"
           disabled
@@ -232,18 +238,19 @@ export default async function ProjectPage({
 
       {/* ── Info chips ────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-2 mb-10">
-        {/* Room type */}
+        {/* Room count */}
         <div className="flex items-center gap-2 rounded-xl border border-sand/30 bg-white/60 px-3.5 py-2">
           <RoomIcon className="w-3.5 h-3.5 text-forest/50 shrink-0" strokeWidth={1.5} />
           <span className="text-xs font-sans font-medium text-forest/70">
-            {room?.name ?? roomLabel}
+            {rooms.length === 1
+              ? (primaryRoom?.name ?? roomLabel)
+              : `${rooms.length} Räume`}
           </span>
-          {room?.name && room.name !== roomLabel && (
+          {rooms.length === 1 && primaryRoom?.name && primaryRoom.name !== roomLabel && (
             <span className="text-xs text-gray/35 font-sans">· {roomLabel}</span>
           )}
         </div>
 
-        {/* Budget */}
         {project.budget != null && (
           <div className="flex items-center gap-2 rounded-xl border border-sand/30 bg-white/60 px-3.5 py-2">
             <Euro className="w-3.5 h-3.5 text-forest/50 shrink-0" strokeWidth={1.5} />
@@ -253,7 +260,6 @@ export default async function ProjectPage({
           </div>
         )}
 
-        {/* Deadline */}
         {deadline && (
           <div className="flex items-center gap-2 rounded-xl border border-sand/30 bg-white/60 px-3.5 py-2">
             <CalendarDays className="w-3.5 h-3.5 text-forest/50 shrink-0" strokeWidth={1.5} />
@@ -263,40 +269,62 @@ export default async function ProjectPage({
           </div>
         )}
 
-        {/* Created at */}
         <div className="flex items-center gap-2 rounded-xl border border-sand/30 bg-white/60 px-3.5 py-2">
           <Clock className="w-3.5 h-3.5 text-gray/35 shrink-0" strokeWidth={1.5} />
-          <span className="text-xs font-sans text-gray/45">
-            Erstellt {createdAt}
-          </span>
+          <span className="text-xs font-sans text-gray/45">Erstellt {createdAt}</span>
         </div>
       </div>
 
-      {/* ── Divider ───────────────────────────────────────────── */}
-      <div className="flex items-center gap-4 mb-8">
+      {/* ── Rooms section ─────────────────────────────────────── */}
+      <div className="flex items-center gap-4 mb-5">
+        <span className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
+          Räume in diesem Projekt
+        </span>
+        <div className="flex-1 h-px bg-sand/25" />
+      </div>
+
+      <div className="flex flex-col gap-2 mb-4">
+        {(rooms as RoomCardData[]).map((room) => (
+          <RoomCard
+            key={room.id}
+            room={room}
+            projectId={project.id}
+            canDelete={rooms.length > 1}
+          />
+        ))}
+      </div>
+
+      <Link
+        href={`/dashboard/projekte/${project.id}/raum/neu`}
+        className={cn(
+          "inline-flex items-center gap-2 h-10 px-4 rounded-xl mb-10",
+          "border border-dashed border-sand/50 bg-white/30 hover:bg-white/60",
+          "text-sm font-sans font-medium text-forest/55 hover:text-forest/80 transition-all"
+        )}
+      >
+        <Plus className="w-4 h-4" strokeWidth={1.5} />
+        Weiteren Raum hinzufügen
+      </Link>
+
+      {/* ── Module grid ───────────────────────────────────────── */}
+      <div className="flex items-center gap-4 mb-6">
         <span className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
           Deine Module
         </span>
         <div className="flex-1 h-px bg-sand/25" />
       </div>
 
-      {/* ── Module grid ───────────────────────────────────────── */}
       <div className="grid sm:grid-cols-2 gap-4">
 
         {/* ── Modul 1 – active ──────────────────────────────── */}
         <Link
-          href={
-            m1Completed
-              ? `/dashboard/projekte/${project.id}/modul-1?edit=true`
-              : `/dashboard/projekte/${project.id}/modul-1`
-          }
+          href={m1Href}
           className={cn(
             "group relative rounded-2xl border bg-white/60 p-6 transition-all",
             "hover:shadow-md hover:bg-white/80",
             MODULES[0].accent
           )}
         >
-          {/* Number + status */}
           <div className="flex items-start justify-between mb-4">
             <span className={cn("font-headline text-5xl leading-none", MODULES[0].numberColor)}>
               {MODULES[0].number}
@@ -317,7 +345,6 @@ export default async function ProjectPage({
             )}
           </div>
 
-          {/* Title */}
           <p className="text-xs text-gray/45 font-sans uppercase tracking-wider mb-1">
             {MODULES[0].subtitle}
           </p>
@@ -328,10 +355,11 @@ export default async function ProjectPage({
             {MODULES[0].description}
           </p>
 
-          {/* Progress */}
           <div className="flex flex-col gap-1.5 mb-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-sans text-gray/45">Fortschritt</span>
+              <span className="text-xs font-sans text-gray/45">
+                {rooms.length > 1 ? `Erster Raum · Fortschritt` : "Fortschritt"}
+              </span>
               <span className={cn(
                 "text-xs font-sans font-medium",
                 m1Completed ? "text-forest" : "text-gray/50"
@@ -354,7 +382,6 @@ export default async function ProjectPage({
             </div>
           </div>
 
-          {/* Topics */}
           <div className="flex flex-wrap gap-1.5 mb-5">
             {MODULES[0].topics.map((t) => (
               <span
@@ -366,7 +393,6 @@ export default async function ProjectPage({
             ))}
           </div>
 
-          {/* CTA */}
           <div className="flex items-center justify-end gap-1 text-sm font-sans font-medium text-forest/50 group-hover:text-forest transition-colors">
             {m1Completed ? "Bearbeiten" : m1Started ? "Fortsetzen" : "Starten"}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
@@ -382,7 +408,6 @@ export default async function ProjectPage({
               mod.accent
             )}
           >
-            {/* Number + coming soon badge */}
             <div className="flex items-start justify-between mb-4">
               <span className={cn("font-headline text-5xl leading-none", mod.numberColor)}>
                 {mod.number}
@@ -392,7 +417,6 @@ export default async function ProjectPage({
               </span>
             </div>
 
-            {/* Title */}
             <p className="text-xs text-gray/35 font-sans uppercase tracking-wider mb-1">
               {mod.subtitle}
             </p>
@@ -403,17 +427,13 @@ export default async function ProjectPage({
               {mod.description}
             </p>
 
-            {/* Lock state */}
             <div className="flex items-center gap-2 mb-4">
               <div className="w-7 h-7 rounded-lg bg-gray/8 border border-gray/15 flex items-center justify-center">
                 <Lock className="w-3.5 h-3.5 text-gray/35" strokeWidth={1.5} />
               </div>
-              <span className="text-xs font-sans text-gray/40">
-                Demnächst verfügbar
-              </span>
+              <span className="text-xs font-sans text-gray/40">Demnächst verfügbar</span>
             </div>
 
-            {/* Topics */}
             <div className="flex flex-wrap gap-1.5">
               {mod.topics.map((t) => (
                 <span
@@ -425,13 +445,11 @@ export default async function ProjectPage({
               ))}
             </div>
 
-            {/* Overlay to prevent interaction feel */}
             <div className="absolute inset-0 rounded-2xl cursor-default" />
           </div>
         ))}
       </div>
 
-      {/* ── Bottom spacer ─────────────────────────────────────── */}
       <div className="h-16" />
     </div>
   );

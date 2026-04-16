@@ -2,7 +2,13 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Pencil } from "lucide-react";
+import {
+  Pencil,
+  Home, Sofa, Moon, Monitor, Star, Droplets,
+  ChefHat, UtensilsCrossed, DoorOpen, Package,
+  Briefcase, Leaf, Sparkles, Camera, ChevronsUpDown,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { ProgressBar } from "./ProgressBar";
 import { StepNav } from "./StepNav";
 import { Step01 } from "./steps/Step01";
@@ -21,22 +27,53 @@ import { saveModule1Step } from "@/app/actions/module1";
 import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
 import type { Module1Data } from "@/lib/types/module1";
 
+// ── Room display config ────────────────────────────────────────────────────────
+
+const ROOM_LABELS: Record<string, string> = {
+  wohnzimmer: "Wohnzimmer", schlafzimmer: "Schlafzimmer",
+  arbeitszimmer: "Arbeitszimmer", kinderzimmer: "Kinderzimmer",
+  badezimmer: "Bad", kueche: "Küche", esszimmer: "Esszimmer",
+  flur: "Flur", keller: "Keller", buero: "Büro",
+  yogaraum: "Yogaraum", wellness: "Wellness",
+  studio: "Studio", sonstiges: "Sonstiges",
+};
+
+const ROOM_ICONS: Record<string, LucideIcon> = {
+  wohnzimmer: Sofa, schlafzimmer: Moon,
+  arbeitszimmer: Monitor, kinderzimmer: Star,
+  badezimmer: Droplets, kueche: ChefHat,
+  esszimmer: UtensilsCrossed, flur: DoorOpen,
+  keller: Package, buero: Briefcase,
+  yogaraum: Leaf, wellness: Sparkles,
+  studio: Camera, sonstiges: Home,
+};
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+type RoomSummary = { id: string; name: string; room_type: string };
+
 interface Props {
   moduleId: string;
   projectId: string;
   projectName: string;
+  roomId: string;
   roomName: string;
   roomType: string;
+  allRooms: RoomSummary[];
   initialData: Module1Data;
   editMode?: boolean;
 }
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 export function ModuleWizard({
   moduleId,
   projectId,
   projectName,
+  roomId,
   roomName,
   roomType,
+  allRooms,
   initialData,
   editMode = false,
 }: Props) {
@@ -59,7 +96,6 @@ export function ModuleWizard({
     setSaving(true);
 
     const stepPayload = buildStepPayload(step, data);
-    // Track furthest step reached (never go backwards in the DB counter)
     const payload = nextStep > step
       ? { ...stepPayload, current_step: Math.min(nextStep, TOTAL_STEPS) }
       : stepPayload;
@@ -90,10 +126,42 @@ export function ModuleWizard({
   }
 
   const currentConfig = STEP_CONFIG[step - 1];
+  const RoomIcon      = ROOM_ICONS[roomType] ?? Home;
+  const roomLabel     = ROOM_LABELS[roomType] ?? roomType;
 
   return (
-    // pb-24 on mobile reserves space above the fixed StepNav bar
     <div className="flex flex-col gap-6 sm:gap-8 pb-24 sm:pb-0">
+
+      {/* ── Room header ─────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-white/60 border border-sand/25">
+        <div className="flex items-center gap-2 min-w-0">
+          <RoomIcon className="w-3.5 h-3.5 text-forest/50 shrink-0" strokeWidth={1.5} />
+          <span className="text-sm font-sans font-medium text-forest/80 truncate">{roomName}</span>
+          <span className="text-xs text-gray/40 font-sans shrink-0">· {roomLabel}</span>
+        </div>
+
+        {allRooms.length > 1 && (
+          <div className="flex items-center gap-1 shrink-0">
+            <ChevronsUpDown className="w-3 h-3 text-sand" />
+            <select
+              value={roomId}
+              onChange={(e) =>
+                router.push(
+                  `/dashboard/projekte/${projectId}/raum/${e.target.value}/modul-1${editMode ? "?edit=true" : ""}`
+                )
+              }
+              className="text-xs font-sans text-forest/70 bg-transparent outline-none cursor-pointer border-b border-sand/35 py-0.5 max-w-[130px]"
+              aria-label="Raum wechseln"
+            >
+              {allRooms.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
 
       {/* Edit mode banner */}
       {editMode && (
@@ -128,6 +196,7 @@ export function ModuleWizard({
           data={data}
           projectId={projectId}
           projectName={projectName}
+          roomId={roomId}
           roomName={roomName}
           roomType={roomType}
           editMode={editMode}
@@ -154,6 +223,7 @@ function StepContent({
   data,
   projectId,
   projectName,
+  roomId,
   roomName,
   roomType,
   editMode,
@@ -163,6 +233,7 @@ function StepContent({
   data: Module1Data;
   projectId: string;
   projectName: string;
+  roomId: string;
   roomName: string;
   roomType: string;
   editMode: boolean;
@@ -217,6 +288,7 @@ function StepContent({
           data={data}
           projectId={projectId}
           projectName={projectName}
+          roomId={roomId}
           roomType={roomType}
           roomName={roomName}
           editMode={editMode}
@@ -229,7 +301,7 @@ function StepContent({
   }
 }
 
-// ── Payload builders – only send fields for the active step ──────────────────
+// ── Payload builders ─────────────────────────────────────────────────────────
 function buildStepPayload(step: number, data: Module1Data) {
   switch (step) {
     case 1:
@@ -247,13 +319,11 @@ function buildStepPayload(step: number, data: Module1Data) {
         change_reason:  data.change_reason,
       };
     case 3:
-      return {}; // info-only step
+      return {};
     case 4:
-      return {
-        main_effect: data.main_effect,
-      };
+      return { main_effect: data.main_effect };
     case 5:
-      return {}; // info-only step
+      return {};
     case 6:
       return {
         primary_colors:   data.primary_colors,
@@ -262,23 +332,21 @@ function buildStepPayload(step: number, data: Module1Data) {
         materials:        data.materials,
       };
     case 7:
-      return {}; // info-only step
+      return {};
     case 8:
       return {
         light_mood:       data.light_mood,
         special_elements: data.special_elements,
       };
     case 9:
-      return {}; // info-only step
+      return {};
     case 10:
       return {
         moodboard_prompt: data.moodboard_prompt,
         moodboard_urls:   data.moodboard_urls,
       };
     case 11:
-      return {
-        status: "completed",
-      };
+      return { status: "completed" };
     default:
       return {};
   }

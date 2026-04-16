@@ -47,14 +47,17 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
 
   const statusCfg = STATUS_CONFIG[project.status] ?? STATUS_CONFIG.entwurf;
 
-  // Module 1 progress
-  const m1 = project.rooms?.[0]?.module1_analysis?.[0];
+  // Module 1 progress (aggregate across all rooms)
+  const rooms       = project.rooms ?? [];
+  const roomCount   = rooms.length;
+  const m1 = rooms[0]?.module1_analysis?.[0];
   const m1Completed = m1?.status === "completed";
   const m1Step      = m1Completed ? TOTAL_STEPS : (m1?.current_step ?? 0);
   const m1Started   = m1Step > 0;
   const m1Pct       = Math.min(100, Math.round((m1Step / TOTAL_STEPS) * 100));
 
-  const modul1Href = `/dashboard/projekte/${project.id}/modul-1`;
+  // Link to project overview (not directly to modul-1)
+  const projectHref = `/dashboard/projekte/${project.id}`;
 
   const createdAt = new Date(project.created_at).toLocaleDateString("de-DE", {
     day: "2-digit",
@@ -157,17 +160,22 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
       </div>
 
       {/* Clickable main area */}
-      <Link href={modul1Href} className="block px-5 pt-3 pb-5">
+      <Link href={projectHref} className="block px-5 pt-3 pb-5">
 
         {/* Project name */}
         <h3 className="font-headline text-xl text-ink leading-snug mb-0.5">
           {project.name}
         </h3>
-        {project.description && (
-          <p className="text-xs text-gray/55 font-sans line-clamp-1 mb-3">
-            {project.description}
-          </p>
-        )}
+        <div className="flex items-center gap-2 mb-2">
+          {project.description && (
+            <p className="text-xs text-gray/55 font-sans line-clamp-1 flex-1">
+              {project.description}
+            </p>
+          )}
+          <span className="text-[11px] font-sans text-forest/50 bg-forest/5 border border-forest/10 px-2 py-0.5 rounded-full shrink-0">
+            {roomCount === 1 ? "1 Raum" : `${roomCount} Räume`}
+          </span>
+        </div>
 
         {/* Modul 1 progress */}
         <div className="mt-3 flex flex-col gap-1.5">
@@ -206,7 +214,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
             "flex items-center gap-1 text-xs font-sans font-medium transition-all",
             "text-forest/30 group-hover:text-forest/60 group-hover:translate-x-0.5"
           )}>
-            Öffnen
+            Ansehen
             <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
           </span>
         </div>

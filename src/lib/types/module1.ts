@@ -81,3 +81,35 @@ export const STEP_CONFIG = [
 ] as const;
 
 export const TOTAL_STEPS = STEP_CONFIG.length;
+
+export const EMPTY_MODULE1_DATA: Omit<Module1Data, "id" | "room_id"> = {
+  wishes:              ["", "", ""],
+  support_friends:     false,
+  support_external:    false,
+  support_person:      "",
+  current_issues:      "",
+  more_of:             "",
+  less_of:             "",
+  change_reason:       "",
+  main_effect:         null,
+  primary_colors:      ["", ""],
+  secondary_colors:    ["", ""],
+  accent_color:        "",
+  materials:           [],
+  light_mood:          "",
+  special_elements:    "",
+  moodboard_prompt:    "",
+  moodboard_urls:      [],
+  status:              "in_progress",
+  current_step:        1,
+  desired_effects:     [],
+  current_situation:   "",
+  color_preferences:   [],
+  color_avoid:         [],
+  color_notes:         "",
+  material_preferences:[],
+  material_avoid:      [],
+  material_notes:      "",
+  moodboard_notes:     "",
+  notes:               "",
+};

@@ -21,6 +21,7 @@ interface Props {
   data: Module1Data;
   projectId: string;
   projectName: string;
+  roomId: string;
   roomType: string;
   roomName: string;
   editMode?: boolean;
@@ -74,7 +75,7 @@ const DOTS = [
   { left: "4%",  top: "65%", size: "w-2 h-2",   color: "bg-sand/50",       delay: "1.5s"  },
 ];
 
-export function Step11({ data, projectId, projectName, roomType, roomName, editMode }: Props) {
+export function Step11({ data, projectId, projectName, roomId, roomType, roomName, editMode }: Props) {
   const [mounted, setMounted]       = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError]     = useState<string | null>(null);
@@ -88,7 +89,7 @@ export function Step11({ data, projectId, projectName, roomType, roomName, editM
     setPdfLoading(true);
     setPdfError(null);
     try {
-      const res = await fetch(`/api/export/raumidee/${projectId}`);
+      const res = await fetch(`/api/export/raumidee/${projectId}/${roomId}`);
       if (!res.ok) throw new Error("Export fehlgeschlagen");
       const blob = await res.blob();
       const url  = URL.createObjectURL(blob);
