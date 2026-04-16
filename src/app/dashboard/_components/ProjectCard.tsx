@@ -31,10 +31,10 @@ export type ProjectCardProps = {
 };
 
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; dot: string; badge: string }> = {
-  entwurf:       { label: "Entwurf",       dot: "bg-sand",       badge: "bg-sand/25 text-[#7a5520] border-sand/40" },
-  aktiv:         { label: "Aktiv",         dot: "bg-mint",       badge: "bg-mint/20 text-forest border-mint/30" },
-  abgeschlossen: { label: "Abgeschlossen", dot: "bg-forest/50",  badge: "bg-forest/8 text-forest/60 border-forest/15" },
-  archiviert:    { label: "Archiviert",    dot: "bg-gray/30",    badge: "bg-gray/10 text-gray/50 border-gray/20" },
+  entwurf:       { label: "Entwurf",       dot: "bg-amber-400",  badge: "bg-amber-50 text-amber-700 border-amber-200"   },
+  aktiv:         { label: "Aktiv",         dot: "bg-forest",     badge: "bg-forest/8 text-forest border-forest/20"      },
+  abgeschlossen: { label: "Abgeschlossen", dot: "bg-gray-400",   badge: "bg-gray-100 text-gray-600 border-gray-200"     },
+  archiviert:    { label: "Archiviert",    dot: "bg-gray-300",   badge: "bg-gray-50 text-gray-400 border-gray-200"      },
 };
 
 const TOTAL_STEPS = 11;
@@ -47,16 +47,15 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
 
   const statusCfg = STATUS_CONFIG[project.status] ?? STATUS_CONFIG.entwurf;
 
-  // Module 1 progress (aggregate across all rooms)
-  const rooms       = project.rooms ?? [];
-  const roomCount   = rooms.length;
+  // Progress from first room
+  const rooms     = project.rooms ?? [];
+  const roomCount = rooms.length;
   const m1 = rooms[0]?.module1_analysis?.[0];
   const m1Completed = m1?.status === "completed";
   const m1Step      = m1Completed ? TOTAL_STEPS : (m1?.current_step ?? 0);
   const m1Started   = m1Step > 0;
   const m1Pct       = Math.min(100, Math.round((m1Step / TOTAL_STEPS) * 100));
 
-  // Link to project overview (not directly to modul-1)
   const projectHref = `/dashboard/projekte/${project.id}`;
 
   const createdAt = new Date(project.created_at).toLocaleDateString("de-DE", {
@@ -78,37 +77,37 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
     });
   }
 
-  // ── Delete confirmation overlay ─────────────────────────
+  // ── Delete confirmation ──────────────────────────────────
   if (confirmDelete) {
     return (
-      <div className="rounded-2xl bg-white border-2 border-terracotta/25 shadow-warm-sm p-6 flex flex-col gap-4">
+      <div className="rounded-xl bg-white border-2 border-red-200 p-5 flex flex-col gap-4">
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-xl bg-terracotta/10 border border-terracotta/20 flex items-center justify-center shrink-0 mt-0.5">
-            <AlertTriangle className="w-4 h-4 text-terracotta" strokeWidth={1.5} />
+          <div className="w-8 h-8 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center shrink-0 mt-0.5">
+            <AlertTriangle className="w-4 h-4 text-red-500" strokeWidth={1.5} />
           </div>
           <div>
-            <p className="font-sans text-sm font-semibold text-forest mb-1">
+            <p className="font-sans text-sm font-semibold text-gray-900 mb-1">
               Projekt löschen?
             </p>
-            <p className="font-sans text-xs text-gray/60 leading-relaxed">
-              <span className="font-medium text-forest/80">&ldquo;{project.name}&rdquo;</span> wird
-              dauerhaft gelöscht. Alle Daten aus Modul 1 gehen verloren.
+            <p className="font-sans text-xs text-gray-500 leading-relaxed">
+              <span className="font-medium text-gray-700">&ldquo;{project.name}&rdquo;</span> wird
+              dauerhaft gelöscht. Alle Modul-1-Daten gehen verloren.
             </p>
           </div>
         </div>
 
         {deleteError && (
-          <p className="text-xs text-terracotta font-sans bg-terracotta/5 rounded-lg px-3 py-2">
+          <p className="text-xs text-red-600 font-sans bg-red-50 rounded-lg px-3 py-2">
             {deleteError}
           </p>
         )}
 
-        <div className="flex gap-2 mt-1">
+        <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setConfirmDelete(false)}
             disabled={isPending}
-            className="flex-1 h-9 rounded-lg border border-sand/40 bg-cream text-sm font-sans font-medium text-forest/70 hover:bg-sand/20 transition-colors disabled:opacity-50"
+            className="flex-1 h-9 rounded-lg border border-gray-200 bg-white text-sm font-sans font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
             Abbrechen
           </button>
@@ -116,29 +115,29 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
             type="button"
             onClick={handleDelete}
             disabled={isPending}
-            className="flex-1 h-9 rounded-lg bg-terracotta text-sm font-sans font-medium text-white hover:bg-terracotta/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-1.5"
+            className="flex-1 h-9 rounded-lg bg-red-500 text-sm font-sans font-medium text-white hover:bg-red-600 transition-colors disabled:opacity-60 flex items-center justify-center gap-1.5"
           >
             {isPending ? (
               <span className="w-3.5 h-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" />
             ) : (
               <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
             )}
-            {isPending ? "Löschen …" : "Jetzt löschen"}
+            {isPending ? "Löschen …" : "Löschen"}
           </button>
         </div>
       </div>
     );
   }
 
-  // ── Normal card ─────────────────────────────────────────
+  // ── Normal card ──────────────────────────────────────────
   return (
-    <div className="group relative rounded-2xl bg-white border border-sand/20 shadow-warm-sm hover:shadow-warm-md hover:scale-[1.015] transition-all duration-200 overflow-hidden">
+    <div className="group relative rounded-xl bg-white border border-gray-200 hover:border-gray-300 transition-colors duration-150 overflow-hidden">
 
-      {/* Top bar: status badge + delete */}
-      <div className="flex items-center justify-between px-5 pt-4 pb-0">
+      {/* Status + delete */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-0">
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 text-xs font-sans font-medium px-2.5 py-1 rounded-full border",
+            "inline-flex items-center gap-1.5 text-[11px] font-sans font-medium px-2 py-0.5 rounded-full border",
             statusCfg.badge
           )}
         >
@@ -151,7 +150,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
           onClick={() => setConfirmDelete(true)}
           className={cn(
             "w-7 h-7 rounded-lg flex items-center justify-center transition-all",
-            "text-gray/30 hover:text-terracotta hover:bg-terracotta/8",
+            "text-gray-300 hover:text-red-400 hover:bg-red-50",
             "opacity-0 group-hover:opacity-100"
           )}
         >
@@ -159,44 +158,44 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
         </button>
       </div>
 
-      {/* Clickable main area */}
-      <Link href={projectHref} className="block px-5 pt-3 pb-5">
+      {/* Main content */}
+      <Link href={projectHref} className="block px-4 pt-3 pb-4">
 
-        {/* Project name */}
-        <h3 className="font-headline text-xl text-ink leading-snug mb-0.5">
-          {project.name}
-        </h3>
-        <div className="flex items-center gap-2 mb-2">
-          {project.description && (
-            <p className="text-xs text-gray/55 font-sans line-clamp-1 flex-1">
-              {project.description}
-            </p>
-          )}
-          <span className="text-[11px] font-sans text-forest/50 bg-forest/5 border border-forest/10 px-2 py-0.5 rounded-full shrink-0">
+        {/* Name + room count */}
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="font-headline text-lg text-gray-900 leading-snug">
+            {project.name}
+          </h3>
+          <span className="shrink-0 text-[10px] font-sans text-gray-400 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full mt-0.5">
             {roomCount === 1 ? "1 Raum" : `${roomCount} Räume`}
           </span>
         </div>
 
-        {/* Modul 1 progress */}
+        {project.description && (
+          <p className="text-xs text-gray-500 font-sans line-clamp-1 mb-3">
+            {project.description}
+          </p>
+        )}
+
+        {/* Module 1 progress */}
         <div className="mt-3 flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-sans font-medium text-forest/60">Modul 1</span>
+            <span className="text-xs font-sans font-medium text-gray-500">Modul 1</span>
             {m1Completed ? (
               <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest">
                 <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
-                Abgeschlossen
+                Fertig
               </span>
             ) : m1Started ? (
-              <span className="text-[11px] font-sans text-gray/50">
+              <span className="text-[11px] font-sans text-gray-400">
                 Schritt {m1Step} / {TOTAL_STEPS}
               </span>
             ) : (
-              <span className="text-[11px] font-sans text-gray/35 italic">Noch nicht gestartet</span>
+              <span className="text-[11px] font-sans text-gray-400 italic">Nicht gestartet</span>
             )}
           </div>
 
-          {/* Progress track */}
-          <div className="h-1 rounded-full bg-sand/25 overflow-hidden">
+          <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
             <div
               className={cn(
                 "h-full rounded-full transition-all duration-500",
@@ -207,15 +206,12 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
           </div>
         </div>
 
-        {/* Footer: date + arrow */}
+        {/* Footer */}
         <div className="flex items-center justify-between mt-4">
-          <span className="text-[11px] text-gray/40 font-sans">{createdAt}</span>
-          <span className={cn(
-            "flex items-center gap-1 text-xs font-sans font-medium transition-all",
-            "text-forest/30 group-hover:text-forest/60 group-hover:translate-x-0.5"
-          )}>
+          <span className="text-[11px] text-gray-400 font-sans">{createdAt}</span>
+          <span className="flex items-center gap-1 text-xs font-sans font-medium text-gray-400 group-hover:text-forest transition-colors">
             Ansehen
-            <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
           </span>
         </div>
       </Link>

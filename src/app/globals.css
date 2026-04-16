@@ -3,31 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --background: #f6ede2;
-  --foreground: #2d2d2d;
+  --background: #f9fafb;
+  --foreground: #111827;
 
   /* CI palette */
-  --color-mint: #94c1a4;
-  --color-forest: #445c49;
-  --color-terracotta: #823509;
-  --color-sand: #cba178;
-  --color-cream: #f6ede2;
-  --color-gray: #737373;
-  --color-ink: #2d2d2d;
+  --color-mint:      #94c1a4;
+  --color-forest:    #445c49;
+  --color-terracotta:#823509;
+  --color-sand:      #cba178;
+  --color-cream:     #f6ede2;
+  --color-gray:      #737373;
+  --color-ink:       #111827;
 }
 
 @layer base {
   body {
     @apply font-sans antialiased;
-    background: linear-gradient(160deg, #f6ede2 0%, #f0e6d8 100%);
-    background-attachment: fixed;
+    background-color: #f9fafb;
     min-height: 100vh;
-    color: #525252;
+    color: #374151;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
-    color: #2d2d2d;
+    color: #111827;
   }
 }
 
