@@ -48,8 +48,15 @@ export async function createProject(
     .single();
 
   if (projectError || !project) {
-    console.error("Project creation error:", projectError);
-    return { error: "Projekt konnte nicht gespeichert werden. Bitte erneut versuchen." };
+    console.error("Project creation error:", JSON.stringify(projectError, null, 2));
+    if (projectError?.code === "42501") {
+      return { error: "Keine Berechtigung. Bitte melde dich ab und wieder an." };
+    }
+    if (projectError?.code === "23505") {
+      return { error: "Ein Projekt mit diesem Namen existiert bereits." };
+    }
+    const detail = projectError?.message ? ` (${projectError.message})` : "";
+    return { error: `Projekt konnte nicht gespeichert werden.${detail} Bitte erneut versuchen.` };
   }
 
   // ── Create room (trigger auto-creates module1_analysis) ────
@@ -65,8 +72,9 @@ export async function createProject(
 
   if (roomError || !room) {
     await supabase.from("projects").delete().eq("id", project.id);
-    console.error("Room creation error:", roomError);
-    return { error: "Raum konnte nicht erstellt werden. Bitte erneut versuchen." };
+    console.error("Room creation error:", JSON.stringify(roomError, null, 2));
+    const detail = roomError?.message ? ` (${roomError.message})` : "";
+    return { error: `Raum konnte nicht erstellt werden.${detail} Bitte erneut versuchen.` };
   }
 
   redirect(`/dashboard/projekte/${project.id}/raum/${room.id}/modul-1`);

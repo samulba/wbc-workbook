@@ -24,10 +24,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             id={id}
             className={cn(
               // h-12 = 48px touch target; text-base = 16px prevents iOS zoom
-              "h-12 w-full appearance-none rounded-lg border border-sand/60 bg-cream px-3 pr-9 text-base text-forest",
+              "h-12 w-full appearance-none rounded-lg border border-sand/60 bg-cream px-3 pr-9 text-base",
               "focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent",
               "disabled:cursor-not-allowed disabled:opacity-50",
-              !props.value && "text-gray/50",
+              props.value ? "text-gray-900" : "text-gray-400",
               error && "border-terracotta focus:ring-terracotta",
               className
             )}
@@ -39,7 +39,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             )}
             {options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="text-gray-900 bg-white">
                 {opt.label}
               </option>
             ))}

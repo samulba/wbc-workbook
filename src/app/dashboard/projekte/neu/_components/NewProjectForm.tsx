@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { RadioGroup } from "@/components/ui/RadioGroup";
@@ -33,6 +33,19 @@ const ROOM_STATE_OPTIONS = [
   },
 ];
 
+/** Format a raw integer as German thousand-separated string: 10000 → "10.000" */
+function formatBudget(raw: number): string {
+  return raw.toLocaleString("de-DE");
+}
+
+/** Parse German-formatted budget string to integer, returns NaN if invalid */
+function parseBudget(input: string): number {
+  const cleaned = input.replace(/\./g, "").replace(/,/g, "").trim();
+  if (!cleaned) return NaN;
+  const n = parseInt(cleaned, 10);
+  return isNaN(n) || n < 0 || n > 1_000_000 ? NaN : n;
+}
+
 const initialState: CreateProjectResult | null = null;
 
 export function NewProjectForm() {
@@ -41,15 +54,46 @@ export function NewProjectForm() {
   const [roomType, setRoomType] = useState("");
   const [roomState, setRoomState] = useState("new");
 
-  // Track pending state via transitions
+  // Budget: display string (formatted) + raw number for hidden input
+  const [budgetDisplay, setBudgetDisplay] = useState("");
+  const [budgetRaw, setBudgetRaw] = useState("");
+  const [budgetError, setBudgetError] = useState("");
+
   const selectedRoom = ROOM_OPTIONS.find((o) => o.value === roomType);
 
-  // Reset pending if error comes back
+  // Reset pending whenever state changes (error or redirect won't fire this)
   useEffect(() => {
-    if (state && "error" in state) {
-      setPending(false);
-    }
+    if (state) setPending(false);
   }, [state]);
+
+  function handleBudgetChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    // Allow only digits and dots (German thousand separator typed by user)
+    const digitsOnly = value.replace(/\./g, "").replace(/[^0-9]/g, "");
+    setBudgetError("");
+
+    if (digitsOnly === "") {
+      setBudgetDisplay("");
+      setBudgetRaw("");
+      return;
+    }
+
+    const n = parseInt(digitsOnly, 10);
+    if (n > 1_000_000) {
+      setBudgetError("Maximal 1.000.000 €");
+      return;
+    }
+
+    setBudgetRaw(String(n));
+    // Format live as user types
+    setBudgetDisplay(formatBudget(n));
+  }
+
+  function handleBudgetBlur() {
+    if (!budgetRaw) return;
+    const n = parseInt(budgetRaw, 10);
+    if (!isNaN(n)) setBudgetDisplay(formatBudget(n));
+  }
 
   return (
     <form
@@ -111,23 +155,37 @@ export function NewProjectForm() {
       {/* ── Budget ───────────────────────────────────────────── */}
       <fieldset className="flex flex-col gap-1.5">
         <div className="relative">
-          <Input
-            id="budget"
-            name="budget"
-            type="number"
-            label="Budget"
+          {/* Visible formatted input */}
+          <input
+            id="budget-display"
+            type="text"
+            inputMode="numeric"
+            value={budgetDisplay}
+            onChange={handleBudgetChange}
+            onBlur={handleBudgetBlur}
             placeholder="5.000"
-            min="0"
-            step="100"
-            className="pr-8"
+            aria-label="Budget"
+            className="h-12 w-full rounded-lg border border-sand/60 bg-cream px-3 pr-8 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent"
           />
-          <span className="absolute right-3 bottom-0 h-10 flex items-center text-sm text-gray/50 pointer-events-none">
+          {/* Hidden input carries the raw value to the server action */}
+          <input type="hidden" name="budget" value={budgetRaw} />
+          <label
+            htmlFor="budget-display"
+            className="absolute -top-6 left-0 text-sm font-medium text-forest"
+          >
+            Budget
+          </label>
+          <span className="absolute right-3 bottom-0 h-12 flex items-center text-sm text-gray/50 pointer-events-none">
             €
           </span>
         </div>
-        <p className="text-xs text-gray/50 font-sans">
-          Dein ungefähres Gesamtbudget für dieses Projekt.
-        </p>
+        {budgetError ? (
+          <p className="text-xs text-terracotta font-sans">{budgetError}</p>
+        ) : (
+          <p className="text-xs text-gray/50 font-sans">
+            Dein ungefähres Gesamtbudget (bis 1.000.000 €).
+          </p>
+        )}
       </fieldset>
 
       {/* ── Deadline ─────────────────────────────────────────── */}
@@ -150,7 +208,8 @@ export function NewProjectForm() {
       {/* ── Error message ────────────────────────────────────── */}
       {state && "error" in state && (
         <div className="rounded-lg bg-terracotta/10 border border-terracotta/20 px-4 py-3">
-          <p className="text-sm text-terracotta">{state.error}</p>
+          <p className="text-sm font-semibold text-terracotta mb-0.5">Fehler beim Speichern</p>
+          <p className="text-sm text-terracotta/80">{state.error}</p>
         </div>
       )}
 
@@ -160,9 +219,10 @@ export function NewProjectForm() {
           type="submit"
           size="lg"
           loading={pending}
+          disabled={pending || !!budgetError}
           className="w-full"
         >
-          Projekt erstellen & Analyse starten
+          {pending ? "Wird gespeichert …" : "Projekt erstellen & Analyse starten"}
         </Button>
       </div>
     </form>
