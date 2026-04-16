@@ -131,7 +131,7 @@ export function ProjectCard({ project }: { project: ProjectCardProps }) {
 
   // ── Normal card ──────────────────────────────────────────
   return (
-    <div className="group relative rounded-xl bg-white border border-[#e8e5e0] hover:border-[#d4cfc9] hover:shadow-warm-sm transition-all duration-150 overflow-hidden">
+    <div className="group relative rounded-xl bg-white border border-[var(--border-page)] hover:border-[#d4cfc9] dark:hover:border-[#444] hover:shadow-warm-sm transition-all duration-150 overflow-hidden">
 
       {/* Status + delete */}
       <div className="flex items-center justify-between px-4 pt-4 pb-0">

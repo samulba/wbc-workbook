@@ -134,7 +134,7 @@ function Modul1Modal({
                         key={project.id}
                         href={`/dashboard/projekte/${project.id}/modul-1`}
                         onClick={onClose}
-                        className="group flex items-center gap-3 p-3 rounded-xl border border-[#e8e5e0] hover:border-forest/30 hover:bg-forest/[0.02] transition-all duration-150"
+                        className="group flex items-center gap-3 p-3 rounded-xl border border-[var(--border-page)] hover:border-forest/30 hover:bg-forest/[0.02] transition-all duration-150"
                       >
                         {/* Room icon */}
                         <div className="w-9 h-9 rounded-lg bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">

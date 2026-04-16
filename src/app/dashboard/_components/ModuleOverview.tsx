@@ -133,7 +133,7 @@ export function ModuleOverview({ projects }: Props) {
               <Modul1CardButton
                 key={mod.number}
                 projects={projects}
-                cardClassName="group relative rounded-xl border bg-white p-5 text-left transition-all duration-200 border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block w-full"
+                cardClassName="group relative rounded-xl border bg-white p-5 text-left transition-all duration-200 border-[var(--border-page)] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block w-full"
               >
                 {inner}
               </Modul1CardButton>
@@ -143,7 +143,7 @@ export function ModuleOverview({ projects }: Props) {
           return (
             <div
               key={mod.number}
-              className="group relative rounded-xl border bg-white p-5 overflow-hidden border-[#e8e5e0] opacity-55"
+              className="group relative rounded-xl border bg-white p-5 overflow-hidden border-[var(--border-page)] opacity-55"
               title="Demnächst verfügbar"
             >
               {inner}

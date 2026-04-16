@@ -38,7 +38,7 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
       {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="relative pt-10 sm:pt-14 pb-10 sm:pb-12 border-b border-[#e8e5e0] overflow-hidden">
+      <section className="relative pt-10 sm:pt-14 pb-10 sm:pb-12 border-b border-[var(--border-page)] overflow-hidden">
         {/* Subtle warm gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-cream/25 via-transparent to-mint/5 pointer-events-none" />
         {/* Subtle deco bars */}
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
       </section>
 
       {/* ── Projects ───────────────────────────────────────────── */}
-      <section className="py-8 sm:py-10 border-b border-[#e8e5e0]">
+      <section className="py-8 sm:py-10 border-b border-[var(--border-page)]">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="font-headline text-xl sm:text-2xl text-gray-900">

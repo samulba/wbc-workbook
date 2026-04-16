@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     .eq("user_id", user.id);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--bg-page)]">
       <DashboardHeader
         email={user.email!}
         favoriteCount={favoriteCount ?? 0}

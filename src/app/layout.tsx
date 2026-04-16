@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Syne } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const montserrat = Montserrat({
   subsets:  ["latin"],
@@ -35,12 +36,33 @@ export const metadata: Metadata = {
   },
 };
 
+// Inline script runs synchronously before paint — prevents flash of wrong theme
+const themeScript = `
+try {
+  var t = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (t === 'dark' || (!t && prefersDark)) {
+    document.documentElement.classList.add('dark');
+  }
+} catch(e) {}
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="de" className={`${montserrat.variable} ${syne.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="de"
+      className={`${montserrat.variable} ${syne.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Anti-FOUC: apply dark class before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
