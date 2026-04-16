@@ -53,14 +53,29 @@ export default async function RaumModul1Page({
   const room     = allRooms.find((r) => r.id === params.roomId);
   if (!room) notFound();
 
-  const module1Raw = room.module1_analysis?.[0];
-  if (!module1Raw) notFound();
+  // Supabase returns single object (not array) when FK has UNIQUE constraint
+  const module1Raw: Module1Data | null = Array.isArray(room.module1_analysis)
+    ? (room.module1_analysis[0] ?? null)
+    : (room.module1_analysis as Module1Data | null);
+
+  // Fallback: trigger might not have fired — create the record on the fly
+  let m1Data = module1Raw;
+  if (!m1Data) {
+    const { data: newM1 } = await supabase
+      .from("module1_analysis")
+      .insert({ room_id: room.id })
+      .select()
+      .single();
+    m1Data = newM1 as Module1Data | null;
+  }
+
+  if (!m1Data) notFound();
 
   const initialData: Module1Data = {
     ...EMPTY_MODULE1_DATA,
-    ...module1Raw,
-    wishes: (module1Raw.wishes?.length === 3
-      ? module1Raw.wishes
+    ...m1Data,
+    wishes: (m1Data!.wishes?.length === 3
+      ? m1Data!.wishes
       : ["", "", ""]
     ) as [string, string, string],
   } as Module1Data;
