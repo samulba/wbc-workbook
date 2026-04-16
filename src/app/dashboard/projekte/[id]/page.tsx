@@ -92,7 +92,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
       id, name, description, status, budget, deadline, created_at,
       rooms (
         id, name, room_type, before_image_url, after_image_url,
-        share_token, is_shared, ai_analysis,
+        share_token, is_shared, ai_analysis, rendered_images,
         module1_analysis ( status, current_step )
       )
     `)
@@ -107,6 +107,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     before_image_url: string | null; after_image_url: string | null;
     share_token: string | null; is_shared: boolean;
     ai_analysis: string | null;
+    rendered_images: string[] | null;
     module1_analysis: { status: string | null; current_step: number | null }[] | null;
   };
 

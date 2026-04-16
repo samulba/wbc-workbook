@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { deleteRoom, updateRoomPhoto } from "@/app/actions/projects";
 import {
   CheckCircle2, ArrowRight, Trash2, AlertTriangle,
-  Sparkles, ImagePlus, X, SplitSquareHorizontal, Share2, BrainCircuit,
+  Sparkles, ImagePlus, X, SplitSquareHorizontal, Share2, BrainCircuit, Wand2,
 } from "lucide-react";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
 import { CircleProgress } from "@/components/CircleProgress";
@@ -30,6 +30,7 @@ export type RoomCardData = {
   share_token: string | null;
   is_shared: boolean;
   ai_analysis: string | null;
+  rendered_images: string[] | null;
   module1_analysis: { status: string | null; current_step: number | null }[] | null;
 };
 
@@ -190,6 +191,20 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
         "absolute top-3 right-3 flex items-center gap-1 z-10 transition-opacity",
         "opacity-0 group-hover:opacity-100"
       )}>
+        {m1Step >= 6 && (
+          <Link
+            href={`/dashboard/projekte/${projectId}/raum/${room.id}/visualisierung`}
+            title="Raum visualisieren"
+            className={cn(
+              "w-7 h-7 rounded-lg flex items-center justify-center transition-all",
+              (room.rendered_images?.length ?? 0) > 0
+                ? "text-forest bg-forest/8 hover:bg-forest/15"
+                : "text-gray-300 hover:text-forest hover:bg-forest/8"
+            )}
+          >
+            <Wand2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+          </Link>
+        )}
         <Link
           href={`/dashboard/projekte/${projectId}/raum/${room.id}/analyse`}
           title="KI-Raumanalyse"
@@ -303,6 +318,31 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
           <span className="text-[11px] font-sans text-gray-400 group-hover/ki:text-forest/60 transition-colors">KI-Raumanalyse starten</span>
           <ArrowRight className="w-3 h-3 text-gray-300 group-hover/ki:text-forest/40 ml-auto transition-colors" strokeWidth={1.5} />
         </Link>
+      )}
+
+      {/* ── Visualisierung strip ─────────────────────────────── */}
+      {m1Step >= 6 && (
+        (room.rendered_images?.length ?? 0) > 0 ? (
+          <Link
+            href={`/dashboard/projekte/${projectId}/raum/${room.id}/visualisierung`}
+            className="flex items-center gap-2 px-4 py-2 border-t border-gray-100 bg-forest/[0.02] hover:bg-forest/5 transition-colors"
+          >
+            <Wand2 className="w-3 h-3 text-forest/50 shrink-0" strokeWidth={1.5} />
+            <span className="text-[11px] font-sans text-forest/60 font-medium">
+              {room.rendered_images!.length} {room.rendered_images!.length === 1 ? "Visualisierung" : "Visualisierungen"} vorhanden · ansehen
+            </span>
+            <ArrowRight className="w-3 h-3 text-forest/30 ml-auto" strokeWidth={1.5} />
+          </Link>
+        ) : (
+          <Link
+            href={`/dashboard/projekte/${projectId}/raum/${room.id}/visualisierung`}
+            className="flex items-center gap-2 px-4 py-2 border-t border-gray-100 hover:bg-gray-50 transition-colors group/vis"
+          >
+            <Wand2 className="w-3 h-3 text-gray-300 group-hover/vis:text-forest/50 shrink-0 transition-colors" strokeWidth={1.5} />
+            <span className="text-[11px] font-sans text-gray-400 group-hover/vis:text-forest/60 transition-colors">Raum visualisieren</span>
+            <ArrowRight className="w-3 h-3 text-gray-300 group-hover/vis:text-forest/40 ml-auto transition-colors" strokeWidth={1.5} />
+          </Link>
+        )
       )}
 
       {/* ── Photo strip ─────────────────────────────────────── */}

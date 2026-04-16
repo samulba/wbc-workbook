@@ -21,6 +21,7 @@ import {
   Share2,
   PhoneCall,
   PenLine,
+  Wand2,
 } from "lucide-react";
 import Link from "next/link";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
@@ -530,6 +531,19 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
             </>
           )}
         </button>
+
+        {/* Visualisierung CTA */}
+        <Link
+          href={`/dashboard/projekte/${projectId}/raum/${roomId}/visualisierung`}
+          className={cn(
+            "w-full flex items-center justify-center gap-2 rounded-xl border-2 px-5 py-3.5",
+            "text-sm font-sans font-medium transition-all",
+            "border-forest bg-forest text-white hover:bg-forest/90"
+          )}
+        >
+          <Wand2 className="w-4 h-4" strokeWidth={1.5} />
+          Sieh dein Konzept in Aktion
+        </Link>
 
         {/* Share button */}
         <button
