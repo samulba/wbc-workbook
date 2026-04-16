@@ -10,8 +10,9 @@ import {
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
   Briefcase, Leaf, Sparkles, Camera,
-  ImagePlus, X, SplitSquareHorizontal,
+  ImagePlus, X, SplitSquareHorizontal, Share2,
 } from "lucide-react";
+import { ShareModal } from "@/app/dashboard/_components/ShareModal";
 import type { LucideIcon } from "lucide-react";
 
 const ROOM_LABELS: Record<string, string> = {
@@ -39,6 +40,8 @@ export type RoomCardData = {
   room_type: string;
   before_image_url: string | null;
   after_image_url: string | null;
+  share_token: string | null;
+  is_shared: boolean;
   module1_analysis: { status: string | null; current_step: number | null }[] | null;
 };
 
@@ -55,6 +58,9 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
   const [isPending, startTransition] = useTransition();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteError, setDeleteError]     = useState<string | null>(null);
+
+  // Share modal state
+  const [showShare, setShowShare] = useState(false);
 
   // Photo state
   const [uploadingPhoto, setUploadingPhoto] = useState<"before" | "after" | null>(null);
@@ -192,20 +198,44 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
   return (
     <div className="group relative rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-colors duration-150">
 
-      {/* Delete button */}
-      {canDelete && (
+      {/* Share + Delete buttons (top-right) */}
+      <div className={cn(
+        "absolute top-3 right-3 flex items-center gap-1 z-10 transition-opacity",
+        "opacity-0 group-hover:opacity-100"
+      )}>
         <button
           type="button"
-          title="Raum löschen"
-          onClick={() => setConfirmDelete(true)}
+          title="Konzept teilen"
+          onClick={() => setShowShare(true)}
           className={cn(
-            "absolute top-3 right-3 w-7 h-7 rounded-lg flex items-center justify-center transition-all z-10",
-            "text-gray-300 hover:text-red-400 hover:bg-red-50",
-            "opacity-0 group-hover:opacity-100"
+            "w-7 h-7 rounded-lg flex items-center justify-center transition-all",
+            room.is_shared
+              ? "text-forest bg-forest/8 hover:bg-forest/15"
+              : "text-gray-300 hover:text-forest hover:bg-forest/8"
           )}
         >
-          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+          <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />
         </button>
+        {canDelete && (
+          <button
+            type="button"
+            title="Raum löschen"
+            onClick={() => setConfirmDelete(true)}
+            className="w-7 h-7 rounded-lg flex items-center justify-center transition-all text-gray-300 hover:text-red-400 hover:bg-red-50"
+          >
+            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
+          </button>
+        )}
+      </div>
+
+      {/* Share modal */}
+      {showShare && (
+        <ShareModal
+          roomId={room.id}
+          initialIsShared={room.is_shared}
+          initialToken={room.share_token}
+          onClose={() => setShowShare(false)}
+        />
       )}
 
       {/* Main content link */}

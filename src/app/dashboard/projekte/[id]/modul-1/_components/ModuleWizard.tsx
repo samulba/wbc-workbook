@@ -62,6 +62,8 @@ interface Props {
   allRooms: RoomSummary[];
   initialData: Module1Data;
   editMode?: boolean;
+  shareToken?: string | null;
+  isShared?: boolean;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -76,6 +78,8 @@ export function ModuleWizard({
   allRooms,
   initialData,
   editMode = false,
+  shareToken,
+  isShared = false,
 }: Props) {
   const router = useRouter();
   const [step, setStep]       = useState(() => {
@@ -200,6 +204,8 @@ export function ModuleWizard({
           roomName={roomName}
           roomType={roomType}
           editMode={editMode}
+          shareToken={shareToken ?? null}
+          isShared={isShared}
           onChange={handleChange}
         />
       </div>
@@ -227,6 +233,8 @@ function StepContent({
   roomName,
   roomType,
   editMode,
+  shareToken,
+  isShared,
   onChange,
 }: {
   step: number;
@@ -237,6 +245,8 @@ function StepContent({
   roomName: string;
   roomType: string;
   editMode: boolean;
+  shareToken: string | null;
+  isShared: boolean;
   onChange: (patch: Partial<Module1Data>) => void;
 }) {
   switch (step) {
@@ -294,6 +304,8 @@ function StepContent({
           roomType={roomType}
           roomName={roomName}
           editMode={editMode}
+          shareToken={shareToken}
+          isShared={isShared}
         />
       );
     default: {

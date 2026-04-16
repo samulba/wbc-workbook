@@ -16,8 +16,10 @@ import {
   Leaf,
   Camera,
   ArrowRight,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
+import { ShareModal } from "@/app/dashboard/_components/ShareModal";
 import { ProductRecommendations } from "../ProductRecommendations";
 
 interface Props {
@@ -28,6 +30,8 @@ interface Props {
   roomType: string;
   roomName: string;
   editMode?: boolean;
+  shareToken?: string | null;
+  isShared?: boolean;
 }
 
 const ROOM_LABELS: Record<string, string> = {
@@ -78,10 +82,11 @@ const DOTS = [
   { left: "4%",  top: "65%", size: "w-2 h-2",   color: "bg-sand/50",       delay: "1.5s"  },
 ];
 
-export function Step11({ data, projectId, projectName, roomId, roomType, roomName, editMode }: Props) {
+export function Step11({ data, projectId, projectName, roomId, roomType, roomName, editMode, shareToken, isShared = false }: Props) {
   const [mounted, setMounted]       = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError]     = useState<string | null>(null);
+  const [showShare, setShowShare]   = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
@@ -418,6 +423,30 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
             </>
           )}
         </button>
+
+        {/* Share button */}
+        <button
+          type="button"
+          onClick={() => setShowShare(true)}
+          className={cn(
+            "w-full flex items-center justify-center gap-2 rounded-xl border-2 px-5 py-3.5",
+            "text-sm font-sans font-medium transition-all",
+            isShared
+              ? "border-forest bg-forest text-white hover:bg-forest/90"
+              : "border-forest/30 bg-forest/5 text-forest hover:bg-forest/10 hover:border-forest/50"
+          )}
+        >
+          <Share2 className="w-4 h-4" strokeWidth={1.5} />
+          {isShared ? "Konzept wird geteilt" : "Konzept teilen"}
+        </button>
+        {showShare && (
+          <ShareModal
+            roomId={roomId}
+            initialIsShared={isShared}
+            initialToken={shareToken ?? null}
+            onClose={() => setShowShare(false)}
+          />
+        )}
 
         {/* Modul 2 – disabled */}
         <div className="relative">

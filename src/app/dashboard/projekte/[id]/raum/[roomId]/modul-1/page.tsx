@@ -30,7 +30,7 @@ export default async function RaumModul1Page({
     .select(`
       id, name,
       rooms (
-        id, name, room_type,
+        id, name, room_type, share_token, is_shared,
         module1_analysis (*)
       )
     `)
@@ -44,6 +44,8 @@ export default async function RaumModul1Page({
     id: string;
     name: string;
     room_type: string;
+    share_token: string | null;
+    is_shared: boolean;
     module1_analysis: Module1Data[] | null;
   };
 
@@ -93,6 +95,8 @@ export default async function RaumModul1Page({
           allRooms={allRooms.map((r) => ({ id: r.id, name: r.name, room_type: r.room_type }))}
           initialData={initialData}
           editMode={editMode}
+          shareToken={room.share_token}
+          isShared={room.is_shared}
         />
       </div>
     </div>
