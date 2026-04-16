@@ -16,7 +16,7 @@ export default async function DashboardPage() {
       .from("projects")
       .select(`
         id, name, description, status, budget, deadline, created_at,
-        rooms ( id, module1_analysis ( status, current_step ) )
+        rooms ( id, name, room_type, module1_analysis ( status, current_step ) )
       `)
       .order("created_at", { ascending: false }),
   ]);
@@ -25,12 +25,14 @@ export default async function DashboardPage() {
   const displayName = user?.user_metadata?.full_name ?? null;
   const greeting = displayName ?? (firstName ? firstName.charAt(0).toUpperCase() + firstName.slice(1) : null);
 
-  // Compute Modul-1 link: first project → first room, or create new
-  const firstProject = projects?.[0];
-  const firstRoom = (firstProject?.rooms as { id: string }[] | null)?.[0];
-  const m1Href = firstProject && firstRoom
-    ? `/dashboard/projekte/${firstProject.id}/raum/${firstRoom.id}/modul-1`
-    : "/dashboard/projekte/neu";
+  type RoomForModal = { id: string; name: string; room_type: string };
+  type ProjectForModal = { id: string; name: string; status: "entwurf" | "aktiv" | "abgeschlossen" | "archiviert"; rooms: RoomForModal[] | null };
+  const projectsForModal: ProjectForModal[] = (projects ?? []).map((p) => ({
+    id: p.id,
+    name: p.name,
+    status: p.status as ProjectForModal["status"],
+    rooms: (p.rooms as (RoomForModal & { module1_analysis: unknown[] | null })[])?.map(({ id, name, room_type }) => ({ id, name, room_type })) ?? null,
+  }));
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -93,7 +95,7 @@ export default async function DashboardPage() {
 
       {/* ── Module overview ────────────────────────────────────── */}
       <section className="py-8 sm:py-10 pb-16 sm:pb-20">
-        <ModuleOverview m1Href={m1Href} />
+        <ModuleOverview projects={projectsForModal} />
       </section>
 
     </div>

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { Modul1CardButton } from "./Modul1Modal";
+import type { ProjectForModal } from "./Modul1Modal";
 
 const modules = [
   {
@@ -64,10 +65,10 @@ const modules = [
 ];
 
 interface Props {
-  m1Href?: string;
+  projects: ProjectForModal[];
 }
 
-export function ModuleOverview({ m1Href }: Props) {
+export function ModuleOverview({ projects }: Props) {
   return (
     <section>
       <div className="mb-6">
@@ -79,7 +80,6 @@ export function ModuleOverview({ m1Href }: Props) {
 
       <div className="grid sm:grid-cols-2 gap-4">
         {modules.map((mod) => {
-          const href = mod.available && m1Href ? m1Href : undefined;
           const inner = (
             <>
               {/* Watermark number */}
@@ -128,26 +128,23 @@ export function ModuleOverview({ m1Href }: Props) {
             </>
           );
 
-          if (href) {
+          if (mod.available) {
             return (
-              <Link
+              <Modul1CardButton
                 key={mod.number}
-                href={href}
-                className="group relative rounded-xl border bg-white p-5 transition-all duration-200 border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block"
+                projects={projects}
+                cardClassName="group relative rounded-xl border bg-white p-5 text-left transition-all duration-200 border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block w-full"
               >
                 {inner}
-              </Link>
+              </Modul1CardButton>
             );
           }
 
           return (
             <div
               key={mod.number}
-              className={`group relative rounded-xl border bg-white p-5 overflow-hidden ${
-                mod.available
-                  ? "border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm transition-all duration-200"
-                  : "border-[#e8e5e0] opacity-55"
-              }`}
+              className="group relative rounded-xl border bg-white p-5 overflow-hidden border-[#e8e5e0] opacity-55"
+              title="Demnächst verfügbar"
             >
               {inner}
             </div>
