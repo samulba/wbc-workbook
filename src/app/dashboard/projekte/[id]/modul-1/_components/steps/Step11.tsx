@@ -116,8 +116,9 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
   const allColors  = [...primary, ...secondary, accent].filter(Boolean);
   const materials  = data.materials ?? [];
   const lightMood  = LIGHT_LABELS[data.light_mood ?? ""] ?? "";
-  const moodboardUrl = (data.moodboard_urls ?? [])[0] ?? "";
-  const isImageUrl = /^https?:\/\/.+\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(moodboardUrl);
+  const moodboardUrls = (data.moodboard_urls ?? []).filter(
+    (u) => /^https?:\/\//i.test(u)
+  );
 
   return (
     <div className="flex flex-col gap-10">
@@ -301,18 +302,30 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
           )}
 
           {/* Moodboard preview */}
-          {isImageUrl && (
+          {moodboardUrls.length > 0 && (
             <div className="px-5 py-4">
               <p className="text-[10px] text-gray/40 font-sans uppercase tracking-wider mb-2.5">
-                Moodboard
+                Moodboard{moodboardUrls.length > 1 ? ` (${moodboardUrls.length} Bilder)` : ""}
               </p>
-              <div className="rounded-xl overflow-hidden border border-sand/30 aspect-video bg-sand/5 flex items-center justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={moodboardUrl}
-                  alt="Moodboard"
-                  className="max-w-full max-h-full object-contain"
-                />
+              <div
+                className={`grid gap-2 ${
+                  moodboardUrls.length === 1 ? "grid-cols-1" : "grid-cols-2"
+                }`}
+              >
+                {moodboardUrls.map((url, i) => (
+                  <div
+                    key={url}
+                    className="rounded-xl overflow-hidden border border-sand/30 bg-sand/5"
+                    style={{ aspectRatio: moodboardUrls.length === 1 ? "16/9" : "4/3" }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={`Moodboard ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           )}

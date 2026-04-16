@@ -277,6 +277,8 @@ function StepContent({
       return (
         <Step10
           data={data}
+          projectId={projectId}
+          roomId={roomId}
           roomType={roomType}
           roomName={roomName}
           onChange={onChange}

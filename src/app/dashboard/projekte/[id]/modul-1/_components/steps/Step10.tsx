@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/Input";
 import { EFFECTS } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
-import { Check, Copy, ExternalLink, ImageIcon, Sparkles } from "lucide-react";
+import { MoodboardUpload } from "../MoodboardUpload";
+import { Check, Copy, ExternalLink, Sparkles } from "lucide-react";
 
 interface Props {
   data: Module1Data;
+  projectId: string;
+  roomId: string;
   roomType: string;
   roomName: string;
   onChange: (patch: Partial<Module1Data>) => void;
@@ -61,11 +63,8 @@ Erstelle ein Moodboard mit:
 • 6 Inspirationsbilder für Möbel, Materialien, Licht und Deko`;
 }
 
-export function Step10({ data, roomType, roomName, onChange }: Props) {
+export function Step10({ data, projectId, roomId, roomType, roomName, onChange }: Props) {
   const [copied, setCopied] = useState(false);
-
-  const moodboardUrl = (data.moodboard_urls ?? [])[0] ?? "";
-  const isImageUrl   = /^https?:\/\/.+\.(jpg|jpeg|png|webp|gif|svg)(\?.*)?$/i.test(moodboardUrl);
 
   // Auto-generate on first visit
   useEffect(() => {
@@ -76,17 +75,13 @@ export function Step10({ data, roomType, roomName, onChange }: Props) {
   }, []);
 
   const prompt = data.moodboard_prompt || buildMoodboardPrompt(data, roomType, roomName);
+  const urls   = data.moodboard_urls ?? [];
 
   function handleCopy() {
     navigator.clipboard.writeText(prompt).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }
-
-  function handleUrlChange(url: string) {
-    const current = data.moodboard_urls ?? [];
-    onChange({ moodboard_urls: [url, ...current.slice(1)] });
   }
 
   return (
@@ -181,42 +176,16 @@ export function Step10({ data, roomType, roomName, onChange }: Props) {
             Moodboard hochladen
           </h3>
           <p className="text-xs text-gray/45 font-sans">
-            Optional – füge die URL deines generierten Moodboards ein.
+            Lade dein generiertes Moodboard hoch – bis zu 4 Bilder möglich.
           </p>
         </div>
 
-        {/* Preview area */}
-        {isImageUrl ? (
-          <div className="rounded-xl overflow-hidden border border-sand/30 bg-sand/5 aspect-video flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={moodboardUrl}
-              alt="Moodboard Vorschau"
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
-        ) : (
-          <div
-            className={cn(
-              "rounded-xl border-2 border-dashed aspect-video",
-              "flex flex-col items-center justify-center gap-2",
-              moodboardUrl ? "border-terracotta/30 bg-terracotta/5" : "border-sand/35 bg-sand/5"
-            )}
-          >
-            <ImageIcon
-              className={cn("w-8 h-8", moodboardUrl ? "text-terracotta/40" : "text-sand/40")}
-              strokeWidth={1.5}
-            />
-            <p className="text-xs text-gray/40 font-sans">
-              {moodboardUrl ? "Ungültige Bild-URL" : "Bild-URL hier einfügen"}
-            </p>
-          </div>
-        )}
-
-        <Input
-          placeholder="https://… (Bild-URL einfügen)"
-          value={moodboardUrl}
-          onChange={(e) => handleUrlChange(e.target.value)}
+        <MoodboardUpload
+          urls={urls}
+          projectId={projectId}
+          roomId={roomId}
+          maxImages={4}
+          onChange={(newUrls) => onChange({ moodboard_urls: newUrls })}
         />
       </div>
 

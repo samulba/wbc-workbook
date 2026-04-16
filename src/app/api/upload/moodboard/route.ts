@@ -1,0 +1,120 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+
+// ── POST /api/upload/moodboard ─────────────────────────────────────────────
+// FormData: { file: File, projectId: string, roomId: string }
+// Response: { url: string }
+export async function POST(req: NextRequest) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 });
+  }
+
+  let formData: FormData;
+  try {
+    formData = await req.formData();
+  } catch {
+    return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+  }
+
+  const file      = formData.get("file");
+  const projectId = formData.get("projectId");
+  const roomId    = formData.get("roomId");
+
+  if (!(file instanceof File) || typeof projectId !== "string" || typeof roomId !== "string") {
+    return NextResponse.json({ error: "Fehlende Parameter." }, { status: 400 });
+  }
+
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return NextResponse.json(
+      { error: "Ungültiges Format. Nur JPG, PNG und WebP erlaubt." },
+      { status: 422 }
+    );
+  }
+
+  if (file.size > MAX_BYTES) {
+    return NextResponse.json(
+      { error: "Datei zu groß. Maximal 5 MB erlaubt." },
+      { status: 422 }
+    );
+  }
+
+  const ext      = file.type === "image/jpeg" ? "jpg" : file.type.split("/")[1];
+  const slug     = Math.random().toString(36).slice(2, 8);
+  const path     = `${user.id}/${projectId}/${roomId}/${Date.now()}-${slug}.${ext}`;
+  const bytes    = await file.arrayBuffer();
+
+  const { data, error } = await supabase.storage
+    .from("moodboards")
+    .upload(path, new Uint8Array(bytes), { contentType: file.type, upsert: false });
+
+  if (error) {
+    console.error("Moodboard upload error:", error);
+    return NextResponse.json(
+      { error: "Upload fehlgeschlagen. Bitte erneut versuchen." },
+      { status: 500 }
+    );
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("moodboards").getPublicUrl(data.path);
+
+  return NextResponse.json({ url: publicUrl });
+}
+
+// ── DELETE /api/upload/moodboard ───────────────────────────────────────────
+// Body: { url: string }   (full public URL of the file)
+export async function DELETE(req: NextRequest) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 });
+  }
+
+  let body: { url?: string };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+  }
+
+  const { url } = body;
+  if (!url) {
+    return NextResponse.json({ error: "URL fehlt." }, { status: 400 });
+  }
+
+  // Extract storage path from:
+  // {SUPABASE_URL}/storage/v1/object/public/moodboards/{storagePath}
+  const MARKER = "/object/public/moodboards/";
+  const idx    = url.indexOf(MARKER);
+  if (idx === -1) {
+    return NextResponse.json({ error: "Ungültige URL." }, { status: 400 });
+  }
+
+  const storagePath = url.slice(idx + MARKER.length);
+
+  // Security: path must start with the current user's ID
+  if (!storagePath.startsWith(`${user.id}/`)) {
+    return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403 });
+  }
+
+  const { error } = await supabase.storage.from("moodboards").remove([storagePath]);
+
+  if (error) {
+    console.error("Moodboard delete error:", error);
+    return NextResponse.json({ error: "Löschen fehlgeschlagen." }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
+}
