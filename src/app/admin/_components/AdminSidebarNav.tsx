@@ -46,9 +46,9 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Content",
     items: [
       { href: "/admin/produkte",    label: "Produkte",    Icon: ShoppingBag,    enabled: true  },
-      { href: "/admin/inspiration", label: "Inspiration", Icon: Sparkles,       enabled: false },
-      { href: "/admin/farben",      label: "Farbpaletten",Icon: Palette,        enabled: false },
-      { href: "/admin/faq",         label: "FAQ",         Icon: HelpCircle,     enabled: false },
+      { href: "/admin/inspiration", label: "Inspiration", Icon: Sparkles,       enabled: true  },
+      { href: "/admin/farben",      label: "Farbpaletten",Icon: Palette,        enabled: true  },
+      { href: "/admin/faq",         label: "FAQ",         Icon: HelpCircle,     enabled: true  },
     ],
   },
   {

@@ -1,6 +1,9 @@
-import { Palette } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import type { Metadata } from "next";
+import { PaletteAdmin } from "./_components/PaletteAdmin";
+
+export const metadata: Metadata = { title: "Farbpaletten – Admin" };
+export const dynamic = "force-dynamic";
 
 export default function AdminFarbenPage() {
-  return <ComingSoon icon={Palette} title="Farbpaletten" desc="Farbpaletten und Farbschemas für Räume verwalten." />;
+  return <PaletteAdmin />;
 }
