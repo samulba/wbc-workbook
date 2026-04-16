@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Heart, FolderOpen, ChevronDown,
-  User, Settings, LogOut, Sun, Moon, Sparkles,
+  User, Settings, LogOut, Sun, Moon, Sparkles, ShieldCheck,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -23,19 +23,20 @@ function getInitials(email: string): string {
 // ── Nav items ─────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { href: "/dashboard",              label: "Projekte",    Icon: FolderOpen, exact: true  },
-  { href: "/dashboard/favoriten",    label: "Favoriten",   Icon: Heart,      exact: false },
-  { href: "/dashboard/inspiration",  label: "Inspiration", Icon: Sparkles,   exact: false },
+  { href: "/dashboard",             label: "Projekte",    Icon: FolderOpen, exact: true  },
+  { href: "/dashboard/favoriten",   label: "Favoriten",   Icon: Heart,      exact: false },
+  { href: "/dashboard/inspiration", label: "Inspiration", Icon: Sparkles,   exact: false },
 ] as const;
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 interface Props {
-  email: string;
+  email:         string;
   favoriteCount: number;
+  isAdmin?:      boolean;
 }
 
-export function DashboardHeader({ email, favoriteCount }: Props) {
+export function DashboardHeader({ email, favoriteCount, isAdmin = false }: Props) {
   const pathname    = usePathname();
   const router      = useRouter();
   const { theme, toggle } = useTheme();
@@ -63,6 +64,19 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, []);
+
+  // Admin shortcut: Cmd/Ctrl + Shift + A → /admin (admins only)
+  useEffect(() => {
+    if (!isAdmin) return;
+    function onAdminShortcut(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "A") {
+        e.preventDefault();
+        router.push("/admin");
+      }
+    }
+    document.addEventListener("keydown", onAdminShortcut);
+    return () => document.removeEventListener("keydown", onAdminShortcut);
+  }, [isAdmin, router]);
 
   async function handleLogout() {
     setOpen(false);
@@ -198,7 +212,7 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
                     Einstellungen
                   </Link>
 
-                  {/* Dark mode toggle (also in menu for discoverability) */}
+                  {/* Dark mode toggle */}
                   <button
                     type="button"
                     onClick={() => { toggle(); setOpen(false); }}
@@ -210,6 +224,18 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
                     }
                     {theme === "dark" ? "Heller Modus" : "Dunkler Modus"}
                   </button>
+
+                  {/* Admin link – only visible to admins */}
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm font-sans text-gray-500 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors min-h-[40px]"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-gray-400 shrink-0" strokeWidth={1.5} />
+                      Admin
+                    </Link>
+                  )}
                 </div>
 
                 {/* Logout */}

@@ -11,17 +11,25 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Favorite count for nav badge
-  const { count: favoriteCount } = await supabase
-    .from("favorites")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id);
+  // Parallel: favorite count + profile role
+  const [{ count: favoriteCount }, { data: profile }] = await Promise.all([
+    supabase
+      .from("favorites")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id),
+    supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single(),
+  ]);
 
   return (
     <div className="min-h-screen bg-[var(--bg-page)]">
       <DashboardHeader
         email={user.email!}
         favoriteCount={favoriteCount ?? 0}
+        isAdmin={profile?.role === "admin"}
       />
       <main>{children}</main>
     </div>
