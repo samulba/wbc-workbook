@@ -103,7 +103,8 @@ export async function GET(req: NextRequest) {
       case "last_sign_in_at": va = a.last_sign_in_at ?? ""; vb = b.last_sign_in_at ?? ""; break;
       default:                va = a.created_at;      vb = b.created_at;
     }
-    const cmp = typeof va === "number" ? va - vb : (va as string).localeCompare(vb as string);
+    if (va === vb) return 0;
+    const cmp = va < vb ? -1 : 1;
     return sortDir === "asc" ? cmp : -cmp;
   });
 

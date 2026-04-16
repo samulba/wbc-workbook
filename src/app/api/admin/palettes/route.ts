@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     total:    rows.length,
     active:   rows.filter((r) => r.is_active).length,
     inactive: rows.filter((r) => !r.is_active).length,
-    effects:  [...new Set(rows.map((r) => r.room_effect).filter(Boolean))].length,
+    effects:  Array.from(new Set(rows.map((r) => r.room_effect).filter(Boolean))).length,
   };
 
   // Filter
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
   const items  = filtered.slice(offset, offset + limit);
 
   // Distinct room effects for filter dropdown
-  const roomEffects = [...new Set(rows.map((r) => r.room_effect).filter(Boolean))].sort();
+  const roomEffects = Array.from(new Set(rows.map((r) => r.room_effect).filter(Boolean))).sort();
 
   return NextResponse.json({ items, total, stats, roomEffects });
 }

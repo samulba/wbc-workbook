@@ -342,7 +342,7 @@ export function FaqAdmin() {
         </div>
       ) : (
         <div className="space-y-2">
-          {displayedItems.map((faq, idx) => {
+          {displayedItems.map((faq) => {
             const groupItems = displayedItems.filter((f) => f.category === faq.category);
             const groupIdx   = groupItems.findIndex((f) => f.id === faq.id);
             return (

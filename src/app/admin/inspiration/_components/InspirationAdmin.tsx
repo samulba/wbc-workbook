@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Images, Eye, EyeOff, Upload, Search, X, Plus,
   Pencil, Trash2, Loader2, ChevronLeft, ChevronRight,
@@ -85,7 +85,7 @@ function CsvModal({ onClose, onImported }: { onClose: () => void; onImported: (n
 
   function onCsvChange(v: string) {
     setCsv(v);
-    setPreview(parseRows(v).slice(0, 5) as any);
+    setPreview(parseRows(v).slice(0, 5) as unknown as Record<string, string>[]);
   }
 
   async function doImport() {
@@ -456,7 +456,7 @@ export function InspirationAdmin() {
       {showCsv && (
         <CsvModal
           onClose={() => setShowCsv(false)}
-          onImported={n => { setShowCsv(false); setTick(t => t + 1); }}
+          onImported={() => { setShowCsv(false); setTick(t => t + 1); }}
         />
       )}
     </div>

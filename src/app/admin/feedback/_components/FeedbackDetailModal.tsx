@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  X, Star, ExternalLink, User, Calendar,
+  X, Star, ExternalLink, User,
   CheckCircle2, Circle, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -95,8 +95,6 @@ export function FeedbackDetailModal({ feedback, onClose, onUpdate, onDelete }: P
       setDeleting(false);
     }
   }
-
-  const statusInfo = STATUS_OPTIONS.find((s) => s.value === status);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">

@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     total:    rows.length,
     active:   rows.filter((r) => r.is_active).length,
     inactive: rows.filter((r) => !r.is_active).length,
-    categories: [...new Set(rows.map((r) => r.category).filter(Boolean))].length,
+    categories: Array.from(new Set(rows.map((r) => r.category).filter(Boolean))).length,
   };
 
   let filtered = rows;

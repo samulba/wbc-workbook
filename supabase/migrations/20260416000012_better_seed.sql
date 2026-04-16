@@ -1,14 +1,15 @@
 -- ── Replace inspiration seed with 60 high-quality interior photos ─────────────
--- Run AFTER 20260416000010 and 20260416000011.
--- Only deletes curated (user_id IS NULL) seed rows.
+-- Safe to run standalone – no user_id dependency.
 
-DELETE FROM public.inspiration_images WHERE user_id IS NULL;
+DELETE FROM public.inspiration_images;
 
 INSERT INTO public.inspiration_images
   (image_url, title, description, room_effect, room_type, colors, tags)
 VALUES
 
--- ── RUHE & ERHOLUNG ── Wohnzimmer ────────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────────────────────
+-- RUHE & ERHOLUNG
+-- ────────────────────────────────────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80',
  'Nordische Stille',
@@ -18,7 +19,7 @@ VALUES
 
 ('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
  'Minimalismus pur',
- 'Weniger ist mehr – ein Raum, der atmet und Platz für das Wesentliche lässt.',
+ 'Weniger ist mehr – ein Raum der atmet und Platz für das Wesentliche lässt.',
  'ruhe_erholung','wohnzimmer',
  ARRAY['#F5F0E8','#FFFFFF','#C8D5B9'], ARRAY['minimal','weiß','hell','ruhig','luftig']),
 
@@ -40,8 +41,6 @@ VALUES
  'ruhe_erholung','wohnzimmer',
  ARRAY['#C4956A','#F0E6D3','#8B7355'], ARRAY['hygge','warm','kerzen','gemütlich','dänisch']),
 
--- ── RUHE & ERHOLUNG ── Schlafzimmer ──────────────────────────────────────────
-
 ('https://images.unsplash.com/photo-1618220048045-10a6dbdf1b44?w=800&q=80',
  'Weiches Schlafzimmer',
  'Warme Bettwäsche und natürliche Texturen schaffen einen Rückzugsort.',
@@ -61,12 +60,10 @@ VALUES
  ARRAY['#FFFFFF','#E8E0D5','#B0A898'], ARRAY['loft','luftig','urban','weiß','schlicht']),
 
 ('https://images.unsplash.com/photo-1600487018819-1bae3f1694cb?w=800&q=80',
- 'Soft-Bedroom',
+ 'Soft Bedroom',
  'Alles in sanften Tönen – ein Schlafzimmer das entspannt, bevor man die Augen schließt.',
  'ruhe_erholung','schlafzimmer',
  ARRAY['#EDE0D4','#D4B896','#F5F0E8'], ARRAY['sand','pastelltöne','soft','ruhig','cozy']),
-
--- ── RUHE & ERHOLUNG ── Badezimmer ────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1560185127-6ed189168982?w=800&q=80',
  'Spa-Atmosphäre',
@@ -86,8 +83,6 @@ VALUES
  'ruhe_erholung','badezimmer',
  ARRAY['#FFFFFF','#F0E8E0','#D4C8C0'], ARRAY['hell','tageslicht','sauber','modern','natural']),
 
--- ── RUHE & ERHOLUNG ── Yogaraum ──────────────────────────────────────────────
-
 ('https://images.unsplash.com/photo-1567016432779-094069958ea5?w=800&q=80',
  'Meditationsecke',
  'Minimalistisch und still – dieser Raum lädt zum Zentrieren ein.',
@@ -106,7 +101,9 @@ VALUES
  'ruhe_erholung','yogaraum',
  ARRAY['#8B9E7A','#C8D5B9','#F5F0E8'], ARRAY['zen','pflanzen','ruhe','grün','rückzug']),
 
--- ── FOKUS & KONZENTRATION ── Arbeitszimmer ────────────────────────────────────
+-- ────────────────────────────────────────────────────────────────────────────
+-- FOKUS & KONZENTRATION
+-- ────────────────────────────────────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800&q=80',
  'Klares Homeoffice',
@@ -121,8 +118,8 @@ VALUES
  ARRAY['#F8F9FA','#343A40','#6C757D'], ARRAY['büro','minimal','grau','weiß','konzentriert']),
 
 ('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80',
- 'Schreibtisch mit Aussicht',
- 'Ein Pflänzchen, klarer Schreibtisch und das richtige Licht – Fokus-Zone.',
+ 'Schreibtisch mit Pflanze',
+ 'Ein Pflänzchen, klarer Schreibtisch und das richtige Licht – perfekte Fokus-Zone.',
  'fokus_konzentration','arbeitszimmer',
  ARRAY['#F5F0E8','#8B9E7A','#FFFFFF'], ARRAY['desk','pflanze','tageslicht','fokus','clean']),
 
@@ -133,7 +130,7 @@ VALUES
  ARRAY['#2C1810','#8B7355','#F0E6D3'], ARRAY['dunkel','holz','warm','abend','produktiv']),
 
 ('https://images.unsplash.com/photo-1609766454-c24b6819d5bd?w=800&q=80',
- 'Minimales Studiobüro',
+ 'Minimales Studio-Büro',
  'Klare Linie, kein Überfluss – ein Raum für tiefe Arbeit.',
  'fokus_konzentration','arbeitszimmer',
  ARRAY['#FFFFFF','#E8E0D8','#4A4A4A'], ARRAY['studio','klar','minimal','fokus','modern']),
@@ -143,8 +140,6 @@ VALUES
  'Wenige Objekte, viel Raum zum Denken.',
  'fokus_konzentration','arbeitszimmer',
  ARRAY['#FFFFFF','#D0C8C0','#6C757D'], ARRAY['clean','desk','aufgeräumt','fokus','produktiv']),
-
--- ── FOKUS & KONZENTRATION ── Wohnzimmer / Lesen ──────────────────────────────
 
 ('https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&q=80',
  'Leseecke mit Charakter',
@@ -164,19 +159,19 @@ VALUES
  'fokus_konzentration','wohnzimmer',
  ARRAY['#8B7355','#C4956A','#2C3E50'], ARRAY['bücher','bibliothek','regale','holz','wissen']),
 
--- ── FOKUS & KONZENTRATION ── Badezimmer ──────────────────────────────────────
-
 ('https://images.unsplash.com/photo-1583845440985-b2a4c8afe28b?w=800&q=80',
  'Modernes Bad',
  'Klare Formen, heller Marmor und strukturlose Wände – Klarheit und Frische.',
  'fokus_konzentration','badezimmer',
  ARRAY['#FFFFFF','#E2E8F0','#CBD5E0'], ARRAY['marmor','modern','hell','sauber','klar']),
 
--- ── ENERGIE & AKTIVITÄT ── Wohnzimmer ────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────────────────────
+-- ENERGIE & AKTIVITÄT
+-- ────────────────────────────────────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
  'Lebendiges Wohnzimmer',
- 'Kräftige Akzentfarben und klare Linien – Dynamik und Lebendigkeit.',
+ 'Kräftige Akzentfarben und klare Linien erzeugen Dynamik und Lebendigkeit.',
  'energie_aktivitaet','wohnzimmer',
  ARRAY['#C96A50','#2D5A4F','#F5F0E8'], ARRAY['terrakotta','dynamisch','farbenfroh','modern','kontrast']),
 
@@ -198,11 +193,9 @@ VALUES
  'energie_aktivitaet','wohnzimmer',
  ARRAY['#2C4A6B','#C4956A','#F0E6D3'], ARRAY['blau','warm','kontrast','energie','modern']),
 
--- ── ENERGIE & AKTIVITÄT ── Küche ─────────────────────────────────────────────
-
 ('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
  'Dynamische Küche',
- 'Frische Farben und durchdachte Organisation – Freude ans Kochen.',
+ 'Frische Farben und durchdachte Organisation bringen Freude ans Kochen.',
  'energie_aktivitaet','kueche',
  ARRAY['#FFFFFF','#4A5568','#C8D5B9'], ARRAY['küche','modern','hell','sauber','kochen']),
 
@@ -213,12 +206,10 @@ VALUES
  ARRAY['#FFFFFF','#8B9E7A','#2C3E50'], ARRAY['profiküche','modern','grün','edelstahl','clean']),
 
 ('https://images.unsplash.com/photo-1556909212-d5a3d1852a8e?w=800&q=80',
- 'Küche in Weiß',
+ 'Weiße Küche',
  'Klare Strukturen und helle Oberflächen laden zum aktiven Kochen ein.',
  'energie_aktivitaet','kueche',
  ARRAY['#FFFFFF','#F0E8E0','#4A5568'], ARRAY['weiß','küche','clean','hell','modern']),
-
--- ── ENERGIE & AKTIVITÄT ── Yogaraum ─────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80',
  'Aktiver Yoga-Raum',
@@ -232,7 +223,9 @@ VALUES
  'energie_aktivitaet','yogaraum',
  ARRAY['#F0EBE0','#FFFFFF','#C8D5B9'], ARRAY['studio','licht','yoga','flow','offen']),
 
--- ── KREATIVITÄT & INSPIRATION ── Wohnzimmer ───────────────────────────────────
+-- ────────────────────────────────────────────────────────────────────────────
+-- KREATIVITÄT & INSPIRATION
+-- ────────────────────────────────────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1588854671070-c3ee17c1082f?w=800&q=80',
  'Eklektisches Wohnzimmer',
@@ -258,8 +251,6 @@ VALUES
  'kreativitaet_inspiration','wohnzimmer',
  ARRAY['#2C3E50','#C4956A','#F0E6D3'], ARRAY['kunst','galerie','wand','persönlich','kreativ']),
 
--- ── KREATIVITÄT & INSPIRATION ── Arbeitszimmer ────────────────────────────────
-
 ('https://images.unsplash.com/photo-1616137133836-5a3ec25f4745?w=800&q=80',
  'Kreativer Workspace',
  'Pinwand, Pflanzen und helles Licht – eine Werkstatt für Ideen.',
@@ -270,9 +261,7 @@ VALUES
  'Studio-Workspace',
  'Große Tische, gutes Licht und ein Hauch Chaos – hier entstehen Ideen.',
  'kreativitaet_inspiration','arbeitszimmer',
- ARRAY['#F0EBE0','#8B7355','#C4956A'], ARRAY['studio','kreativ','großer tisch','licht','ideen']),
-
--- ── KREATIVITÄT & INSPIRATION ── Schlafzimmer ─────────────────────────────────
+ ARRAY['#F0EBE0','#8B7355','#C4956A'], ARRAY['studio','kreativ','tisch','licht','ideen']),
 
 ('https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80',
  'Schlafzimmer mit Seele',
@@ -286,8 +275,6 @@ VALUES
  'kreativitaet_inspiration','schlafzimmer',
  ARRAY['#C4956A','#8B7355','#F0E6D3'], ARRAY['boho','traumfänger','warm','textilien','persönlich']),
 
--- ── KREATIVITÄT & INSPIRATION ── Studio / Sonstiges ──────────────────────────
-
 ('https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80',
  'Künstler-Studio',
  'Offener Raum mit Persönlichkeit – jede Ecke erzählt eine Geschichte.',
@@ -300,7 +287,9 @@ VALUES
  'kreativitaet_inspiration','sonstiges',
  ARRAY['#6B6B6B','#C4956A','#E8D5C0'], ARRAY['industrial','loft','beton','stahl','kreativ']),
 
--- ── BEGEGNUNG & AUSTAUSCH ── Esszimmer ────────────────────────────────────────
+-- ────────────────────────────────────────────────────────────────────────────
+-- BEGEGNUNG & AUSTAUSCH
+-- ────────────────────────────────────────────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80',
  'Einladendes Esszimmer',
@@ -314,25 +303,23 @@ VALUES
  'begegnung_austausch','esszimmer',
  ARRAY['#C4956A','#F0E6D3','#FFFFFF'], ARRAY['holz','hell','tisch','stühle','gastfreundschaft']),
 
-('https://images.unsplash.com/photo-1618219636372-a4e10a2e4849?w=800&q=80',
- 'Modernes Esszimmer',
- 'Klare Linien und warme Materialien – Essen als Ritual.',
- 'begegnung_austausch','esszimmer',
- ARRAY['#E8D5C0','#8B7355','#FFFFFF'], ARRAY['modern','esszimmer','warm','tisch','ritual']),
-
 ('https://images.unsplash.com/photo-1578683094948-96e8dca6c776?w=800&q=80',
  'Langer Esstisch',
  'Ein Tisch für viele – Begegnungen finden hier ihren Raum.',
  'begegnung_austausch','esszimmer',
  ARRAY['#8B7355','#F0E6D3','#2C3E50'], ARRAY['langer tisch','holz','gemeinschaft','offen','gastgeber']),
 
+('https://images.unsplash.com/photo-1618219636372-a4e10a2e4849?w=800&q=80',
+ 'Modernes Esszimmer',
+ 'Klare Linien und warme Materialien – Essen als Ritual.',
+ 'begegnung_austausch','esszimmer',
+ ARRAY['#E8D5C0','#8B7355','#FFFFFF'], ARRAY['modern','esszimmer','warm','tisch','ritual']),
+
 ('https://images.unsplash.com/photo-1477120130473-94f42c44f8ec?w=800&q=80',
  'Familien-Esszimmer',
  'Warm, einladend und ohne Schnickschnack – hier wird Familie gelebt.',
  'begegnung_austausch','esszimmer',
  ARRAY['#C4956A','#8B7355','#F5F0E8'], ARRAY['familie','warm','holz','einladend','gemütlich']),
-
--- ── BEGEGNUNG & AUSTAUSCH ── Wohnzimmer ──────────────────────────────────────
 
 ('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80',
  'Geselliges Wohnzimmer',
@@ -352,8 +339,6 @@ VALUES
  'begegnung_austausch','wohnzimmer',
  ARRAY['#FFFFFF','#C4956A','#8B9E7A'], ARRAY['open plan','offen','modern','durchgang','groß']),
 
--- ── BEGEGNUNG & AUSTAUSCH ── Küche ────────────────────────────────────────────
-
 ('https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800&q=80',
  'Offene Küche',
  'Kücheninsel und offener Grundriss laden zum gemeinsamen Kochen ein.',
@@ -362,7 +347,7 @@ VALUES
 
 ('https://images.unsplash.com/photo-1556909172-54557c7e4bd7?w=800&q=80',
  'Kücheninsel für alle',
- 'Eine Insel, die verbindet – Kochen und Reden in einem.',
+ 'Eine Insel die verbindet – Kochen und Reden in einem.',
  'begegnung_austausch','kueche',
  ARRAY['#FFFFFF','#8B9E7A','#4A5568'], ARRAY['kücheninsel','offen','kochen','modern','hell']),
 

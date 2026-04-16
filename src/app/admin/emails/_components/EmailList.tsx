@@ -96,7 +96,6 @@ export function EmailList() {
   const [sortDir,      setSortDir]      = useState<"asc" | "desc">("desc");
 
   const [page,         setPage]         = useState(1);
-  const [total,        setTotal]        = useState(0);
   const [exporting,    setExporting]    = useState(false);
 
   const LIMIT = 25;
@@ -116,7 +115,7 @@ export function EmailList() {
       const res  = await fetch(`/api/admin/emails?${q}`);
       const data = await res.json();
       setRows(data.rows ?? []);
-      setTotal(data.rows?.length ?? 0);
+      // total is derived from rows.length below
       setStats(data.stats ?? { total: 0, active: 0, inactive: 0 });
     } finally {
       setLoading(false);

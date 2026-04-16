@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 import {
   Users, UserPlus, FolderOpen, CheckCircle2,
@@ -153,12 +153,15 @@ function ChartCard({ title, children, empty }: {
   );
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipPayloadItem { color?: string; name?: string; value?: number | string; }
+interface TooltipProps { active?: boolean; payload?: TooltipPayloadItem[]; label?: string; }
+
+const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 shadow-lg">
       <p className="text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">{label}</p>
-      {payload.map((p: any, i: number) => (
+      {payload.map((p, i) => (
         <p key={i} className="text-xs" style={{ color: p.color ?? CI.forest }}>
           {p.name ? `${p.name}: ` : ""}{p.value}
         </p>
@@ -167,7 +170,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-const PieTooltip = ({ active, payload }: any) => {
+const PieTooltip = ({ active, payload }: TooltipProps) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 shadow-lg">

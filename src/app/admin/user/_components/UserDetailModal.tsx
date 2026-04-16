@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   X, Loader2, FolderOpen, CalendarDays, ShieldCheck,
-  ToggleLeft, ToggleRight, Trash2, ExternalLink,
+  ToggleLeft, ToggleRight, Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

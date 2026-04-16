@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Search, X, Pencil, Trash2, Palette, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Search, X, Pencil, Trash2, Palette } from "lucide-react";
 import { PaletteModal, type PaletteRow } from "./PaletteModal";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { Loader2 } from "lucide-react";
 
 export const metadata: Metadata = { title: "Analytics – Admin" };
 export const dynamic = "force-dynamic";
 
 // No SSR – recharts uses browser APIs
-const AnalyticsDashboard = dynamic(
+const AnalyticsDashboard = dynamicImport(
   () => import("./_components/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })),
   {
     ssr: false,

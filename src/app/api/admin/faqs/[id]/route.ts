@@ -12,6 +12,7 @@ export async function PATCH(
   if (!caller) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json().catch(() => ({}));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _id, created_at: _ca, ...updates } = body;
 
   const admin = createAdminClient();

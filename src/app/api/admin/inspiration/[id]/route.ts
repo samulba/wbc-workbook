@@ -14,6 +14,7 @@ export async function PATCH(
   const body = await req.json().catch(() => ({}));
 
   // Strip read-only / relational fields
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id: _id, created_at: _ca, user_id: _uid, ...updates } = body;
 
   const admin = createAdminClient();

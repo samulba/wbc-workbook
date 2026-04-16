@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   );
 
   // Fetch user info (email + name) for each unique user_id
-  const userIds = [...new Set(filtered.map((r) => r.user_id).filter(Boolean))];
+  const userIds = Array.from(new Set(filtered.map((r) => r.user_id).filter(Boolean)));
   const profileMap = new Map<string, { full_name: string | null }>();
   const emailMap   = new Map<string, string>();
 

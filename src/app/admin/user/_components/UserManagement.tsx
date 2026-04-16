@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Users, UserPlus, ShieldCheck, UserX,
   Search, ChevronUp, ChevronDown, ChevronsUpDown,
@@ -176,7 +176,7 @@ export function UserManagement() {
   }
 
   function toggleOne(id: string, checked: boolean) {
-    setSelected(s => { const n = new Set(s); checked ? n.add(id) : n.delete(id); return n; });
+    setSelected(s => { const n = new Set(s); if (checked) n.add(id); else n.delete(id); return n; });
   }
 
   async function updateUser(id: string, patch: Partial<UserRow>) {
