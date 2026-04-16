@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const modules = [
   {
     number: "01",
@@ -12,6 +14,7 @@ const modules = [
     topicClass:  "bg-forest/5 text-forest/70 border-forest/10",
     badgeClass:  "bg-forest/8 text-forest border-forest/15",
     badgeLabel:  "Verfügbar",
+    numberColor: "text-forest",
   },
   {
     number: "02",
@@ -26,6 +29,7 @@ const modules = [
     topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeLabel:  "Demnächst",
+    numberColor: "text-gray-400",
   },
   {
     number: "03",
@@ -40,6 +44,7 @@ const modules = [
     topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeLabel:  "Demnächst",
+    numberColor: "text-gray-400",
   },
   {
     number: "04",
@@ -54,10 +59,15 @@ const modules = [
     topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
     badgeLabel:  "Demnächst",
+    numberColor: "text-gray-400",
   },
 ];
 
-export function ModuleOverview() {
+interface Props {
+  m1Href?: string;
+}
+
+export function ModuleOverview({ m1Href }: Props) {
   return (
     <section>
       <div className="mb-6">
@@ -68,53 +78,81 @@ export function ModuleOverview() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
-        {modules.map((mod) => (
-          <div
-            key={mod.number}
-            className={`rounded-xl border bg-white p-5 transition-colors duration-200 ${
-              mod.available
-                ? "border-gray-200 hover:border-forest/30"
-                : "border-gray-100 opacity-60"
-            }`}
-          >
-            {/* Header row */}
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${mod.dotColor}`} />
-                <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
-                  {mod.subtitle}
+        {modules.map((mod) => {
+          const href = mod.available && m1Href ? m1Href : undefined;
+          const inner = (
+            <>
+              {/* Watermark number */}
+              <span
+                className={`absolute bottom-3 right-4 font-headline text-[5rem] font-bold leading-none select-none pointer-events-none transition-opacity duration-200 opacity-[0.07] group-hover:opacity-[0.12] ${mod.numberColor}`}
+              >
+                {mod.number}
+              </span>
+
+              {/* Header row */}
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${mod.dotColor}`} />
+                  <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
+                    {mod.subtitle}
+                  </span>
+                </div>
+                <span
+                  className={`text-[10px] font-sans font-medium px-2 py-0.5 rounded-full border ${mod.badgeClass}`}
+                >
+                  {mod.badgeLabel}
                 </span>
               </div>
-              <span
-                className={`text-[10px] font-sans font-medium px-2 py-0.5 rounded-full border ${mod.badgeClass}`}
+
+              {/* Title */}
+              <h3 className={`font-headline text-lg leading-snug mb-2 ${mod.accentColor}`}>
+                {mod.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-sm text-gray-500 font-sans leading-relaxed mb-4">
+                {mod.description}
+              </p>
+
+              {/* Topics */}
+              <div className="flex flex-wrap gap-1.5">
+                {mod.topics.map((topic) => (
+                  <span
+                    key={topic}
+                    className={`text-[11px] font-sans px-2.5 py-1 rounded-full border ${mod.topicClass}`}
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </>
+          );
+
+          if (href) {
+            return (
+              <Link
+                key={mod.number}
+                href={href}
+                className="group relative rounded-xl border bg-white p-5 transition-all duration-200 border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block"
               >
-                {mod.badgeLabel}
-              </span>
+                {inner}
+              </Link>
+            );
+          }
+
+          return (
+            <div
+              key={mod.number}
+              className={`group relative rounded-xl border bg-white p-5 overflow-hidden ${
+                mod.available
+                  ? "border-[#e8e5e0] hover:border-forest/30 hover:shadow-warm-sm transition-all duration-200"
+                  : "border-[#e8e5e0] opacity-55"
+              }`}
+            >
+              {inner}
             </div>
-
-            {/* Title */}
-            <h3 className={`font-headline text-lg leading-snug mb-2 ${mod.accentColor}`}>
-              {mod.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-sm text-gray-500 font-sans leading-relaxed mb-4">
-              {mod.description}
-            </p>
-
-            {/* Topics */}
-            <div className="flex flex-wrap gap-1.5">
-              {mod.topics.map((topic) => (
-                <span
-                  key={topic}
-                  className={`text-[11px] font-sans px-2.5 py-1 rounded-full border ${mod.topicClass}`}
-                >
-                  {topic}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

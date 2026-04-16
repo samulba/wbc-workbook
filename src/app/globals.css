@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #f9fafb;
+  --background: #fafaf8;
   --foreground: #111827;
 
   /* CI palette */
@@ -19,7 +19,7 @@
 @layer base {
   body {
     @apply font-sans antialiased;
-    background-color: #f9fafb;
+    background-color: #fafaf8;
     min-height: 100vh;
     color: #374151;
   }

@@ -70,7 +70,7 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
   }
 
   return (
-    <header className="sticky top-0 z-20 bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-20 bg-[#fafaf8] border-b border-[#e8e5e0]">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 grid grid-cols-[auto_1fr_auto] items-center gap-4">
 
         {/* ── Logo ──────────────────────────────────────────── */}
@@ -94,16 +94,16 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-sans font-medium transition-colors",
+                  "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-sans font-medium transition-all duration-150",
                   isActive
-                    ? "bg-forest/8 text-forest"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    ? "bg-forest text-white shadow-sm"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-[#e8e5e0]/60"
                 )}
               >
                 <Icon
                   className={cn(
                     "w-3.5 h-3.5 shrink-0",
-                    isFav && isActive ? "fill-terracotta text-terracotta" : ""
+                    isFav && isActive ? "fill-white text-white" : ""
                   )}
                   strokeWidth={isFav && isActive ? 0 : 1.5}
                 />
@@ -113,7 +113,7 @@ export function DashboardHeader({ email, favoriteCount }: Props) {
                     className={cn(
                       "min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold leading-none flex items-center justify-center",
                       isActive
-                        ? "bg-terracotta text-white"
+                        ? "bg-white/30 text-white"
                         : "bg-gray-200 text-gray-600"
                     )}
                   >
