@@ -33,7 +33,7 @@ export default async function AddRoomPage({
       {/* Back */}
       <Link
         href={`/dashboard/projekte/${project.id}`}
-        className="inline-flex items-center gap-2 text-sm text-gray/60 hover:text-forest transition-colors font-sans mb-8 min-h-[44px]"
+        className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors font-sans mb-8 min-h-[44px]"
       >
         <ArrowLeft className="w-4 h-4" />
         {project.name}
@@ -41,17 +41,17 @@ export default async function AddRoomPage({
 
       {/* Header */}
       <div className="max-w-md">
-        <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand mb-2">
+        <p className="text-xs font-sans uppercase tracking-[0.2em] text-gray-400 mb-2">
           {project.name}
         </p>
-        <h1 className="font-headline text-3xl sm:text-4xl text-forest mb-2 leading-tight">
+        <h1 className="font-headline text-3xl sm:text-4xl text-gray-900 mb-2 leading-tight">
           Neuen Raum hinzufügen
         </h1>
-        <p className="text-sm text-gray/55 font-sans leading-relaxed mb-8">
+        <p className="text-sm text-gray-500 font-sans leading-relaxed mb-8">
           Jeder Raum erhält sein eigenes Modul-1-Konzept. Du kannst beliebig viele Räume zu einem Projekt hinzufügen.
         </p>
 
-        <div className="rounded-2xl border border-sand/30 bg-white/50 p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6">
           <AddRoomForm projectId={project.id} />
         </div>
       </div>

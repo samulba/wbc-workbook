@@ -50,7 +50,7 @@ export function AddRoomForm({ projectId }: { projectId: string }) {
 
       {/* Room name */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="roomName" className="text-sm font-sans font-medium text-forest/80">
+        <label htmlFor="roomName" className="text-sm font-sans font-medium text-gray-700">
           Raumname
         </label>
         <input
@@ -59,13 +59,13 @@ export function AddRoomForm({ projectId }: { projectId: string }) {
           type="text"
           placeholder="z. B. Schlafzimmer OG, Büro Erdgeschoss …"
           required
-          className="h-12 px-4 rounded-xl border border-sand/40 bg-white/70 text-base font-sans text-forest placeholder:text-gray/35 focus:outline-none focus:ring-2 focus:ring-forest/25 focus:border-forest/40 transition"
+          className="h-12 px-4 rounded-xl border border-gray-200 bg-white text-base font-sans text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest/40 transition"
         />
       </div>
 
       {/* Room type */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="roomType" className="text-sm font-sans font-medium text-forest/80">
+        <label htmlFor="roomType" className="text-sm font-sans font-medium text-gray-700">
           Raumtyp
         </label>
         <select
@@ -73,7 +73,7 @@ export function AddRoomForm({ projectId }: { projectId: string }) {
           name="roomType"
           required
           defaultValue=""
-          className="h-12 px-4 rounded-xl border border-sand/40 bg-white/70 text-base font-sans text-forest focus:outline-none focus:ring-2 focus:ring-forest/25 focus:border-forest/40 transition appearance-none"
+          className="h-12 px-4 rounded-xl border border-gray-200 bg-white text-base font-sans text-gray-900 focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest/40 transition appearance-none"
         >
           <option value="" disabled>Bitte auswählen …</option>
           {ROOM_OPTIONS.map(({ value, label }) => (
@@ -84,7 +84,7 @@ export function AddRoomForm({ projectId }: { projectId: string }) {
 
       {/* Error */}
       {state && "error" in state && (
-        <p className="text-xs text-terracotta font-sans bg-terracotta/5 rounded-lg px-3 py-2">
+        <p className="text-xs text-red-600 font-sans bg-red-50 rounded-lg px-3 py-2">
           {state.error}
         </p>
       )}

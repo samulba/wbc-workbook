@@ -133,16 +133,16 @@ export function ModuleWizard({
     <div className="flex flex-col gap-6 sm:gap-8 pb-24 sm:pb-0">
 
       {/* ── Room header ─────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-white/60 border border-sand/25">
+      <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200">
         <div className="flex items-center gap-2 min-w-0">
-          <RoomIcon className="w-3.5 h-3.5 text-forest/50 shrink-0" strokeWidth={1.5} />
-          <span className="text-sm font-sans font-medium text-forest/80 truncate">{roomName}</span>
-          <span className="text-xs text-gray/40 font-sans shrink-0">· {roomLabel}</span>
+          <RoomIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" strokeWidth={1.5} />
+          <span className="text-sm font-sans font-medium text-gray-700 truncate">{roomName}</span>
+          <span className="text-xs text-gray-400 font-sans shrink-0">· {roomLabel}</span>
         </div>
 
         {allRooms.length > 1 && (
           <div className="flex items-center gap-1 shrink-0">
-            <ChevronsUpDown className="w-3 h-3 text-sand" />
+            <ChevronsUpDown className="w-3 h-3 text-gray-400" />
             <select
               value={roomId}
               onChange={(e) =>
@@ -150,7 +150,7 @@ export function ModuleWizard({
                   `/dashboard/projekte/${projectId}/raum/${e.target.value}/modul-1${editMode ? "?edit=true" : ""}`
                 )
               }
-              className="text-xs font-sans text-forest/70 bg-transparent outline-none cursor-pointer border-b border-sand/35 py-0.5 max-w-[130px]"
+              className="text-xs font-sans text-gray-600 bg-transparent outline-none cursor-pointer border-b border-gray-200 py-0.5 max-w-[130px]"
               aria-label="Raum wechseln"
             >
               {allRooms.map((r) => (
