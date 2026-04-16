@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Shield, Menu, X, ArrowLeft } from "lucide-react";
+import { Shield, Menu, X, ArrowLeft, Sun, Moon } from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { AdminSidebarNav } from "./AdminSidebarNav";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface Props {
   email:    string;
@@ -41,9 +42,10 @@ function SidebarFooter() {
 
 export function AdminShell({ email, children }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
 
       {/* ── Desktop sidebar ─────────────────────────────────────────── */}
       <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-[#111a12] dark:bg-[#0d1410] sticky top-0 h-screen overflow-y-auto">
@@ -97,11 +99,25 @@ export function AdminShell({ email, children }: Props) {
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:block truncate max-w-[200px]">
               {email}
             </span>
             <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
+
+            {/* Theme toggle */}
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={theme === "dark" ? "Heller Modus" : "Dunkler Modus"}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+            >
+              {theme === "dark"
+                ? <Sun  className="w-4 h-4" strokeWidth={1.5} />
+                : <Moon className="w-4 h-4" strokeWidth={1.5} />
+              }
+            </button>
+
             <LogoutButton />
           </div>
         </header>

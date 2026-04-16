@@ -74,13 +74,13 @@ export function FaqModal({ faq, onClose, onSaved }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {isEdit ? "FAQ bearbeiten" : "Neue FAQ"}
           </h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -89,11 +89,11 @@ export function FaqModal({ faq, onClose, onSaved }: Props) {
         <div className="px-6 py-5 space-y-4">
           {/* Category */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Kategorie</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Kategorie</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
             >
               {FAQ_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -101,32 +101,32 @@ export function FaqModal({ faq, onClose, onSaved }: Props) {
 
           {/* Question */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Frage *</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Frage *</label>
             <input
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
               placeholder="z. B. Wie starte ich mit Modul 1?"
             />
           </div>
 
           {/* Answer */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Antwort *</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Antwort *</label>
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               rows={6}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-y"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-y"
               placeholder="Ausführliche Antwort…"
             />
-            <p className="text-xs text-gray-400 mt-1">{answer.length} Zeichen</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{answer.length} Zeichen</p>
           </div>
 
           {/* Active toggle */}
           <div className="flex items-center justify-between pt-1">
-            <span className="text-sm text-gray-700">Aktiv (öffentlich sichtbar)</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Aktiv (öffentlich sichtbar)</span>
             <button
               type="button"
               onClick={() => setIsActive((v) => !v)}
@@ -136,14 +136,14 @@ export function FaqModal({ faq, onClose, onSaved }: Props) {
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>}
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 px-6 py-4 border-t border-gray-100">
+        <div className="flex gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-700">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
             Abbrechen
           </button>

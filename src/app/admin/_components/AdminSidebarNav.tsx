@@ -97,7 +97,7 @@ export function AdminSidebarNav() {
                   >
                     <Icon className="w-4 h-4 text-slate-400 shrink-0" strokeWidth={1.5} />
                     <span className="text-sm text-slate-400 flex-1">{label}</span>
-                    <span className="text-[10px] text-slate-500 bg-slate-700/60 px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] text-slate-300 bg-slate-600/50 px-1.5 py-0.5 rounded font-medium">
                       Bald
                     </span>
                   </div>

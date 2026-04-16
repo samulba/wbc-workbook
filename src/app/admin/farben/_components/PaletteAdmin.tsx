@@ -15,10 +15,10 @@ function safeHex(val: unknown, fallback: string): string {
 
 function StatCard({ label, value, sub }: { label: string; value: number; sub?: string }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm">
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">{value}</p>
+      {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
     </div>
   );
 }
@@ -41,7 +41,7 @@ function PaletteCard({
   ];
 
   return (
-    <div className={`group relative bg-white rounded-xl border shadow-sm overflow-hidden transition-all hover:shadow-md ${!palette.is_active ? "opacity-50 grayscale" : ""}`}>
+    <div className={`group relative bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden transition-all hover:shadow-md ${!palette.is_active ? "opacity-50 grayscale" : ""}`}>
       {/* Color strip */}
       <div className="flex h-20">
         {allColors.slice(0, 5).map((c, i) => (
@@ -66,9 +66,9 @@ function PaletteCard({
             />
           ))}
         </div>
-        <p className="text-sm font-semibold text-gray-900 truncate">{palette.name}</p>
+        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{palette.name}</p>
         {palette.room_effect && (
-          <p className="text-xs text-gray-400 mt-0.5">{palette.room_effect}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{palette.room_effect}</p>
         )}
       </div>
 
@@ -198,8 +198,8 @@ export function PaletteAdmin() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Farbpaletten</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Farbpaletten und -schemas verwalten</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Farbpaletten</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Farbpaletten und -schemas verwalten</p>
         </div>
         <button
           onClick={() => setModal("create")}
@@ -227,13 +227,13 @@ export function PaletteAdmin() {
             placeholder="Suche…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
           />
         </div>
         <select
           value={filterEffect}
           onChange={(e) => setFilterEffect(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+          className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
         >
           <option value="">Alle Wirkungen</option>
           {roomEffects.map((e) => <option key={e} value={e}>{e}</option>)}
@@ -241,7 +241,7 @@ export function PaletteAdmin() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+          className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
         >
           <option value="all">Alle Status</option>
           <option value="active">Aktiv</option>
@@ -250,7 +250,7 @@ export function PaletteAdmin() {
         {hasFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             <X className="w-3.5 h-3.5" /> Filter
           </button>
@@ -267,7 +267,7 @@ export function PaletteAdmin() {
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <Palette className="w-12 h-12 text-gray-300 mb-3" />
-          <p className="text-gray-500 font-medium">Keine Paletten gefunden</p>
+          <p className="text-gray-500 dark:text-gray-400 font-medium">Keine Paletten gefunden</p>
           {hasFilters && (
             <button onClick={clearFilters} className="mt-2 text-sm text-green-700 hover:underline">
               Filter zurücksetzen
@@ -293,7 +293,7 @@ export function PaletteAdmin() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
           >
             Zurück
           </button>
@@ -303,7 +303,7 @@ export function PaletteAdmin() {
               <button
                 key={p}
                 onClick={() => setPage(p)}
-                className={`w-8 h-8 text-sm rounded-lg transition-colors ${page === p ? "bg-green-700 text-white" : "border border-gray-200 hover:bg-gray-50"}`}
+                className={`w-8 h-8 text-sm rounded-lg transition-colors ${page === p ? "bg-green-700 text-white" : "border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"}`}
               >
                 {p}
               </button>
@@ -312,7 +312,7 @@ export function PaletteAdmin() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
           >
             Weiter
           </button>
@@ -331,23 +331,23 @@ export function PaletteAdmin() {
       {/* Delete Confirmation */}
       {toDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <Trash2 className="w-5 h-5 text-red-600" />
+              <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Palette löschen?</h3>
-                <p className="text-sm text-gray-500">{toDelete.name}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Palette löschen?</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{toDelete.name}</p>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mb-5">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
               Diese Aktion kann nicht rückgängig gemacht werden.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setToDelete(null)}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200"
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Abbrechen
               </button>

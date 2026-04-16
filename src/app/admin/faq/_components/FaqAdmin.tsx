@@ -11,10 +11,10 @@ import { FaqModal, type FaqRow, FAQ_CATEGORIES } from "./FaqModal";
 
 function StatCard({ label, value, sub }: { label: string; value: number; sub?: string }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-      <p className="text-xs text-gray-500 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm">
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">{value}</p>
+      {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
     </div>
   );
 }
@@ -22,11 +22,11 @@ function StatCard({ label, value, sub }: { label: string; value: number; sub?: s
 // ── Category Badge ────────────────────────────────────────────────────────────
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Allgemein:  "bg-blue-50 text-blue-700",
-  Module:     "bg-green-50 text-green-700",
-  Produkte:   "bg-amber-50 text-amber-700",
-  Coaching:   "bg-purple-50 text-purple-700",
-  Technisch:  "bg-gray-100 text-gray-600",
+  Allgemein:  "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+  Module:     "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300",
+  Produkte:   "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300",
+  Coaching:   "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300",
+  Technisch:  "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300",
 };
 
 // ── FAQ Row Component ─────────────────────────────────────────────────────────
@@ -53,21 +53,21 @@ function FaqItem({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className={`bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden transition-all ${!faq.is_active ? "opacity-60" : ""}`}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden transition-all ${!faq.is_active ? "opacity-60" : ""}`}>
       <div className="flex items-start gap-3 p-4">
         {/* Reorder arrows */}
         <div className="flex flex-col gap-0.5 pt-0.5 shrink-0">
           <button
             onClick={onMoveUp}
             disabled={isFirst}
-            className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20 disabled:cursor-not-allowed"
+            className="p-0.5 text-gray-300 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-20 disabled:cursor-not-allowed"
           >
             <ChevronUp className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onMoveDown}
             disabled={isLast}
-            className="p-0.5 text-gray-300 hover:text-gray-600 disabled:opacity-20 disabled:cursor-not-allowed"
+            className="p-0.5 text-gray-300 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-20 disabled:cursor-not-allowed"
           >
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
@@ -89,10 +89,10 @@ function FaqItem({
             onClick={() => setExpanded((v) => !v)}
             className="text-left w-full"
           >
-            <p className="text-sm font-semibold text-gray-900 leading-snug">{faq.question}</p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-snug">{faq.question}</p>
           </button>
           {expanded && (
-            <p className="mt-2 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{faq.answer}</p>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{faq.answer}</p>
           )}
           <button
             onClick={() => setExpanded((v) => !v)}
@@ -249,8 +249,8 @@ export function FaqAdmin() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">FAQ</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Häufig gestellte Fragen verwalten</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">FAQ</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Häufig gestellte Fragen verwalten</p>
         </div>
         <button
           onClick={() => setModal("create")}
@@ -278,13 +278,13 @@ export function FaqAdmin() {
             placeholder="Fragen durchsuchen…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+            className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
           />
         </div>
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+          className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
         >
           <option value="all">Alle Status</option>
           <option value="active">Aktiv</option>
@@ -293,7 +293,7 @@ export function FaqAdmin() {
         {hasFilters && (
           <button
             onClick={clearFilters}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             <X className="w-3.5 h-3.5" /> Filter
           </button>
@@ -311,7 +311,7 @@ export function FaqAdmin() {
               className={`px-3 py-1.5 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                 activeTab === tab
                   ? "bg-green-700 text-white"
-                  : "text-gray-600 hover:bg-gray-100"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
             >
               {tab === "alle" ? "Alle" : tab}
@@ -333,7 +333,7 @@ export function FaqAdmin() {
       ) : displayedItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <HelpCircle className="w-12 h-12 text-gray-300 mb-3" />
-          <p className="text-gray-500 font-medium">Keine FAQs gefunden</p>
+          <p className="text-gray-500 dark:text-gray-400 font-medium">Keine FAQs gefunden</p>
           {hasFilters && (
             <button onClick={clearFilters} className="mt-2 text-sm text-green-700 hover:underline">
               Filter zurücksetzen
@@ -374,21 +374,21 @@ export function FaqAdmin() {
       {/* Delete Confirmation */}
       {toDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-sm p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                <Trash2 className="w-5 h-5 text-red-600" />
+              <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">FAQ löschen?</h3>
-                <p className="text-sm text-gray-500 line-clamp-1">{toDelete.question}</p>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">FAQ löschen?</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{toDelete.question}</p>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mb-5">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">Diese Aktion kann nicht rückgängig gemacht werden.</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setToDelete(null)}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200"
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Abbrechen
               </button>

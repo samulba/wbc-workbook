@@ -58,7 +58,7 @@ function ColorRow({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label className="text-xs font-medium text-gray-600">{label}</label>
+        <label className="text-xs font-medium text-gray-600 dark:text-gray-400">{label}</label>
         {colors.length < max && (
           <button
             type="button"
@@ -89,7 +89,7 @@ function ColorRow({
               type="text"
               value={c}
               onChange={(e) => set(i, e.target.value)}
-              className="w-20 text-xs border border-gray-200 rounded px-1.5 py-1 font-mono"
+              className="w-20 text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-1 font-mono bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               maxLength={7}
               placeholder="#000000"
             />
@@ -196,13 +196,13 @@ export function PaletteModal({ palette, onClose, onSaved }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {isEdit ? "Palette bearbeiten" : "Neue Farbpalette"}
           </h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -210,30 +210,30 @@ export function PaletteModal({ palette, onClose, onSaved }: Props) {
         {/* Body */}
         <div className="px-6 py-5 space-y-5">
           {/* Preview */}
-          <div className="bg-gray-50 rounded-xl p-4">
-            <p className="text-xs font-medium text-gray-500 mb-2">Vorschau</p>
+          <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Vorschau</p>
             <PalettePreview primary={primary} secondary={secondary} accent={accent} />
           </div>
 
           {/* Name */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Name *</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Name *</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
               placeholder="z. B. Waldgrün-Palette"
             />
           </div>
 
           {/* Room Effect */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Raumwirkung</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Raumwirkung</label>
             <select
               value={effect}
               onChange={(e) => setEffect(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
             >
               <option value="">— keine —</option>
               {ROOM_EFFECTS.map((e) => (
@@ -250,7 +250,7 @@ export function PaletteModal({ palette, onClose, onSaved }: Props) {
 
           {/* Accent */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">Akzentfarbe</label>
+            <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">Akzentfarbe</label>
             <div className="flex items-center gap-2">
               <div className="relative">
                 <div
@@ -269,16 +269,16 @@ export function PaletteModal({ palette, onClose, onSaved }: Props) {
                 type="text"
                 value={accent}
                 onChange={(e) => setAccent(e.target.value)}
-                className="w-24 text-xs border border-gray-200 rounded px-1.5 py-1 font-mono"
+                className="w-24 text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-1 font-mono bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 maxLength={7}
                 placeholder="#F5F0E8"
               />
             </div>
           </div>
 
-          {/* Active toggle */}
+          {/* Active toggle — toggle bg adapts automatically */}
           <div className="flex items-center justify-between pt-1">
-            <span className="text-sm text-gray-700">Aktiv</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Aktiv</span>
             <button
               type="button"
               onClick={() => setIsActive((v) => !v)}
@@ -288,14 +288,14 @@ export function PaletteModal({ palette, onClose, onSaved }: Props) {
             </button>
           </div>
 
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
+          {error && <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 rounded-lg px-3 py-2">{error}</p>}
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 px-6 py-4 border-t border-gray-100">
+        <div className="flex gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-700">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
           >
             Abbrechen
           </button>
