@@ -1,6 +1,5 @@
-import { DatabaseBackup } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import { BackupsPage } from "./_components/BackupsPage";
 
 export default function AdminBackupsPage() {
-  return <ComingSoon icon={DatabaseBackup} title="Backups" desc="Datenbank-Backups verwalten und wiederherstellen." />;
+  return <BackupsPage />;
 }

@@ -1,6 +1,5 @@
-import { Activity } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import { SystemStatus } from "./_components/SystemStatus";
 
 export default function AdminStatusPage() {
-  return <ComingSoon icon={Activity} title="System-Status" desc="Dienststatus, Uptime und Systemgesundheit überwachen." />;
+  return <SystemStatus />;
 }

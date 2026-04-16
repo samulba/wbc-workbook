@@ -66,9 +66,9 @@ const NAV_GROUPS: NavGroup[] = [
     label: "System",
     items: [
       { href: "/admin/analytics", label: "Analytics",    Icon: BarChart3,      enabled: true  },
-      { href: "/admin/status",    label: "System-Status",Icon: Activity,       enabled: false },
-      { href: "/admin/errors",    label: "Error-Logs",   Icon: AlertTriangle,  enabled: false },
-      { href: "/admin/backups",   label: "Backups",      Icon: DatabaseBackup, enabled: false },
+      { href: "/admin/status",    label: "System-Status",Icon: Activity,       enabled: true  },
+      { href: "/admin/errors",    label: "Error-Logs",   Icon: AlertTriangle,  enabled: true  },
+      { href: "/admin/backups",   label: "Backups",      Icon: DatabaseBackup, enabled: true  },
     ],
   },
 ];
