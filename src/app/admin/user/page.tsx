@@ -1,6 +1,9 @@
-import { Users } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import type { Metadata } from "next";
+import { UserManagement } from "./_components/UserManagement";
+
+export const metadata: Metadata = { title: "Benutzer – Admin" };
+export const dynamic = "force-dynamic";
 
 export default function AdminUserPage() {
-  return <ComingSoon icon={Users} title="Benutzer" desc="Registrierte Accounts einsehen, verwalten und Rollen zuweisen." />;
+  return <UserManagement />;
 }
