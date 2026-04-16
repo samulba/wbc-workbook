@@ -52,6 +52,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // ── /coaching guard: must be authenticated ───────────────────────────────────
+  if (!user && pathname.startsWith("/coaching")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
   // ── /dashboard guard: must be authenticated ──────────────────────────────────
   if (!user && pathname.startsWith("/dashboard")) {
     const url = request.nextUrl.clone();

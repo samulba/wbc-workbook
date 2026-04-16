@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   ShoppingBag,
+  PhoneCall,
   Users,
   BarChart3,
 } from "lucide-react";
@@ -22,6 +23,13 @@ const NAV_ITEMS = [
     href:     "/admin/produkte",
     label:    "Produkte",
     Icon:     ShoppingBag,
+    exact:    false,
+    enabled:  true,
+  },
+  {
+    href:     "/admin/coaching",
+    label:    "Coaching",
+    Icon:     PhoneCall,
     exact:    false,
     enabled:  true,
   },

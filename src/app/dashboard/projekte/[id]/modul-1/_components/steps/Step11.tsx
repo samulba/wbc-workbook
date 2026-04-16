@@ -17,6 +17,7 @@ import {
   Camera,
   ArrowRight,
   Share2,
+  PhoneCall,
 } from "lucide-react";
 import Link from "next/link";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
@@ -447,6 +448,19 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
             onClose={() => setShowShare(false)}
           />
         )}
+
+        {/* Coaching CTA */}
+        <Link
+          href={`/coaching/buchen?room=${roomId}`}
+          className={cn(
+            "w-full flex items-center justify-center gap-2 rounded-xl border-2 px-5 py-3.5",
+            "text-sm font-sans font-medium transition-all",
+            "border-sand/40 bg-sand/8 text-forest/70 hover:bg-sand/15 hover:border-sand/60"
+          )}
+        >
+          <PhoneCall className="w-4 h-4" strokeWidth={1.5} />
+          Persönliche Beratung buchen
+        </Link>
 
         {/* Modul 2 – disabled */}
         <div className="relative">

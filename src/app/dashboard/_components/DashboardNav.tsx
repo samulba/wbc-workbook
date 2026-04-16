@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, FolderOpen } from "lucide-react";
+import { Heart, FolderOpen, PhoneCall } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
 const NAV_ITEMS = [
   { href: "/dashboard",           label: "Projekte",  Icon: FolderOpen, exact: true  },
   { href: "/dashboard/favoriten", label: "Favoriten", Icon: Heart,      exact: false },
+  { href: "/dashboard/coaching",  label: "Coaching",  Icon: PhoneCall,  exact: false },
 ] as const;
 
 export function DashboardNav({ favoriteCount }: Props) {

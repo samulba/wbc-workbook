@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, Lock,
-  CalendarDays, Euro, Clock, Plus,
+  CalendarDays, Euro, Clock, Plus, PhoneCall,
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
   Briefcase, Leaf, Sparkles, Camera,
@@ -338,6 +338,33 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Coaching CTA ──────────────────────────────────── */}
+      <div className="rounded-xl border border-sand/30 bg-white overflow-hidden">
+        <div className="flex items-start gap-4 px-5 py-5">
+          <div className="w-10 h-10 rounded-xl bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">
+            <PhoneCall className="w-5 h-5 text-forest/60" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-headline text-base text-gray-900 mb-0.5">
+              Experten-Beratung buchen
+            </h3>
+            <p className="text-xs font-sans text-gray-500 leading-relaxed">
+              Besprich dein Raumkonzept persönlich mit Interior-Expertin Lisa – 30 Minuten, ganz individuell.
+            </p>
+          </div>
+          <Link
+            href={firstRoom
+              ? `/coaching/buchen?room=${firstRoom.id}`
+              : "/coaching/buchen"
+            }
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-forest text-white text-xs font-sans font-medium px-3 py-2 hover:bg-forest/90 transition-colors"
+          >
+            Termin buchen
+            <ArrowRight className="w-3 h-3" strokeWidth={2} />
+          </Link>
         </div>
       </div>
 
