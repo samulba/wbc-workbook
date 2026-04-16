@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { BrainCircuit } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import type { Module1Data } from "@/lib/types/module1";
 
@@ -8,6 +10,8 @@ interface Props {
   projectName: string;
   roomName: string;
   roomType: string;
+  projectId?: string;
+  roomId?: string;
   onChange: (patch: Partial<Module1Data>) => void;
 }
 
@@ -28,7 +32,7 @@ const ROOM_TYPE_LABELS: Record<string, string> = {
   sonstiges:    "Sonstiges",
 };
 
-export function Step01({ data, projectName, roomName, roomType, onChange }: Props) {
+export function Step01({ data, projectName, roomName, roomType, projectId, roomId, onChange }: Props) {
   const wishes = data.wishes ?? ["", "", ""];
 
   function setWish(index: 0 | 1 | 2, value: string) {
@@ -93,6 +97,29 @@ export function Step01({ data, projectName, roomName, roomType, onChange }: Prop
           ))}
         </div>
       </div>
+
+      {/* KI-Analyse CTA */}
+      {projectId && roomId && (
+        <Link
+          href={`/dashboard/projekte/${projectId}/raum/${roomId}/analyse`}
+          className="flex items-center gap-3 rounded-xl border border-dashed border-forest/25 bg-forest/[0.02] px-4 py-3.5 hover:bg-forest/5 hover:border-forest/40 transition-all group"
+        >
+          <div className="w-9 h-9 rounded-lg bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">
+            <BrainCircuit className="w-4 h-4 text-forest/60" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-sans font-semibold text-forest/80 leading-snug">
+              Lass deinen Raum analysieren
+            </p>
+            <p className="text-xs font-sans text-gray-400 mt-0.5">
+              Claude analysiert ein Foto deines Raums und gibt konkrete Empfehlungen
+            </p>
+          </div>
+          <span className="text-xs font-sans font-medium text-forest/50 group-hover:text-forest transition-colors shrink-0">
+            Starten →
+          </span>
+        </Link>
+      )}
 
       {/* Support */}
       <div className="flex flex-col gap-4">

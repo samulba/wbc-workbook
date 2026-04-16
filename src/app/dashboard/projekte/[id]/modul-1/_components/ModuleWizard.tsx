@@ -265,6 +265,8 @@ function StepContent({
           projectName={projectName}
           roomName={roomName}
           roomType={roomType}
+          projectId={projectId}
+          roomId={roomId}
           onChange={onChange}
         />
       );
