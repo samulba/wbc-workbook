@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Heart, FolderOpen, ChevronDown,
-  User, Settings, LogOut, Sun, Moon,
+  User, Settings, LogOut, Sun, Moon, Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -23,8 +23,9 @@ function getInitials(email: string): string {
 // ── Nav items ─────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { href: "/dashboard",           label: "Projekte",  Icon: FolderOpen, exact: true  },
-  { href: "/dashboard/favoriten", label: "Favoriten", Icon: Heart,      exact: false },
+  { href: "/dashboard",              label: "Projekte",    Icon: FolderOpen, exact: true  },
+  { href: "/dashboard/favoriten",    label: "Favoriten",   Icon: Heart,      exact: false },
+  { href: "/dashboard/inspiration",  label: "Inspiration", Icon: Sparkles,   exact: false },
 ] as const;
 
 // ── Component ─────────────────────────────────────────────────────────────────
