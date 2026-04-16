@@ -1,6 +1,9 @@
-import { Sparkles } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import type { Metadata } from "next";
+import { InspirationAdmin } from "./_components/InspirationAdmin";
+
+export const metadata: Metadata = { title: "Inspiration – Admin" };
+export const dynamic = "force-dynamic";
 
 export default function AdminInspirationPage() {
-  return <ComingSoon icon={Sparkles} title="Inspiration" desc="Inspiration-Bilder verwalten, kuratieren und taggen." />;
+  return <InspirationAdmin />;
 }
