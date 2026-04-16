@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { EFFECTS } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
@@ -8,6 +8,7 @@ import type { RoomEffect } from "../effectsConfig";
 import {
   CheckCircle2,
   Download,
+  Image as ImageIcon,
   Lock,
   Lightbulb,
   Palette,
@@ -22,6 +23,7 @@ import {
 import Link from "next/link";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
 import { ProductRecommendations } from "../ProductRecommendations";
+import { MoodboardExportCanvas } from "../MoodboardExportCanvas";
 
 interface Props {
   data: Module1Data;
@@ -84,10 +86,14 @@ const DOTS = [
 ];
 
 export function Step11({ data, projectId, projectName, roomId, roomType, roomName, editMode, shareToken, isShared = false }: Props) {
-  const [mounted, setMounted]       = useState(false);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [pdfError, setPdfError]     = useState<string | null>(null);
-  const [showShare, setShowShare]   = useState(false);
+  const [mounted, setMounted]               = useState(false);
+  const [pdfLoading, setPdfLoading]         = useState(false);
+  const [pdfError, setPdfError]             = useState<string | null>(null);
+  const [showShare, setShowShare]           = useState(false);
+  const [imgExporting, setImgExporting]     = useState(false);
+  const [imgError, setImgError]             = useState<string | null>(null);
+  const [showExportCanvas, setShowExportCanvas] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
@@ -114,6 +120,35 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
       setPdfError("PDF konnte nicht erstellt werden. Bitte erneut versuchen.");
     } finally {
       setPdfLoading(false);
+    }
+  }
+
+  async function handleImageExport() {
+    setImgExporting(true);
+    setImgError(null);
+    setShowExportCanvas(true);
+    try {
+      // Wait for the canvas to render
+      await new Promise((r) => setTimeout(r, 150));
+      if (!exportRef.current) throw new Error("Canvas nicht gefunden");
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(exportRef.current, {
+        pixelRatio: 2,
+        backgroundColor: "#ffffff",
+      });
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      const today = new Date().toLocaleDateString("de-DE").replace(/\./g, "-");
+      const safeName = projectName.replace(/[^a-zA-Z0-9äöüÄÖÜß\s-]/g, "").trim().replace(/\s+/g, "-");
+      a.download = `Raumkonzept-${safeName}-${today}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch {
+      setImgError("Bild konnte nicht erstellt werden. Bitte erneut versuchen.");
+    } finally {
+      setImgExporting(false);
+      setShowExportCanvas(false);
     }
   }
 
@@ -425,6 +460,37 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
           )}
         </button>
 
+        {/* PNG image export */}
+        {imgError && (
+          <p className="text-xs text-terracotta font-sans bg-terracotta/5 rounded-lg px-3 py-2 text-center">
+            {imgError}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={handleImageExport}
+          disabled={imgExporting}
+          className={cn(
+            "w-full flex items-center justify-center gap-2 rounded-xl border-2 px-5 py-3.5",
+            "text-sm font-sans font-medium transition-all",
+            imgExporting
+              ? "border-sand/40 bg-sand/10 text-gray/50 cursor-not-allowed"
+              : "border-forest/30 bg-forest/5 text-forest hover:bg-forest/10 hover:border-forest/50"
+          )}
+        >
+          {imgExporting ? (
+            <>
+              <span className="w-4 h-4 rounded-full border-2 border-forest/30 border-t-forest animate-spin shrink-0" />
+              Bild wird erstellt …
+            </>
+          ) : (
+            <>
+              <ImageIcon className="w-4 h-4" strokeWidth={1.5} />
+              Als Bild speichern
+            </>
+          )}
+        </button>
+
         {/* Share button */}
         <button
           type="button"
@@ -486,6 +552,16 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
         </p>
       </div>
 
+      {/* Off-screen export canvas */}
+      {showExportCanvas && (
+        <MoodboardExportCanvas
+          ref={exportRef}
+          projectName={projectName}
+          roomName={roomName}
+          roomType={roomType}
+          data={data}
+        />
+      )}
     </div>
   );
 }

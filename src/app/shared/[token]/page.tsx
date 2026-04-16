@@ -6,6 +6,7 @@ import {
   Lightbulb, ExternalLink,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { SharedExportButton } from "./_components/SharedExportButton";
 
 export const metadata: Metadata = { title: "Raumkonzept – Wellbeing Workbook" };
 
@@ -148,9 +149,23 @@ export default async function SharedRoomPage({
         <h1 className="font-headline text-3xl sm:text-4xl text-forest leading-tight mb-1.5">
           {room.room_name}
         </h1>
-        <p className="text-sm font-sans text-gray/50">
-          {roomLabel} · {createdYear}
-        </p>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-sm font-sans text-gray/50">
+            {roomLabel} · {createdYear}
+          </p>
+          <SharedExportButton
+            projectName={room.project_name}
+            roomName={room.room_name}
+            roomType={room.room_type}
+            mainEffect={room.main_effect}
+            primaryColors={room.primary_colors}
+            secondaryColors={room.secondary_colors}
+            accentColor={room.accent_color}
+            materials={room.materials}
+            lightMood={room.light_mood}
+            moodboardUrls={room.moodboard_urls}
+          />
+        </div>
       </section>
 
       {/* ── Main content ───────────────────────────────────────────────────── */}
