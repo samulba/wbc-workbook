@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "./_components/DashboardHeader";
+import { FeedbackWidget } from "@/components/FeedbackWidget";
 
 export default async function DashboardLayout({
   children,
@@ -32,6 +33,7 @@ export default async function DashboardLayout({
         isAdmin={profile?.role === "admin"}
       />
       <main>{children}</main>
+      <FeedbackWidget />
     </div>
   );
 }

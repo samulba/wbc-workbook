@@ -1,6 +1,9 @@
-import { Mail } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import type { Metadata } from "next";
+import { EmailList } from "./_components/EmailList";
+
+export const metadata: Metadata = { title: "Email-Liste – Admin" };
+export const dynamic = "force-dynamic";
 
 export default function AdminEmailsPage() {
-  return <ComingSoon icon={Mail} title="Email-Liste" desc="Newsletter-Abonnenten und Email-Kampagnen verwalten." />;
+  return <EmailList />;
 }

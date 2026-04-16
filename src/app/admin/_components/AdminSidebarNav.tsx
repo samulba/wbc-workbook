@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -27,6 +28,7 @@ interface NavItem {
   Icon:    React.ElementType;
   exact?:  boolean;
   enabled: boolean;
+  badge?:  "feedback-unread";
 }
 
 interface NavGroup {
@@ -54,19 +56,19 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Users",
     items: [
-      { href: "/admin/user",      label: "Benutzer",    Icon: Users,          enabled: true  },
-      { href: "/admin/emails",    label: "Email-Liste", Icon: Mail,           enabled: false },
-      { href: "/admin/coaching",  label: "Coaching",    Icon: PhoneCall,      enabled: true  },
-      { href: "/admin/feedback",  label: "Feedback",    Icon: MessageSquare,  enabled: false },
+      { href: "/admin/user",      label: "Benutzer",    Icon: Users,         enabled: true  },
+      { href: "/admin/emails",    label: "Email-Liste", Icon: Mail,          enabled: true  },
+      { href: "/admin/coaching",  label: "Coaching",    Icon: PhoneCall,     enabled: true  },
+      { href: "/admin/feedback",  label: "Feedback",    Icon: MessageSquare, enabled: true,  badge: "feedback-unread" },
     ],
   },
   {
     label: "System",
     items: [
-      { href: "/admin/analytics", label: "Analytics",    Icon: BarChart3,       enabled: true  },
-      { href: "/admin/status",    label: "System-Status",Icon: Activity,        enabled: false },
-      { href: "/admin/errors",    label: "Error-Logs",   Icon: AlertTriangle,   enabled: false },
-      { href: "/admin/backups",   label: "Backups",      Icon: DatabaseBackup,  enabled: false },
+      { href: "/admin/analytics", label: "Analytics",    Icon: BarChart3,      enabled: true  },
+      { href: "/admin/status",    label: "System-Status",Icon: Activity,       enabled: false },
+      { href: "/admin/errors",    label: "Error-Logs",   Icon: AlertTriangle,  enabled: false },
+      { href: "/admin/backups",   label: "Backups",      Icon: DatabaseBackup, enabled: false },
     ],
   },
 ];
@@ -75,6 +77,15 @@ const NAV_GROUPS: NavGroup[] = [
 
 export function AdminSidebarNav() {
   const pathname = usePathname();
+  const [unreadFeedback, setUnreadFeedback] = useState(0);
+
+  // Fetch unread feedback count once on mount
+  useEffect(() => {
+    fetch("/api/admin/feedback/unread-count")
+      .then((r) => r.json())
+      .then((d) => setUnreadFeedback(d.count ?? 0))
+      .catch(() => {});
+  }, []);
 
   return (
     <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
@@ -86,8 +97,9 @@ export function AdminSidebarNav() {
             </p>
           )}
           <div className="space-y-0.5">
-            {group.items.map(({ href, label, Icon, exact, enabled }) => {
-              const isActive = exact ? pathname === href : pathname.startsWith(href);
+            {group.items.map(({ href, label, Icon, exact, enabled, badge }) => {
+              const isActive  = exact ? pathname === href : pathname.startsWith(href);
+              const badgeCount = badge === "feedback-unread" ? unreadFeedback : 0;
 
               if (!enabled) {
                 return (
@@ -119,7 +131,12 @@ export function AdminSidebarNav() {
                     className={cn("w-4 h-4 shrink-0", isActive ? "text-mint" : "")}
                     strokeWidth={1.5}
                   />
-                  <span className="text-sm font-medium">{label}</span>
+                  <span className="text-sm font-medium flex-1">{label}</span>
+                  {badgeCount > 0 && (
+                    <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none flex items-center justify-center">
+                      {badgeCount > 99 ? "99+" : badgeCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

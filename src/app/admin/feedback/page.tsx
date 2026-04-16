@@ -1,6 +1,9 @@
-import { MessageSquare } from "lucide-react";
-import { ComingSoon } from "../_components/ComingSoon";
+import type { Metadata } from "next";
+import { FeedbackAdmin } from "./_components/FeedbackAdmin";
+
+export const metadata: Metadata = { title: "Feedback – Admin" };
+export const dynamic = "force-dynamic";
 
 export default function AdminFeedbackPage() {
-  return <ComingSoon icon={MessageSquare} title="Feedback" desc="Nutzerfeedback und Bewertungen einsehen und auswerten." />;
+  return <FeedbackAdmin />;
 }
