@@ -1,9 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { BrainCircuit } from "lucide-react";
+import { BrainCircuit, Heart, Sun, Sparkles, Coffee, Leaf, Moon, Flame } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import type { Module1Data } from "@/lib/types/module1";
+
+// Inspiration chips — tapping populates the next empty wish slot
+const WISH_IDEAS: { label: string; Icon: React.ElementType }[] = [
+  { label: "Ein Rückzugsort zum Auftanken", Icon: Leaf },
+  { label: "Mehr Licht und Weite",          Icon: Sun },
+  { label: "Ein Raum, der zu mir passt",    Icon: Heart },
+  { label: "Platz für Hobbys & Kreativität",Icon: Sparkles },
+  { label: "Gemütliche Lese-Ecke",          Icon: Coffee },
+  { label: "Ruhe zum Durchatmen",           Icon: Moon },
+  { label: "Mehr Lebendigkeit",             Icon: Flame },
+];
 
 interface Props {
   data: Module1Data;
@@ -39,6 +50,13 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
     const next: [string, string, string] = [...wishes] as [string, string, string];
     next[index] = value;
     onChange({ wishes: next });
+  }
+
+  function applyIdea(idea: string) {
+    // Fill the first empty wish slot; if all full, no-op
+    const emptyIdx = [0, 1, 2].find((i) => !wishes[i]?.trim());
+    if (emptyIdx === undefined) return;
+    setWish(emptyIdx as 0 | 1 | 2, idea);
   }
 
   return (
@@ -95,6 +113,39 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
               />
             </div>
           ))}
+        </div>
+
+        {/* Inspiration chips */}
+        <div>
+          <p className="text-[11px] uppercase tracking-widest text-sand mb-2 font-sans">
+            Keine Idee? Tippe auf einen Vorschlag
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {WISH_IDEAS.map(({ label, Icon }) => {
+              const already = wishes.some((w) => w === label);
+              const allFull = wishes.every((w) => w.trim().length > 0);
+              const disabled = already || allFull;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => applyIdea(label)}
+                  disabled={disabled}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-sans transition-all ${
+                    already
+                      ? "bg-forest/10 border-forest/30 text-forest/70 cursor-default"
+                      : disabled
+                      ? "bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-cream border-sand/40 text-forest/70 hover:border-forest/40 hover:bg-mint/10 hover:-translate-y-0.5 active:scale-95"
+                  }`}
+                >
+                  <Icon className="w-3 h-3" strokeWidth={1.5} />
+                  {label}
+                  {already && <span className="text-forest/60">✓</span>}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
