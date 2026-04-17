@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ShareModal } from "@/app/dashboard/_components/ShareModal";
+import { AskFriendButton } from "@/components/feedback-share/AskFriendButton";
 import { ProductRecommendations } from "../ProductRecommendations";
 import { MoodboardExportCanvas } from "../MoodboardExportCanvas";
 
@@ -568,6 +569,11 @@ export function Step11({ data, projectId, projectName, roomId, roomType, roomNam
             onClose={() => setShowShare(false)}
           />
         )}
+
+        {/* Ask a friend for feedback */}
+        <div className="flex justify-center">
+          <AskFriendButton roomId={roomId} variant="outline" />
+        </div>
 
         {/* Coaching CTA */}
         <Link
