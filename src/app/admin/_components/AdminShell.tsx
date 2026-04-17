@@ -14,27 +14,26 @@ interface Props {
 
 function SidebarBrand() {
   return (
-    <Link href="/admin" className="flex items-center gap-2.5 group">
-      <div className="w-7 h-7 rounded-md bg-mint/20 border border-mint/30 flex items-center justify-center shrink-0">
-        <Shield className="w-3.5 h-3.5 text-mint" strokeWidth={1.5} />
+    <Link href="/admin" className="flex items-center gap-2.5">
+      <div className="w-7 h-7 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shrink-0">
+        <Shield className="w-3.5 h-3.5 text-gray-600 dark:text-gray-300" strokeWidth={1.5} />
       </div>
-      <div className="leading-none">
-        <p className="text-[11px] font-sans font-semibold text-white tracking-wide">Admin-Bereich</p>
-        <p className="text-[9px] text-slate-500 uppercase tracking-widest mt-0.5">Wellbeing WB</p>
-      </div>
+      <span className="text-sm font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
+        Admin
+      </span>
     </Link>
   );
 }
 
 function SidebarFooter() {
   return (
-    <div className="px-3 py-4 border-t border-white/8">
+    <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-800">
       <Link
         href="/dashboard"
-        className="flex items-center gap-2 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/8 transition-colors"
+        className="flex items-center gap-2 px-3 h-9 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
-        <span className="text-xs font-sans">Zur App</span>
+        <span className="text-xs font-medium">Zur App</span>
       </Link>
     </div>
   );
@@ -45,11 +44,11 @@ export function AdminShell({ email, children }: Props) {
   const { theme, toggle } = useTheme();
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
 
       {/* ── Desktop sidebar ─────────────────────────────────────────── */}
-      <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-[#111a12] dark:bg-[#0d1410] sticky top-0 h-screen overflow-y-auto">
-        <div className="px-4 py-5 border-b border-white/8">
+      <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 sticky top-0 h-screen">
+        <div className="h-14 px-4 flex items-center border-b border-gray-200 dark:border-gray-800 shrink-0">
           <SidebarBrand />
         </div>
         <AdminSidebarNav />
@@ -63,15 +62,15 @@ export function AdminShell({ email, children }: Props) {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="absolute left-0 top-0 bottom-0 w-60 flex flex-col bg-[#111a12] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-4 border-b border-white/8">
+          <aside className="absolute left-0 top-0 bottom-0 w-60 flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800">
+            <div className="h-14 px-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-800 shrink-0">
               <SidebarBrand />
               <button
                 type="button"
                 onClick={() => setSidebarOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
-                <X className="w-4 h-4 text-slate-400" strokeWidth={1.5} />
+                <X className="w-4 h-4 text-gray-500 dark:text-gray-400" strokeWidth={1.5} />
               </button>
             </div>
             <AdminSidebarNav />
@@ -89,18 +88,18 @@ export function AdminShell({ email, children }: Props) {
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Navigation öffnen"
             >
               <Menu className="w-4 h-4 text-gray-500 dark:text-gray-400" strokeWidth={1.5} />
             </button>
-            <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wide uppercase">
+            <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-tight">
               Admin-Bereich
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:block truncate max-w-[200px]">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:block truncate max-w-[220px] mr-2">
               {email}
             </span>
             <div className="h-4 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
@@ -110,7 +109,7 @@ export function AdminShell({ email, children }: Props) {
               type="button"
               onClick={toggle}
               aria-label={theme === "dark" ? "Heller Modus" : "Dunkler Modus"}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+              className="w-8 h-8 rounded-md flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
             >
               {theme === "dark"
                 ? <Sun  className="w-4 h-4" strokeWidth={1.5} />
@@ -123,7 +122,7 @@ export function AdminShell({ email, children }: Props) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 overflow-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
           {children}
         </main>
       </div>

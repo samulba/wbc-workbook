@@ -79,7 +79,6 @@ export function AdminSidebarNav() {
   const pathname = usePathname();
   const [unreadFeedback, setUnreadFeedback] = useState(0);
 
-  // Fetch unread feedback count once on mount
   useEffect(() => {
     fetch("/api/admin/feedback/unread-count")
       .then((r) => r.json())
@@ -88,28 +87,28 @@ export function AdminSidebarNav() {
   }, []);
 
   return (
-    <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
+    <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
       {NAV_GROUPS.map((group, gi) => (
         <div key={gi}>
           {group.label && (
-            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-500 select-none">
+            <p className="px-3 mb-1.5 text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 select-none">
               {group.label}
             </p>
           )}
           <div className="space-y-0.5">
             {group.items.map(({ href, label, Icon, exact, enabled, badge }) => {
-              const isActive  = exact ? pathname === href : pathname.startsWith(href);
+              const isActive   = exact ? pathname === href : pathname.startsWith(href);
               const badgeCount = badge === "feedback-unread" ? unreadFeedback : 0;
 
               if (!enabled) {
                 return (
                   <div
                     key={href}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg opacity-30 cursor-not-allowed select-none"
+                    className="flex items-center gap-3 px-3 h-9 rounded-md opacity-40 cursor-not-allowed select-none"
                   >
-                    <Icon className="w-4 h-4 text-slate-400 shrink-0" strokeWidth={1.5} />
-                    <span className="text-sm text-slate-400 flex-1">{label}</span>
-                    <span className="text-[10px] text-slate-300 bg-slate-600/50 px-1.5 py-0.5 rounded font-medium">
+                    <Icon className="w-4 h-4 text-gray-400 shrink-0" strokeWidth={1.5} />
+                    <span className="text-sm text-gray-500 dark:text-gray-400 flex-1">{label}</span>
+                    <span className="text-[10px] text-gray-500 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-medium">
                       Bald
                     </span>
                   </div>
@@ -121,17 +120,22 @@ export function AdminSidebarNav() {
                   key={href}
                   href={href}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+                    "flex items-center gap-3 px-3 h-9 rounded-md text-sm transition-colors",
                     isActive
-                      ? "bg-white/12 text-white border-l-2 border-mint pl-[10px]"
-                      : "text-slate-400 hover:bg-white/8 hover:text-slate-200"
+                      ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-gray-200"
                   )}
                 >
                   <Icon
-                    className={cn("w-4 h-4 shrink-0", isActive ? "text-mint" : "")}
+                    className={cn(
+                      "w-4 h-4 shrink-0",
+                      isActive
+                        ? "text-gray-700 dark:text-gray-200"
+                        : "text-gray-400 dark:text-gray-500"
+                    )}
                     strokeWidth={1.5}
                   />
-                  <span className="text-sm font-medium flex-1">{label}</span>
+                  <span className="flex-1 truncate">{label}</span>
                   {badgeCount > 0 && (
                     <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none flex items-center justify-center">
                       {badgeCount > 99 ? "99+" : badgeCount}
