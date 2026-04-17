@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum der Wellbeing Concepts GbR",
+  description: "Impressum des Wellbeing Workbook",
 };
 
 export default function ImpressumPage() {
@@ -13,34 +13,32 @@ export default function ImpressumPage() {
 
       <h2>Anbieter</h2>
       <p>
-        <strong>Wellbeing Concepts GbR</strong><br />
-        [Straße und Hausnummer]<br />
-        [PLZ] [Ort]<br />
+        <strong>Samuel Liba Unternehmensberatung</strong><br />
+        Geranienweg 7<br />
+        85586 Poing<br />
         Deutschland
       </p>
 
-      <h2>Vertreten durch die Gesellschafter</h2>
-      <p>
-        [Name Gesellschafter 1]<br />
-        [Name Gesellschafter 2]
-      </p>
+      <h2>Vertretungsberechtigter</h2>
+      <p>Samuel Liba</p>
 
       <h2>Kontakt</h2>
       <p>
-        Telefon: [Telefonnummer]<br />
-        E-Mail: <a href="mailto:kontakt@wellbeing-concepts.de">kontakt@wellbeing-concepts.de</a>
+        Telefon: <a href="tel:+4917631335327">+49 176 31335327</a><br />
+        E-Mail: <a href="mailto:info@vicinusmedia.com">info@vicinusmedia.com</a>
       </p>
 
       <h2>Umsatzsteuer-ID</h2>
       <p>
         Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz:<br />
-        [USt-IdNr., falls vorhanden]
+        DE450215192
       </p>
 
-      <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+      <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p>
-        [Name der verantwortlichen Person]<br />
-        [Anschrift wie oben]
+        Samuel Liba<br />
+        Geranienweg 7<br />
+        85586 Poing
       </p>
 
       <h2>Streitbeilegung</h2>
@@ -50,7 +48,7 @@ export default function ImpressumPage() {
         <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
           https://ec.europa.eu/consumers/odr
         </a>
-        . Unsere E-Mail-Adresse finden Sie oben im Impressum.
+        . Unsere E-Mail-Adresse findest du oben im Impressum.
       </p>
       <p>
         Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
@@ -106,9 +104,10 @@ export default function ImpressumPage() {
 
       <p className="text-xs text-gray-400 mt-8">
         <em>
-          Hinweis: Die mit [eckigen Klammern] markierten Angaben müssen vor
-          Go-Live mit den tatsächlichen Angaben der Wellbeing Concepts GbR
-          ersetzt werden (Anschrift, Vertretungsberechtigte, Telefon, USt-IdNr.).
+          Hinweis: Das Wellbeing Workbook wird übergangsweise durch Samuel Liba
+          Unternehmensberatung betrieben, bis die Wellbeing Concepts GbR eigene
+          Firmendaten erhalten hat. Die Verantwortlichkeit für Inhalt und
+          Datenverarbeitung liegt so lange beim oben genannten Anbieter.
         </em>
       </p>
     </>

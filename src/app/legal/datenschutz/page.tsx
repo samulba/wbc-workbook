@@ -16,10 +16,16 @@ export default function DatenschutzPage() {
       <h2>1. Verantwortlicher</h2>
       <p>
         Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
-        <strong>Wellbeing Concepts GbR</strong><br />
-        [Straße und Hausnummer]<br />
-        [PLZ] [Ort]<br />
-        E-Mail: <a href="mailto:datenschutz@wellbeing-concepts.de">datenschutz@wellbeing-concepts.de</a>
+        <strong>Samuel Liba Unternehmensberatung</strong><br />
+        Geranienweg 7<br />
+        85586 Poing<br />
+        Telefon: <a href="tel:+4917631335327">+49 176 31335327</a><br />
+        E-Mail: <a href="mailto:info@vicinusmedia.com">info@vicinusmedia.com</a>
+      </p>
+      <p className="text-xs text-gray-500">
+        Hinweis: Der Betrieb des Wellbeing Workbook erfolgt übergangsweise über
+        Samuel Liba Unternehmensberatung, bis die Wellbeing Concepts GbR eigene
+        Firmendaten erhalten hat.
       </p>
 
       <h2>2. Welche Daten wir erheben</h2>
@@ -192,10 +198,7 @@ export default function DatenschutzPage() {
       </ul>
       <p>
         Zur Ausübung deiner Rechte genügt eine formlose Nachricht an{" "}
-        <a href="mailto:datenschutz@wellbeing-concepts.de">
-          datenschutz@wellbeing-concepts.de
-        </a>
-        .
+        <a href="mailto:info@vicinusmedia.com">info@vicinusmedia.com</a>.
       </p>
 
       <h2>8. Datensicherheit</h2>
