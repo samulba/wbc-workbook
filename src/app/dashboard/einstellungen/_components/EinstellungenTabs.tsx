@@ -58,8 +58,22 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
 
   return (
     <div>
-      {/* ── Tab bar ──────────────────────────────────────────── */}
-      <div className="flex gap-0.5 mb-8 border-b border-gray-200 -mx-4 sm:-mx-6 px-4 sm:px-6 overflow-x-auto">
+      {/* ── Tab bar (mobile: native select) ──────────────────── */}
+      <div className="sm:hidden mb-6">
+        <label className="block text-xs uppercase tracking-widest text-gray-400 mb-1.5">Bereich</label>
+        <select
+          value={active}
+          onChange={(e) => setActive(e.target.value as TabId)}
+          className="w-full h-12 px-3 rounded-lg border border-gray-200 bg-white text-base font-medium text-forest"
+        >
+          {TABS.map(({ id, label }) => (
+            <option key={id} value={id}>{label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* ── Tab bar (desktop: horizontal tabs) ───────────────── */}
+      <div className="hidden sm:flex gap-0.5 mb-8 border-b border-gray-200 -mx-6 px-6 overflow-x-auto">
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
@@ -69,11 +83,11 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
               "flex items-center gap-1.5 px-3.5 py-2.5 text-sm font-sans font-medium whitespace-nowrap border-b-2 -mb-px transition-colors",
               active === id
                 ? "border-forest text-forest"
-                : "border-transparent text-gray-500 hover:text-gray-900"
+                : "border-transparent text-gray-500 hover:text-gray-900",
             )}
           >
             <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
-            <span className="hidden xs:inline sm:inline">{label}</span>
+            <span>{label}</span>
           </button>
         ))}
       </div>

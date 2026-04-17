@@ -178,12 +178,15 @@ export function ModuleWizard({
         </div>
       )}
 
-      <ProgressBar
-        currentStep={step}
-        stepNotes={data.step_notes}
-        editMode={editMode}
-        onStepClick={(s) => transition(s)}
-      />
+      {/* Sticky on mobile so progress stays visible while scrolling */}
+      <div className="sticky top-14 -mx-4 sm:-mx-0 sm:static z-10 bg-[var(--bg-page)]/95 backdrop-blur-md px-4 sm:px-0 py-2 sm:py-0 border-b border-[var(--border-page)] sm:border-0">
+        <ProgressBar
+          currentStep={step}
+          stepNotes={data.step_notes}
+          editMode={editMode}
+          onStepClick={(s) => transition(s)}
+        />
+      </div>
 
       {/* Step header */}
       <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
