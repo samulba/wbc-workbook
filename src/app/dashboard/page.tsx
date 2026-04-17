@@ -5,6 +5,7 @@ import { ProjectCard } from "./_components/ProjectCard";
 import type { ProjectCardProps } from "./_components/ProjectCard";
 import { ModuleOverview } from "./_components/ModuleOverview";
 import { AchievementWidget } from "@/components/achievements/AchievementWidget";
+import { ShoppingWidget } from "@/components/shopping/ShoppingWidget";
 
 export const metadata: Metadata = { title: "Mein Raumkonzept" };
 
@@ -94,9 +95,10 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      {/* ── Achievements widget ────────────────────────────────── */}
-      <section className="py-6 border-b border-[var(--border-page)]">
+      {/* ── Achievements + Shopping widgets ────────────────────── */}
+      <section className="py-6 border-b border-[var(--border-page)] grid grid-cols-1 md:grid-cols-2 gap-4">
         <AchievementWidget />
+        <ShoppingWidget />
       </section>
 
       {/* ── Module overview ────────────────────────────────────── */}
