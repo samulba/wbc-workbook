@@ -108,10 +108,18 @@ export function DashboardHeader({ email, favoriteCount, isAdmin = false }: Props
               : pathname.startsWith(href);
             const isFav = href === "/dashboard/favoriten";
 
+            const tourKey =
+              href === "/dashboard"             ? "nav-projekte"    :
+              href === "/dashboard/favoriten"   ? "nav-favoriten"   :
+              href === "/dashboard/shopping"    ? "nav-shopping"    :
+              href === "/dashboard/inspiration" ? "nav-inspiration" :
+              undefined;
+
             return (
               <Link
                 key={href}
                 href={href}
+                data-tour={tourKey}
                 className={cn(
                   "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-sans font-medium transition-all duration-150",
                   isActive

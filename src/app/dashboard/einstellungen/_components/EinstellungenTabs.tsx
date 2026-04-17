@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   User, Shield, Bell, Scale, ShieldAlert,
-  ExternalLink, Download, ChevronRight,
+  ExternalLink, Download, ChevronRight, Compass,
 } from "lucide-react";
 import { ProfileForm } from "@/app/dashboard/profil/_components/ProfileForm";
 import { PasswordForm } from "./PasswordForm";
+import { resetTour } from "@/app/actions/tour";
 import { cn } from "@/lib/utils";
 
 // ── Tab definitions ────────────────────────────────────────────────────────────
@@ -34,6 +36,25 @@ interface Props {
 
 export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Props) {
   const [active, setActive] = useState<TabId>("profil");
+  const router = useRouter();
+  const [resetting, startReset] = useTransition();
+
+  function handleReplayTour() {
+    startReset(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const startFn = (window as any).__startWelcomeTour;
+      if (typeof startFn === "function") {
+        // Client-only: dashboard layout already mounted, just replay
+        router.push("/dashboard");
+        setTimeout(() => startFn(), 400);
+      } else {
+        // Fallback: flip the flag server-side and navigate
+        await resetTour();
+        router.push("/dashboard");
+        router.refresh();
+      }
+    });
+  }
 
   return (
     <div>
@@ -78,6 +99,32 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
             {/* Form */}
             <div className="rounded-xl border border-gray-200 bg-white p-5">
               <ProfileForm initialName={displayName} email={email} />
+            </div>
+
+            {/* Replay tour */}
+            <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+                <Compass className="w-4 h-4 text-forest" strokeWidth={1.5} />
+                <h2 className="font-headline text-base text-gray-900">Willkommens-Tour</h2>
+              </div>
+              <div className="px-5 py-4 flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-sans font-medium text-gray-700 mb-0.5">
+                    Tour erneut ansehen
+                  </p>
+                  <p className="text-xs text-gray-500 font-sans leading-relaxed">
+                    Die interaktive Einführung noch einmal starten — praktisch, wenn neue Features dazukommen.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleReplayTour}
+                  disabled={resetting}
+                  className="shrink-0 h-9 px-4 rounded-lg border border-forest/30 bg-white text-sm font-sans font-medium text-forest hover:bg-forest/5 transition-colors disabled:opacity-50"
+                >
+                  {resetting ? "Starte …" : "Tour starten"}
+                </button>
+              </div>
             </div>
           </div>
         )}

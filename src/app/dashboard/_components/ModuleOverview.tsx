@@ -70,7 +70,7 @@ interface Props {
 
 export function ModuleOverview({ projects }: Props) {
   return (
-    <section>
+    <section data-tour="modul-overview">
       <div className="mb-6">
         <h2 className="font-headline text-xl sm:text-2xl text-gray-900">Die 4 Module</h2>
         <p className="text-sm text-gray-500 font-sans mt-0.5">

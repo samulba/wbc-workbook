@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { DashboardHeader } from "./_components/DashboardHeader";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
 import { AchievementWatcher } from "@/components/achievements/AchievementWatcher";
+import { WelcomeTour } from "@/components/tour/WelcomeTour";
 import { touchStreak, checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export default async function DashboardLayout({
@@ -18,7 +19,7 @@ export default async function DashboardLayout({
   await touchStreak(user.id).catch(() => {});
   await checkAndUnlockAchievements(user.id, "activity").catch(() => {});
 
-  // Parallel: favorite count + profile role
+  // Parallel: favorite count + profile role + tour flag
   const [{ count: favoriteCount }, { data: profile }] = await Promise.all([
     supabase
       .from("favorites")
@@ -26,7 +27,7 @@ export default async function DashboardLayout({
       .eq("user_id", user.id),
     supabase
       .from("profiles")
-      .select("role")
+      .select("role, has_seen_tour")
       .eq("id", user.id)
       .single(),
   ]);
@@ -41,6 +42,7 @@ export default async function DashboardLayout({
       <main>{children}</main>
       <FeedbackWidget />
       <AchievementWatcher />
+      <WelcomeTour autoStart={profile?.has_seen_tour === false} />
     </div>
   );
 }

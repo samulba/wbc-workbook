@@ -10,6 +10,7 @@ export function NewProjectButton({ variant = "inline" }: Props) {
     return (
       <Link
         href="/dashboard/projekte/neu"
+      data-tour="new-project"
         className="group w-full rounded-xl border-2 border-dashed border-gray-200 hover:border-forest/30 hover:bg-white transition-all duration-200 py-14 px-8 flex flex-col items-center gap-5 text-center"
       >
         <div className="w-14 h-14 rounded-xl bg-gray-100 group-hover:bg-forest/8 border border-gray-200 group-hover:border-forest/20 flex items-center justify-center transition-all duration-200">
@@ -34,6 +35,7 @@ export function NewProjectButton({ variant = "inline" }: Props) {
   return (
     <Link
       href="/dashboard/projekte/neu"
+      data-tour="new-project"
       className="inline-flex items-center gap-1.5 h-9 px-4 text-sm font-sans font-medium rounded-lg bg-forest text-white hover:bg-forest/90 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest focus-visible:ring-offset-2"
     >
       <Plus className="w-3.5 h-3.5" />
