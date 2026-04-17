@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin-client";
+import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 // ── POST /api/feedback ────────────────────────────────────────────────────────
 // Body: { type, message, page_url?, rating? }
@@ -41,5 +42,8 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await checkAndUnlockAchievements(user.id, "feedback_submitted").catch(() => {});
+
   return NextResponse.json({ id: data.id }, { status: 201 });
 }

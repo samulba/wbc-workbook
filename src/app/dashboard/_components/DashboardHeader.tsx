@@ -10,6 +10,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/ThemeProvider";
+import { HeaderBadge } from "@/components/achievements/HeaderBadge";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -144,6 +145,9 @@ export function DashboardHeader({ email, favoriteCount, isAdmin = false }: Props
 
         {/* ── Right side: theme toggle + avatar ─────────────── */}
         <div className="flex items-center gap-1">
+
+          {/* Achievement points badge */}
+          <HeaderBadge />
 
           {/* Theme toggle */}
           <button

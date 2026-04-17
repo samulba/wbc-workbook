@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export type CreateProjectResult    = { error: string } | { projectId: string };
 export type DeleteProjectResult    = { ok: true } | { ok: false; error: string };
@@ -77,6 +78,8 @@ export async function createProject(
     return { error: `Raum konnte nicht erstellt werden.${detail} Bitte erneut versuchen.` };
   }
 
+  await checkAndUnlockAchievements(user.id, "project_created").catch(() => {});
+
   redirect(`/dashboard/projekte/${project.id}/raum/${room.id}/modul-1`);
 }
 
@@ -143,6 +146,8 @@ export async function addRoom(
     return { error: "Raum konnte nicht erstellt werden. Bitte erneut versuchen." };
   }
 
+  await checkAndUnlockAchievements(user.id, "room_created").catch(() => {});
+
   revalidatePath(`/dashboard/projekte/${projectId}`);
   redirect(`/dashboard/projekte/${projectId}/raum/${room.id}/modul-1`);
 }
@@ -187,6 +192,8 @@ export async function updateRoomPhoto(
     console.error("Update room photo error:", error);
     return { ok: false, error: "Speichern fehlgeschlagen." };
   }
+
+  await checkAndUnlockAchievements(user.id, "before_after_updated").catch(() => {});
 
   revalidatePath(`/dashboard/projekte/${roomRow.project_id}`);
   return { ok: true };

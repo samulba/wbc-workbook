@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export type RenderingResult = { ok: true } | { ok: false; error: string };
 
@@ -46,6 +47,8 @@ export async function saveRendering(roomId: string, imageUrl: string): Promise<R
     console.error("saveRendering error:", error);
     return { ok: false, error: "Speichern fehlgeschlagen." };
   }
+
+  await checkAndUnlockAchievements(user.id, "render_created").catch(() => {});
 
   return { ok: true };
 }

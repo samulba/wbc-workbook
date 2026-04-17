@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { DashboardHeader } from "./_components/DashboardHeader";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
+import { AchievementWatcher } from "@/components/achievements/AchievementWatcher";
+import { touchStreak, checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export default async function DashboardLayout({
   children,
@@ -11,6 +13,10 @@ export default async function DashboardLayout({
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  // Streak + passive achievement check (non-blocking for UX)
+  await touchStreak(user.id).catch(() => {});
+  await checkAndUnlockAchievements(user.id, "activity").catch(() => {});
 
   // Parallel: favorite count + profile role
   const [{ count: favoriteCount }, { data: profile }] = await Promise.all([
@@ -34,6 +40,7 @@ export default async function DashboardLayout({
       />
       <main>{children}</main>
       <FeedbackWidget />
+      <AchievementWatcher />
     </div>
   );
 }

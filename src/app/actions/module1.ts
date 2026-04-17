@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Module1Partial } from "@/lib/types/module1";
+import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export type SaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
 
@@ -26,6 +27,8 @@ export async function saveModule1Step(
     console.error("module1 save error:", error);
     return { ok: false, error: "Speichern fehlgeschlagen. Bitte erneut versuchen." };
   }
+
+  await checkAndUnlockAchievements(user.id, "module1_updated").catch(() => {});
 
   return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
 }
