@@ -2,6 +2,24 @@ import type { RoomEffect } from "@/app/dashboard/projekte/[id]/modul-1/_componen
 
 export type { RoomEffect };
 
+// ── Moodboard canvas items ────────────────────────────────────────────────────
+export type CanvasItemType = "image" | "color" | "note";
+export type CanvasItemFrame = "none" | "white" | "polaroid";
+
+export interface CanvasItem {
+  id:     string;
+  type:   CanvasItemType;
+  x:      number;
+  y:      number;
+  w:      number;
+  h:      number;
+  z:      number;
+  src?:   string;   // image URL
+  color?: string;   // hex for "color" cards
+  text?:  string;   // for "note" items
+  frame?: CanvasItemFrame;
+}
+
 export type Module1Data = {
   id: string;
   room_id: string;
@@ -38,14 +56,18 @@ export type Module1Data = {
 
   // ── Step 8: Raum-Briefing ──────────────────────────────────
   light_mood: string;
+  light_warmth: number | null;        // 0 (kalt) .. 100 (warm)
+  light_brightness: number | null;    // 0 (gedimmt) .. 100 (hell)
   special_elements: string;
+  special_tags: string[];             // multi-select idea chips
 
   // ── Step 9: Moodboard erstellen (no input) ────────────────
   // (no fields – pure info step)
 
-  // ── Step 10: Moodboard-Prompt ──────────────────────────────
+  // ── Step 10: Moodboard-Prompt / Canvas ─────────────────────
   moodboard_prompt: string;
   moodboard_urls: string[];
+  moodboard_canvas: CanvasItem[];
 
   // ── Step 11: Abschluss ─────────────────────────────────────
   status: string;
@@ -100,9 +122,13 @@ export const EMPTY_MODULE1_DATA: Omit<Module1Data, "id" | "room_id"> = {
   accent_color:        "",
   materials:           [],
   light_mood:          "",
+  light_warmth:        null,
+  light_brightness:    null,
   special_elements:    "",
+  special_tags:        [],
   moodboard_prompt:    "",
   moodboard_urls:      [],
+  moodboard_canvas:    [],
   status:              "in_progress",
   current_step:        1,
   step_notes:          {},

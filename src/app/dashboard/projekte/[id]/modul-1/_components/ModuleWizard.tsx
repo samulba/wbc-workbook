@@ -292,7 +292,7 @@ function StepContent({
         />
       );
     case 9:
-      return <Step09 data={data} />;
+      return <Step09 data={data} projectId={projectId} roomId={roomId} />;
     case 10:
       return (
         <Step10
@@ -360,7 +360,10 @@ function buildStepPayload(step: number, data: Module1Data) {
     case 8:
       return {
         light_mood:       data.light_mood,
+        light_warmth:     data.light_warmth,
+        light_brightness: data.light_brightness,
         special_elements: data.special_elements,
+        special_tags:     data.special_tags,
       };
     case 9:
       return {};
@@ -368,6 +371,7 @@ function buildStepPayload(step: number, data: Module1Data) {
       return {
         moodboard_prompt: data.moodboard_prompt,
         moodboard_urls:   data.moodboard_urls,
+        moodboard_canvas: data.moodboard_canvas,
       };
     case 11:
       return { status: "completed" };
