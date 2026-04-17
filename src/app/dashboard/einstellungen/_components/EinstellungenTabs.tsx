@@ -139,9 +139,9 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
             {/* Legal links */}
             <div className="rounded-xl border border-gray-200 bg-white overflow-hidden divide-y divide-gray-100">
               {[
-                { label: "Impressum",             href: "/impressum"  },
-                { label: "Datenschutzerklärung", href: "/datenschutz" },
-                { label: "Nutzungsbedingungen",  href: "/agb"         },
+                { label: "Impressum",             href: "/legal/impressum"    },
+                { label: "Datenschutzerklärung", href: "/legal/datenschutz" },
+                { label: "Nutzungsbedingungen",  href: "/legal/agb"         },
                 { label: "Kontakt",               href: "/kontakt"     },
               ].map(({ label, href }) => (
                 <Link
@@ -162,25 +162,23 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
                 <h2 className="font-headline text-base text-red-700">Account & Daten</h2>
               </div>
               <div className="divide-y divide-red-50">
-                {/* Data export placeholder */}
+                {/* Data export */}
                 <div className="px-5 py-4 flex items-start justify-between gap-4">
                   <div>
                     <p className="text-sm font-sans font-medium text-gray-700 mb-0.5">
                       Meine Daten exportieren
                     </p>
                     <p className="text-xs text-gray-500 font-sans">
-                      Projekte und Analysen als ZIP herunterladen.
+                      Alle deine Daten als JSON-Datei herunterladen (DSGVO Art. 20).
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    disabled
-                    title="Demnächst verfügbar"
-                    className="shrink-0 h-9 px-4 rounded-lg border border-gray-200 bg-white text-sm font-sans font-medium text-gray-400 cursor-not-allowed flex items-center gap-1.5"
+                  <a
+                    href="/api/user/export"
+                    className="shrink-0 h-9 px-4 rounded-lg border border-forest/30 bg-white text-sm font-sans font-medium text-forest hover:bg-forest/5 transition-colors flex items-center gap-1.5"
                   >
                     <Download className="w-3.5 h-3.5" strokeWidth={1.5} />
                     Export
-                  </button>
+                  </a>
                 </div>
                 {/* Delete account */}
                 <div className="px-5 py-4 flex items-start justify-between gap-4">

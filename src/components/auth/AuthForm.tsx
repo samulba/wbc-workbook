@@ -134,6 +134,24 @@ export function AuthForm({ mode }: AuthFormProps) {
           </>
         )}
       </p>
+
+      {mode === "signup" && (
+        <p className="mt-3 text-center text-xs text-gray/70 leading-relaxed">
+          Mit der Registrierung akzeptierst du unsere{" "}
+          <Link href="/legal/agb" className="underline hover:text-forest">AGB</Link>
+          {" "}und nimmst die{" "}
+          <Link href="/legal/datenschutz" className="underline hover:text-forest">Datenschutzerklärung</Link>
+          {" "}zur Kenntnis.
+        </p>
+      )}
+
+      <p className="mt-6 text-center text-[11px] text-gray/60 space-x-3">
+        <Link href="/legal/impressum" className="hover:text-forest">Impressum</Link>
+        <span>·</span>
+        <Link href="/legal/datenschutz" className="hover:text-forest">Datenschutz</Link>
+        <span>·</span>
+        <Link href="/legal/agb" className="hover:text-forest">AGB</Link>
+      </p>
     </div>
   );
 }

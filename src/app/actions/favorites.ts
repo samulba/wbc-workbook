@@ -50,17 +50,6 @@ export async function getUserFavorites(): Promise<FavoriteItem[]> {
     }));
 }
 
-export async function getUserFavoriteCount(userId: string): Promise<number> {
-  const supabase = createClient();
-
-  const { count } = await supabase
-    .from("favorites")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", userId);
-
-  return count ?? 0;
-}
-
 // ── Write ─────────────────────────────────────────────────────────────────────
 
 export async function removeFavorite(

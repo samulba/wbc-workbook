@@ -49,16 +49,8 @@ export async function updatePassword(
   return { ok: true };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function deleteAccount(_prev: ProfileResult | null, _formData: FormData): Promise<ProfileResult> {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  // Sign out first
-  await supabase.auth.signOut();
-
-  // Note: full account deletion requires admin/service-role key
-  // This placeholder signs the user out with a clear message
-  redirect("/login?deleted=true");
-}
+// NOTE: account deletion now runs through POST /api/user/delete which uses
+// the service-role client to call auth.admin.deleteUser() — that in turn
+// CASCADEs through profiles → projects → rooms → module1_analysis → etc.
+// The route also removes storage objects under {userId}/… prefixes.
+// This server action stays for UI wiring only and proxies to the route.
