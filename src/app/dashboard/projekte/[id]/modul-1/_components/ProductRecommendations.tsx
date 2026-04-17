@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition, useCallback, useRef } from "react";
-import { Heart, ExternalLink, ShoppingBag, Check } from "lucide-react";
+import { Heart, ExternalLink, ShoppingBag, Check, LayoutGrid, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   getProductRecommendations,
@@ -9,6 +9,7 @@ import {
 } from "@/app/actions/recommendations";
 import { addProductToList } from "@/app/actions/shopping";
 import type { Product } from "@/lib/types/product";
+import { ProductSwipeDeck, type SwipeAction } from "./ProductSwipeDeck";
 
 interface Props {
   roomType:   string;
@@ -234,12 +235,81 @@ export function ProductRecommendations({
     });
   }
 
-  // Don't render until loaded, and only if there are products
+  // ── Toggle view: swipe vs grid ─────────────────────────────
+  const [view, setView] = useState<"swipe" | "grid">("grid");
+  const [lists, setLists] = useState<{ id: string; name: string }[]>([]);
+  const [activeListId, setActiveListId] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  // Initialize view from viewport on mount (mobile → swipe)
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? window.localStorage.getItem("wbc_reco_view") : null;
+    if (saved === "swipe" || saved === "grid") {
+      setView(saved);
+    } else if (typeof window !== "undefined" && window.innerWidth < 640) {
+      setView("swipe");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") window.localStorage.setItem("wbc_reco_view", view);
+  }, [view]);
+
+  // Load shopping lists (for swipe-list target)
+  useEffect(() => {
+    fetch("/api/shopping/lists")
+      .then((r) => r.json())
+      .then((d) => {
+        const ls = d.lists ?? [];
+        setLists(ls);
+        if (ls.length > 0 && !activeListId) setActiveListId(ls[0].id);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function flashToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 1500);
+  }
+
+  const handleSwipeDecision = useCallback((product: Product, action: SwipeAction) => {
+    if (action === "favorite") {
+      // Toggle favorite if not already
+      if (!state.favoriteIds.has(product.id)) {
+        handleToggle(product);
+      }
+      flashToast("⭐ Zu Favoriten");
+    } else if (action === "list") {
+      if (!activeListId) {
+        flashToast("Keine Shopping-Liste — erstelle zuerst eine.");
+        return;
+      }
+      startTransition(async () => {
+        await addProductToList({ listId: activeListId, productId: product.id }).catch(() => {});
+      });
+      flashToast("🛒 Zur Liste");
+    }
+    // skip: no-op besides advancing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeListId, state.favoriteIds, handleToggle]);
+
+  const handleSwipeUndo = useCallback((d: { productId: string; action: SwipeAction }) => {
+    // Reverse favorite for undo; list/skip undo is soft (we don't remove from list
+    // because that'd be surprising — user can remove in /dashboard/shopping)
+    if (d.action === "favorite") {
+      const p = state.products.find((x) => x.id === d.productId);
+      if (p && state.favoriteIds.has(p.id)) handleToggle(p);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.products, state.favoriteIds, handleToggle]);
+
+  // ── Don't render until loaded, and only if there are products ─
   if (!state.loaded || state.products.length === 0) return null;
 
   return (
-    <div className="pt-6 mt-2">
-      {/* Section separator */}
+    <div className="pt-6 mt-2 relative">
+      {/* Section separator + view toggle */}
       <div className="flex items-center gap-3 mb-4">
         <div className="flex-1 h-px bg-sand/25" />
         <div className="flex items-center gap-1.5 shrink-0">
@@ -250,29 +320,83 @@ export function ProductRecommendations({
           <span className="w-1.5 h-1.5 rounded-full bg-mint/70" />
         </div>
         <div className="flex-1 h-px bg-sand/25" />
+        {/* View toggle */}
+        <div className="shrink-0 inline-flex rounded-full bg-sand/15 p-0.5 text-[10px]">
+          <button
+            type="button"
+            onClick={() => setView("grid")}
+            className={cn(
+              "inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-colors",
+              view === "grid" ? "bg-white text-forest shadow-sm" : "text-forest/50 hover:text-forest",
+            )}
+            aria-label="Grid-Ansicht"
+          >
+            <LayoutGrid className="w-3 h-3" strokeWidth={1.75} />
+            <span className="hidden sm:inline">Grid</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("swipe")}
+            className={cn(
+              "inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-colors",
+              view === "swipe" ? "bg-white text-forest shadow-sm" : "text-forest/50 hover:text-forest",
+            )}
+            aria-label="Swipe-Modus"
+          >
+            <Layers className="w-3 h-3" strokeWidth={1.75} />
+            <span className="hidden sm:inline">Swipe</span>
+          </button>
+        </div>
       </div>
 
-      {/* Horizontal scroll */}
-      <div
-        className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1"
-        style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
-      >
-        {state.products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            isFavorite={state.favoriteIds.has(product.id)}
-            onToggle={() => handleToggle(product)}
-          />
-        ))}
-      </div>
-
-      {/* Scroll hint (only if more than 2 cards) */}
-      {state.products.length > 2 && (
-        <p className="text-[10px] text-sand/50 font-sans text-right mt-1 pr-1">
-          Zum Scrollen wischen →
-        </p>
+      {view === "grid" ? (
+        <>
+          <div
+            className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1"
+            style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
+          >
+            {state.products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                isFavorite={state.favoriteIds.has(product.id)}
+                onToggle={() => handleToggle(product)}
+              />
+            ))}
+          </div>
+          {state.products.length > 2 && (
+            <p className="text-[10px] text-sand/50 font-sans text-right mt-1 pr-1">
+              Zum Scrollen wischen →
+            </p>
+          )}
+        </>
+      ) : (
+        <ProductSwipeDeck
+          products={state.products}
+          favoriteIds={state.favoriteIds}
+          lists={lists}
+          activeListId={activeListId}
+          onListChange={setActiveListId}
+          onDecision={handleSwipeDecision}
+          onUndo={handleSwipeUndo}
+          matchReason={mainEffect ? () => "Passt zu deiner Wirkung" : undefined}
+        />
       )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-forest text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium wbc-reco-toast">
+          {toast}
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes wbc-reco-toast {
+          from { opacity: 0; transform: translate(-50%, 20px); }
+          to   { opacity: 1; transform: translate(-50%, 0); }
+        }
+        :global(.wbc-reco-toast) { animation: wbc-reco-toast 220ms cubic-bezier(0.22, 1, 0.36, 1); }
+      `}</style>
     </div>
   );
 }
