@@ -129,6 +129,21 @@ export function WelcomeTour({ autoStart }: { autoStart: boolean }) {
 
   useEffect(() => setMounted(true), []);
 
+  // ── Lock body scroll while active ──────────────────────────────
+  // Compensate for scrollbar disappearance to avoid layout shift.
+  useEffect(() => {
+    if (!active) return;
+    const scrollbarW = window.innerWidth - document.documentElement.clientWidth;
+    const prevOverflow     = document.body.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    document.body.style.overflow     = "hidden";
+    if (scrollbarW > 0) document.body.style.paddingRight = `${scrollbarW}px`;
+    return () => {
+      document.body.style.overflow     = prevOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+    };
+  }, [active]);
+
   // ── Expose replay hook ─────────────────────────────────────────
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -277,60 +292,75 @@ export function WelcomeTour({ autoStart }: { autoStart: boolean }) {
 
   const isCenter = step.kind === "modal";
 
+  const overlayTint = "rgba(17, 26, 18, 0.62)";
+  const frameStyle: React.CSSProperties = {
+    position:       "fixed",
+    backgroundColor: overlayTint,
+    backdropFilter:    "blur(3px)",
+    WebkitBackdropFilter: "blur(3px)",
+  };
+
   return createPortal(
     <div className="fixed inset-0 z-[9999] pointer-events-none">
-      {/* ── Overlay with SVG mask cutout ─────────────────────── */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-auto"
-        style={{ backdropFilter: "blur(4px)" }}
-        onClick={() => {/* block clicks */}}
-      >
-        <defs>
-          <mask id="wbc-tour-mask">
-            <rect width="100%" height="100%" fill="white" />
-            {spotlightRect && (
-              <rect
-                x={spotlightRect.x}
-                y={spotlightRect.y}
-                width={spotlightRect.w}
-                height={spotlightRect.h}
-                rx={14}
-                ry={14}
-                fill="black"
-                className="wbc-tour-cutout-rect"
-              />
-            )}
-          </mask>
-          <filter id="wbc-tour-glow" x="-10%" y="-10%" width="120%" height="120%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
-          </filter>
-        </defs>
-        <rect
-          width="100%"
-          height="100%"
-          fill="rgba(17, 26, 18, 0.62)"
-          mask="url(#wbc-tour-mask)"
+      {/* ── Overlay: 4 rects forming a frame around the spotlight ─────── */}
+      {/* This way backdrop-blur is applied ONLY outside the spotlight. */}
+      {spotlightRect ? (
+        <>
+          {/* Top */}
+          <div
+            className="pointer-events-auto"
+            style={{ ...frameStyle, top: 0, left: 0, right: 0, height: spotlightRect.y }}
+          />
+          {/* Bottom */}
+          <div
+            className="pointer-events-auto"
+            style={{ ...frameStyle, left: 0, right: 0, bottom: 0, top: spotlightRect.y + spotlightRect.h }}
+          />
+          {/* Left */}
+          <div
+            className="pointer-events-auto"
+            style={{
+              ...frameStyle,
+              top:    spotlightRect.y,
+              left:   0,
+              width:  spotlightRect.x,
+              height: spotlightRect.h,
+            }}
+          />
+          {/* Right */}
+          <div
+            className="pointer-events-auto"
+            style={{
+              ...frameStyle,
+              top:    spotlightRect.y,
+              right:  0,
+              left:   spotlightRect.x + spotlightRect.w,
+              height: spotlightRect.h,
+            }}
+          />
+          {/* Mint glow + pulse outline — drawn outside the spotlight so
+              it doesn't cover the target. */}
+          <div
+            className="pointer-events-none wbc-tour-pulse"
+            style={{
+              position:     "fixed",
+              top:          spotlightRect.y - 2,
+              left:         spotlightRect.x - 2,
+              width:        spotlightRect.w + 4,
+              height:       spotlightRect.h + 4,
+              borderRadius: 16,
+              border:       "2px solid #94c1a4",
+              boxShadow:    "0 0 28px 2px rgba(148, 193, 164, 0.5), inset 0 0 0 1px rgba(148, 193, 164, 0.3)",
+            }}
+          />
+        </>
+      ) : (
+        /* Modal step: single full-screen backdrop */
+        <div
+          className="pointer-events-auto"
+          style={{ ...frameStyle, inset: 0 }}
         />
-
-        {/* Mint glow outline around spotlight */}
-        {spotlightRect && (
-          <>
-            <rect
-              x={spotlightRect.x - 2}
-              y={spotlightRect.y - 2}
-              width={spotlightRect.w + 4}
-              height={spotlightRect.h + 4}
-              rx={16}
-              ry={16}
-              fill="none"
-              stroke="#94c1a4"
-              strokeWidth={2.5}
-              className="wbc-tour-pulse"
-              opacity={0.9}
-            />
-          </>
-        )}
-      </svg>
+      )}
 
       {/* ── Confetti (step.confetti only) ─────────────────────── */}
       {step.confetti && <Confetti />}
@@ -385,8 +415,16 @@ export function WelcomeTour({ autoStart }: { autoStart: boolean }) {
           to   { opacity: 1; transform: translateX(0); }
         }
         @keyframes wbc-tour-pulse-stroke {
-          0%, 100% { opacity: 0.9; stroke-width: 2.5; }
-          50%      { opacity: 0.4; stroke-width: 4; }
+          0%, 100% {
+            box-shadow: 0 0 22px 1px rgba(148, 193, 164, 0.45),
+                        inset 0 0 0 1px rgba(148, 193, 164, 0.25);
+            border-color: rgba(148, 193, 164, 0.9);
+          }
+          50% {
+            box-shadow: 0 0 38px 6px rgba(148, 193, 164, 0.65),
+                        inset 0 0 0 1px rgba(148, 193, 164, 0.4);
+            border-color: rgba(148, 193, 164, 1);
+          }
         }
         @keyframes wbc-tour-cutout {
           from { opacity: 0; }
