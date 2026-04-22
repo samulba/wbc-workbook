@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Montserrat, Syne } from "next/font/google";
+import { Montserrat, Syne, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
@@ -13,6 +13,14 @@ const syne = Syne({
   subsets:  ["latin"],
   variable: "--font-syne",
   weight:   ["700", "800"],
+  display:  "swap",
+});
+
+// Brand serif used on wellbeing-concepts.de (landing / editorial headlines)
+const cormorant = Cormorant_Garamond({
+  subsets:  ["latin"],
+  variable: "--font-cormorant",
+  weight:   ["400", "500", "600", "700"],
   display:  "swap",
 });
 
@@ -53,7 +61,7 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`${montserrat.variable} ${syne.variable}`}
+      className={`${montserrat.variable} ${syne.variable} ${cormorant.variable}`}
       suppressHydrationWarning
     >
       <head>

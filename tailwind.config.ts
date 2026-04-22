@@ -27,6 +27,7 @@ const config: Config = {
       fontFamily: {
         sans:     ["var(--font-montserrat)", "sans-serif"],
         headline: ["var(--font-syne)", "sans-serif"],
+        serif:    ["var(--font-cormorant)", "serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

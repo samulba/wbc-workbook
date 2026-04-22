@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Mail, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Wellbeing Workbook – Noch in Aufbau",
@@ -10,97 +10,85 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-cream">
+    <div className="min-h-screen flex flex-col bg-forest">
 
-      {/* ── Top bar: back to main site ───────────────────────────── */}
-      <nav className="border-b border-sand/25">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 h-14 flex items-center justify-between">
+      {/* ── Header ───────────────────────────────────────────────── */}
+      <header className="relative z-10">
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 h-20 sm:h-24 flex items-center justify-between">
           <a
             href="https://www.wellbeing-concepts.de"
-            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-sans text-gray/55 hover:text-forest transition-colors"
+            className="font-sans text-xs sm:text-sm tracking-[0.28em] text-sand hover:text-sand/80 transition-colors"
           >
-            <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.5} />
-            wellbeing-concepts.de
+            WELLBEING—CONCEPTS
           </a>
-          <span className="text-[10px] uppercase tracking-[0.22em] text-sand font-sans">
-            Workbook
-          </span>
+          <a
+            href="https://www.wellbeing-concepts.de"
+            className="hidden sm:inline-block font-sans text-sm text-sand underline underline-offset-[6px] decoration-sand/40 hover:decoration-sand transition-all"
+          >
+            Zur Hauptseite
+          </a>
         </div>
-      </nav>
+      </header>
 
-      {/* ── Main ──────────────────────────────────────────────────── */}
-      <main className="flex-1 flex items-center justify-center px-4 py-16 sm:py-24 relative overflow-hidden">
-        {/* Subtle background decoration */}
+      {/* ── Main / Hero ──────────────────────────────────────────── */}
+      <main className="flex-1 flex items-center justify-center px-6 py-16 sm:py-24 relative overflow-hidden">
+        {/* Atmospheric background glow */}
         <div aria-hidden className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full bg-mint/10 -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-[350px] h-[350px] rounded-full bg-sand/12 translate-x-1/3 translate-y-1/3" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] rounded-full bg-sand/10 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-sand/[0.04] blur-2xl" />
         </div>
 
-        <div className="relative w-full max-w-xl text-center">
-          {/* Brand label */}
-          <p className="font-sans text-xs uppercase tracking-[0.3em] text-sand mb-6">
-            Wellbeing Concepts
-          </p>
-
-          {/* Decorative bars */}
-          <div aria-hidden className="hidden sm:flex justify-center gap-2 mb-10">
-            <div className="w-1.5 h-10 rounded-full bg-mint" />
-            <div className="w-1.5 h-7 rounded-full bg-sand self-end" />
-            <div className="w-1.5 h-8 rounded-full bg-terracotta self-center" />
-            <div className="w-1.5 h-5 rounded-full bg-forest/35 self-start" />
+        <div className="relative w-full max-w-3xl text-center">
+          {/* Small label with lines */}
+          <div className="flex items-center justify-center gap-4 mb-8 sm:mb-10">
+            <span className="w-10 h-px bg-sand/60" />
+            <span className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.32em] text-sand">
+              Workbook · In Aufbau
+            </span>
+            <span className="w-10 h-px bg-sand/60" />
           </div>
 
-          {/* Headline */}
-          <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl text-forest leading-[1.05] tracking-tight mb-5 text-balance">
-            Wellbeing Workbook
+          {/* Editorial serif headline, uppercase */}
+          <h1 className="font-serif font-light text-5xl sm:text-6xl md:text-7xl lg:text-[88px] text-cream tracking-[0.01em] leading-[1.02] mb-8 sm:mb-10 text-balance">
+            DIESER RAUM
+            <br />
+            <span className="text-sand italic font-normal">entsteht gerade.</span>
           </h1>
 
-          {/* Status chip */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-mint/15 border border-mint/30 mb-6">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint opacity-70" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-mint" />
-            </span>
-            <span className="font-sans text-xs uppercase tracking-[0.2em] text-forest">
-              Noch in Aufbau
-            </span>
-          </div>
-
           {/* Body */}
-          <p className="font-sans text-base sm:text-lg text-gray/65 leading-relaxed max-w-md mx-auto mb-8">
-            Dieses Workbook ist aktuell noch nicht öffentlich zugänglich.
-            Du bist neugierig, was wir hier bauen? Schreib uns gern –
-            wir erzählen dir mehr.
+          <p className="font-sans text-base sm:text-lg text-cream/70 leading-[1.75] max-w-xl mx-auto mb-10 sm:mb-14">
+            Das Wellbeing Workbook ist aktuell noch nicht öffentlich zugänglich.
+            Du bist neugierig, was wir hier bauen? Schreib uns gern —
+            wir erzählen dir, was als Nächstes kommt.
           </p>
 
-          {/* Primary CTA: Kontakt */}
-          <div className="flex flex-col items-center gap-3 mb-10">
+          {/* CTA pills — matching main site style */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
             <a
               href="mailto:info@wellbeing-concepts.de?subject=Anfrage%20Wellbeing%20Workbook"
-              className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-forest text-cream text-base font-sans font-medium rounded-xl hover:bg-forest/90 transition-colors shadow-warm-sm"
+              className="inline-flex items-center justify-center h-12 px-8 rounded-full border border-sand/60 text-sand font-sans text-xs sm:text-sm uppercase tracking-[0.2em] hover:bg-sand/10 hover:border-sand transition-all"
             >
-              <Mail className="w-4 h-4 shrink-0" strokeWidth={1.5} />
               Jetzt anfragen
             </a>
             <a
               href="https://www.wellbeing-concepts.de"
-              className="inline-flex items-center justify-center h-11 px-5 text-sm font-sans text-gray/55 hover:text-forest transition-colors"
+              className="inline-flex items-center justify-center h-12 px-6 font-sans text-xs sm:text-sm uppercase tracking-[0.2em] text-cream/60 hover:text-sand transition-colors"
             >
-              Zur Hauptseite
+              Mehr über uns
             </a>
           </div>
         </div>
       </main>
 
-      {/* ── Footer: discreet admin/test login ────────────────────── */}
-      <footer className="border-t border-sand/25 py-6">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-sans text-xs text-gray/40">
-            © 2026 Wellbeing Concepts
+      {/* ── Footer ───────────────────────────────────────────────── */}
+      <footer className="border-t border-sand/15 bg-forest">
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-14 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="font-sans text-[11px] sm:text-xs tracking-wider text-cream/40">
+            © 2026 Wellbeing Concepts · Alle Rechte vorbehalten
           </p>
           <Link
             href="/login"
-            className="inline-flex items-center gap-1.5 text-xs font-sans text-gray/40 hover:text-forest transition-colors"
+            className="inline-flex items-center gap-1.5 font-sans text-[11px] sm:text-xs tracking-wider text-cream/35 hover:text-sand transition-colors"
           >
             <Lock className="w-3 h-3" strokeWidth={1.5} />
             Admin · Test-Login
