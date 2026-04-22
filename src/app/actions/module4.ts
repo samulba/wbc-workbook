@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import type { Module4Partial } from "@/lib/types/module4";
 import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
@@ -40,6 +41,7 @@ export async function saveModule4Step(
   }
 
   await checkAndUnlockAchievements(user.id, "module4_updated").catch(() => {});
+  revalidatePath("/dashboard", "layout");
 
   return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
 }

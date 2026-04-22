@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import type { Module3Partial } from "@/lib/types/module3";
 import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
@@ -42,6 +43,7 @@ export async function saveModule3Step(
   }
 
   await checkAndUnlockAchievements(user.id, "module3_updated").catch(() => {});
+  revalidatePath("/dashboard", "layout");
 
   return {
     ok:      true,
