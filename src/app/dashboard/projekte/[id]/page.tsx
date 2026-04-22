@@ -105,16 +105,17 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
   if (!project) notFound();
 
+  type ModuleStatus = { status: string | null; current_step: number | null };
   type RoomRow = {
     id: string; name: string; room_type: string;
     before_image_url: string | null; after_image_url: string | null;
     share_token: string | null; is_shared: boolean;
     ai_analysis: string | null;
     rendered_images: string[] | null;
-    module1_analysis: { status: string | null; current_step: number | null }[] | null;
-    module2_analysis: { status: string | null; current_step: number | null }[] | null;
-    module3_analysis: { status: string | null; current_step: number | null }[] | null;
-    module4_analysis: { status: string | null; current_step: number | null }[] | null;
+    module1_analysis: ModuleStatus[] | null;
+    module2_analysis: ModuleStatus[] | null;
+    module3_analysis: ModuleStatus[] | null;
+    module4_analysis: ModuleStatus[] | null;
   };
 
   const rooms     = (project.rooms as RoomRow[]) ?? [];

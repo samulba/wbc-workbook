@@ -32,6 +32,9 @@ export type RoomCardData = {
   ai_analysis: string | null;
   rendered_images: string[] | null;
   module1_analysis: { status: string | null; current_step: number | null }[] | null;
+  module2_analysis: { status: string | null; current_step: number | null }[] | null;
+  module3_analysis: { status: string | null; current_step: number | null }[] | null;
+  module4_analysis: { status: string | null; current_step: number | null }[] | null;
 };
 
 interface Props {
@@ -62,8 +65,18 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
   const m1Step      = m1Completed ? TOTAL_STEPS : (m1?.current_step ?? 0);
   const m1Started   = m1Step > 0;
   const m1Pct       = Math.min(100, Math.round((m1Step / TOTAL_STEPS) * 100));
-  const roomLabel   = ROOM_LABELS[room.room_type] ?? room.room_type;
-  const href        = m1Completed
+
+  // Per-module status across all four modules
+  const modules = [
+    { num: 1, total: 11, label: "Analyse",  slug: "modul-1", data: m1 },
+    { num: 2, total:  8, label: "Interior", slug: "modul-2", data: room.module2_analysis?.[0] },
+    { num: 3, total:  7, label: "Licht",    slug: "modul-3", data: room.module3_analysis?.[0] },
+    { num: 4, total:  6, label: "Sinne",    slug: "modul-4", data: room.module4_analysis?.[0] },
+  ] as const;
+  const modulesDone = modules.filter((m) => m.data?.status === "completed").length;
+
+  const roomLabel = ROOM_LABELS[room.room_type] ?? room.room_type;
+  const href      = m1Completed
     ? `/dashboard/projekte/${projectId}/raum/${room.id}/modul-1?edit=true`
     : `/dashboard/projekte/${projectId}/raum/${room.id}/modul-1`;
 
@@ -298,6 +311,57 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
           strokeWidth={1.5}
         />
       </Link>
+
+      {/* ── 4-module status strip ───────────────────────────── */}
+      <div className="flex items-stretch border-t border-gray-100 divide-x divide-gray-100">
+        {modules.map((m) => {
+          const done      = m.data?.status === "completed";
+          const stepN     = done ? m.total : (m.data?.current_step ?? 0);
+          const started   = stepN > 0;
+          const pct       = Math.min(100, Math.round((stepN / m.total) * 100));
+          const dotColor  = done ? "bg-forest" : started ? "bg-amber-400" : "bg-gray-200";
+          const textColor = done ? "text-forest" : started ? "text-amber-600" : "text-gray-400";
+          return (
+            <Link
+              key={m.num}
+              href={`/dashboard/projekte/${projectId}/raum/${room.id}/${m.slug}${done ? "?edit=true" : ""}`}
+              title={`Modul ${m.num}: ${m.label} — ${done ? "abgeschlossen" : started ? `${pct}%` : "nicht gestartet"}`}
+              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 hover:bg-gray-50 transition-colors"
+            >
+              <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+              <span className={cn("text-[11px] font-sans font-medium tabular-nums", textColor)}>
+                0{m.num}
+              </span>
+              {done && <CheckCircle2 className="w-3 h-3 text-forest shrink-0" strokeWidth={2} />}
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Capstone link (only if at least one module completed) */}
+      {modulesDone > 0 && (
+        <Link
+          href={`/dashboard/projekte/${projectId}/raum/${room.id}/zusammenfassung`}
+          className={cn(
+            "flex items-center gap-2 px-4 py-2 border-t border-gray-100 transition-colors",
+            modulesDone === 4 ? "bg-forest/[0.03] hover:bg-forest/[0.08]" : "hover:bg-gray-50",
+          )}
+        >
+          <CheckCircle2
+            className={cn("w-3 h-3 shrink-0", modulesDone === 4 ? "text-forest/70" : "text-gray-300")}
+            strokeWidth={1.5}
+          />
+          <span className={cn(
+            "text-[11px] font-sans font-medium",
+            modulesDone === 4 ? "text-forest/70" : "text-gray-400",
+          )}>
+            {modulesDone === 4
+              ? "Alle 4 Module abgeschlossen · Zusammenfassung öffnen"
+              : `${modulesDone} von 4 Modulen fertig · Zwischenstand ansehen`}
+          </span>
+          <ArrowRight className="w-3 h-3 text-gray-300 ml-auto" strokeWidth={1.5} />
+        </Link>
+      )}
 
       {/* ── KI-Analyse strip ─────────────────────────────────── */}
       {room.ai_analysis ? (
