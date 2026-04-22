@@ -108,7 +108,7 @@ export async function GET() {
     addRow(b, r);
     byUser.set(r.user_id, b);
   }
-  const topUserIds = [...byUser.entries()]
+  const topUserIds = Array.from(byUser.entries())
     .sort((a, b) => b[1].micros - a[1].micros)
     .slice(0, 10);
 
@@ -140,7 +140,7 @@ export async function GET() {
     const b = dailyMap.get(key);
     if (b) addRow(b, r);
   }
-  const daily = [...dailyMap.entries()].map(([day, bucket]) => ({ day, ...bucket }));
+  const daily = Array.from(dailyMap.entries()).map(([day, bucket]) => ({ day, ...bucket }));
 
   return NextResponse.json({
     checkedAt: now.toISOString(),
