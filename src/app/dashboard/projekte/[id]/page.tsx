@@ -94,6 +94,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         id, name, room_type, before_image_url, after_image_url,
         share_token, is_shared, ai_analysis, rendered_images,
         module1_analysis ( status, current_step ),
+        module2_analysis ( status, current_step ),
         module3_analysis ( status, current_step )
       )
     `)
@@ -110,18 +111,25 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     ai_analysis: string | null;
     rendered_images: string[] | null;
     module1_analysis: { status: string | null; current_step: number | null }[] | null;
+    module2_analysis: { status: string | null; current_step: number | null }[] | null;
     module3_analysis: { status: string | null; current_step: number | null }[] | null;
   };
 
   const rooms     = (project.rooms as RoomRow[]) ?? [];
   const firstRoom = rooms[0];
   const m1        = firstRoom?.module1_analysis?.[0];
+  const m2        = firstRoom?.module2_analysis?.[0];
   const m3        = firstRoom?.module3_analysis?.[0];
 
   const m1Completed = m1?.status === "completed";
   const m1Step      = m1Completed ? 11 : (m1?.current_step ?? 0);
   const m1Pct       = Math.min(100, Math.round((m1Step / 11) * 100));
   const m1Started   = m1Step > 0;
+
+  const m2Completed = m2?.status === "completed";
+  const m2Step      = m2Completed ? 8 : (m2?.current_step ?? 0);
+  const m2Pct       = Math.min(100, Math.round((m2Step / 8) * 100));
+  const m2Started   = m2Step > 0;
 
   const m3Completed = m3?.status === "completed";
   const m3Step      = m3Completed ? 7 : (m3?.current_step ?? 0);
@@ -154,6 +162,10 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     ? `${m1Completed ? "?edit=true" : ""}`
       ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-1${m1Completed ? "?edit=true" : ""}`
       : `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-1`
+    : "#";
+
+  const m2Href = firstRoom
+    ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-2${m2Completed ? "?edit=true" : ""}`
     : "#";
 
   const m3Href = firstRoom
@@ -342,8 +354,75 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
           </Link>
 
-          {/* Modul 2 – locked */}
-          <LockedModuleCard mod={MODULES[1]} />
+          {/* Modul 2 – active (soft-gated: recommended after M1) */}
+          <Link
+            href={m2Href}
+            className="group rounded-xl border border-gray-200 bg-white p-5 hover:border-forest/30 transition-colors duration-150"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-forest" />
+                <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
+                  {MODULES[1].subtitle}
+                </span>
+              </div>
+              {m2Completed ? (
+                <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest bg-forest/8 border border-forest/15 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
+                  Abgeschlossen
+                </span>
+              ) : m2Started ? (
+                <span className="text-[11px] font-sans font-medium text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  In Bearbeitung
+                </span>
+              ) : !m1Completed ? (
+                <span className="text-[11px] font-sans font-medium text-sand bg-sand/15 border border-sand/30 px-2 py-0.5 rounded-full">
+                  Empfohlen nach M1
+                </span>
+              ) : (
+                <span className="text-[11px] font-sans text-gray-400 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+                  Bereit zum Start
+                </span>
+              )}
+            </div>
+
+            <h3 className="font-headline text-lg text-gray-900 mb-1.5 leading-snug">
+              {MODULES[1].title}
+            </h3>
+            <p className="text-sm text-gray-500 font-sans leading-relaxed mb-4 line-clamp-2">
+              {MODULES[1].description}
+            </p>
+
+            <div className="flex items-center gap-4 mb-4">
+              <CircleProgress pct={m2Pct} size={52} stroke={4} labelSize="text-[11px]" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-sans text-gray-400 mb-1">Fortschritt Modul 2</p>
+                <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-700",
+                      m2Pct >= 100 ? "bg-forest" : m2Pct >= 50 ? "bg-forest/70" : "bg-mint",
+                    )}
+                    style={{ width: `${m2Pct}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-wrap gap-1.5">
+                {MODULES[1].topics.map((t) => (
+                  <span key={t} className="text-[11px] font-sans text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="flex items-center gap-1 text-xs font-sans font-medium text-gray-400 group-hover:text-forest transition-colors shrink-0 ml-3">
+                {m2Completed ? "Bearbeiten" : m2Started ? "Fortsetzen" : "Starten"}
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
+              </span>
+            </div>
+          </Link>
 
           {/* Modul 3 – active (soft-gated: recommended after M1) */}
           <Link
