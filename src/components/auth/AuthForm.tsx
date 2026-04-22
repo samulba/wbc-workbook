@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -17,6 +18,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -82,17 +84,34 @@ export function AuthForm({ mode }: AuthFormProps) {
           required
           autoComplete="email"
         />
-        <Input
-          id="password"
-          type="password"
-          label="Passwort"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          autoComplete={mode === "login" ? "current-password" : "new-password"}
-          minLength={8}
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            label="Passwort"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete={mode === "login" ? "current-password" : "new-password"}
+            minLength={8}
+            className="pr-11"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Passwort verbergen" : "Passwort anzeigen"}
+            aria-pressed={showPassword}
+            tabIndex={-1}
+            className="absolute right-1.5 bottom-1.5 h-9 w-9 inline-flex items-center justify-center rounded-md text-gray/55 hover:text-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-mint"
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" strokeWidth={1.75} />
+            ) : (
+              <Eye className="w-4 h-4" strokeWidth={1.75} />
+            )}
+          </button>
+        </div>
 
         {error && (
           <p className="rounded-lg bg-terracotta/10 px-3 py-2 text-sm text-terracotta">
