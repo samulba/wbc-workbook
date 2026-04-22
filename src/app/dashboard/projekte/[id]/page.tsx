@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowLeft, ArrowRight, CheckCircle2, Lock,
+  ArrowLeft, ArrowRight, CheckCircle2,
   CalendarDays, Euro, Clock, Plus, PhoneCall,
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
@@ -95,7 +95,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         share_token, is_shared, ai_analysis, rendered_images,
         module1_analysis ( status, current_step ),
         module2_analysis ( status, current_step ),
-        module3_analysis ( status, current_step )
+        module3_analysis ( status, current_step ),
+        module4_analysis ( status, current_step )
       )
     `)
     .eq("id", params.id)
@@ -113,6 +114,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     module1_analysis: { status: string | null; current_step: number | null }[] | null;
     module2_analysis: { status: string | null; current_step: number | null }[] | null;
     module3_analysis: { status: string | null; current_step: number | null }[] | null;
+    module4_analysis: { status: string | null; current_step: number | null }[] | null;
   };
 
   const rooms     = (project.rooms as RoomRow[]) ?? [];
@@ -135,6 +137,14 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   const m3Step      = m3Completed ? 7 : (m3?.current_step ?? 0);
   const m3Pct       = Math.min(100, Math.round((m3Step / 7) * 100));
   const m3Started   = m3Step > 0;
+
+  const m4          = firstRoom?.module4_analysis?.[0];
+  const m4Completed = m4?.status === "completed";
+  const m4Step      = m4Completed ? 6 : (m4?.current_step ?? 0);
+  const m4Pct       = Math.min(100, Math.round((m4Step / 6) * 100));
+  const m4Started   = m4Step > 0;
+
+  const allModulesComplete = m1Completed && m2Completed && m3Completed && m4Completed;
 
   // Average m1 progress across ALL rooms
   const avgM1Pct = rooms.length === 0 ? 0 : Math.round(
@@ -170,6 +180,14 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
   const m3Href = firstRoom
     ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-3${m3Completed ? "?edit=true" : ""}`
+    : "#";
+
+  const m4Href = firstRoom
+    ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/modul-4${m4Completed ? "?edit=true" : ""}`
+    : "#";
+
+  const capstoneHref = firstRoom
+    ? `/dashboard/projekte/${project.id}/raum/${firstRoom.id}/zusammenfassung`
     : "#";
 
   return (
@@ -494,10 +512,116 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
           </Link>
 
-          {/* Modul 4 – locked */}
-          <LockedModuleCard mod={MODULES[3]} />
+          {/* Modul 4 – active (soft-gated: recommended after M1) */}
+          <Link
+            href={m4Href}
+            className="group rounded-xl border border-gray-200 bg-white p-5 hover:border-forest/30 transition-colors duration-150"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-forest" />
+                <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
+                  {MODULES[3].subtitle}
+                </span>
+              </div>
+              {m4Completed ? (
+                <span className="flex items-center gap-1 text-[11px] font-sans font-medium text-forest bg-forest/8 border border-forest/15 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3" strokeWidth={2} />
+                  Abgeschlossen
+                </span>
+              ) : m4Started ? (
+                <span className="text-[11px] font-sans font-medium text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  In Bearbeitung
+                </span>
+              ) : !m1Completed ? (
+                <span className="text-[11px] font-sans font-medium text-sand bg-sand/15 border border-sand/30 px-2 py-0.5 rounded-full">
+                  Empfohlen nach M1
+                </span>
+              ) : (
+                <span className="text-[11px] font-sans text-gray-400 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+                  Bereit zum Start
+                </span>
+              )}
+            </div>
+
+            <h3 className="font-headline text-lg text-gray-900 mb-1.5 leading-snug">
+              {MODULES[3].title}
+            </h3>
+            <p className="text-sm text-gray-500 font-sans leading-relaxed mb-4 line-clamp-2">
+              {MODULES[3].description}
+            </p>
+
+            <div className="flex items-center gap-4 mb-4">
+              <CircleProgress pct={m4Pct} size={52} stroke={4} labelSize="text-[11px]" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-sans text-gray-400 mb-1">Fortschritt Modul 4</p>
+                <div className="h-1 rounded-full bg-gray-100 overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-700",
+                      m4Pct >= 100 ? "bg-forest" : m4Pct >= 50 ? "bg-forest/70" : "bg-mint",
+                    )}
+                    style={{ width: `${m4Pct}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-wrap gap-1.5">
+                {MODULES[3].topics.map((t) => (
+                  <span key={t} className="text-[11px] font-sans text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+                    {t}
+                  </span>
+                ))}
+              </div>
+              <span className="flex items-center gap-1 text-xs font-sans font-medium text-gray-400 group-hover:text-forest transition-colors shrink-0 ml-3">
+                {m4Completed ? "Bearbeiten" : m4Started ? "Fortsetzen" : "Starten"}
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" strokeWidth={1.5} />
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
+
+      {/* ── Capstone CTA (all modules completed) ──────────── */}
+      {firstRoom && (
+        <div className="mt-6">
+          <Link
+            href={capstoneHref}
+            className={cn(
+              "group flex items-start gap-4 rounded-xl border p-5 transition-colors",
+              allModulesComplete
+                ? "border-forest/30 bg-gradient-to-br from-forest/5 to-mint/10 hover:border-forest/50 hover:shadow-warm-sm"
+                : "border-gray-200 bg-white hover:border-forest/30"
+            )}
+          >
+            <div className={cn(
+              "w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-transform",
+              allModulesComplete ? "bg-forest text-cream group-hover:scale-105" : "bg-gray-100 text-gray-400",
+            )}>
+              <CheckCircle2 className="w-5 h-5" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className={cn(
+                "font-headline text-base leading-snug mb-0.5",
+                allModulesComplete ? "text-forest" : "text-gray-700",
+              )}>
+                {allModulesComplete ? "Dein Raumkonzept ist fertig!" : "Abschluss-Zusammenfassung"}
+              </h3>
+              <p className="text-xs text-gray/60 font-sans leading-relaxed">
+                {allModulesComplete
+                  ? "Moodboard, Zusammenfassung aller vier Module und PDF-Export für deinen Raum."
+                  : "Wird freigeschaltet, sobald alle vier Module abgeschlossen sind."}
+              </p>
+            </div>
+            <span className="shrink-0 inline-flex items-center gap-1.5 text-xs font-sans font-medium text-forest">
+              {allModulesComplete ? "Öffnen" : "Vorschau"}
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" strokeWidth={2} />
+            </span>
+          </Link>
+        </div>
+      )}
 
       {/* ── Coaching CTA ──────────────────────────────────── */}
       <div className="rounded-xl border border-sand/30 bg-white overflow-hidden">
@@ -531,42 +655,3 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   );
 }
 
-// ── Locked module card ────────────────────────────────────────────────────────
-
-function LockedModuleCard({
-  mod,
-}: {
-  mod: { number: string; subtitle: string; title: string; description: string; topics: readonly string[] };
-}) {
-  return (
-    <div className="rounded-xl border border-gray-100 bg-white p-5 opacity-60">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-gray-300" />
-          <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
-            {mod.subtitle}
-          </span>
-        </div>
-        <span className="text-[11px] font-sans text-gray-400 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
-          Demnächst
-        </span>
-      </div>
-
-      <h3 className="font-headline text-lg text-gray-400 mb-1.5 leading-snug">{mod.title}</h3>
-      <p className="text-sm text-gray-400 font-sans leading-relaxed mb-4 line-clamp-2">{mod.description}</p>
-
-      <div className="flex items-center gap-2 mb-4">
-        <Lock className="w-3.5 h-3.5 text-gray-300" strokeWidth={1.5} />
-        <span className="text-xs font-sans text-gray-400">Demnächst verfügbar</span>
-      </div>
-
-      <div className="flex flex-wrap gap-1.5">
-        {mod.topics.map((t) => (
-          <span key={t} className="text-[11px] font-sans text-gray-400 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">
-            {t}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
