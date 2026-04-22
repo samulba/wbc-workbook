@@ -7,6 +7,7 @@ import {
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
   Briefcase, Leaf, Sparkles, Camera, ChevronsUpDown,
+  MousePointer2, BookOpen, Eye,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { ProgressBar } from "./ProgressBar";
@@ -190,9 +191,12 @@ export function ModuleWizard({
 
       {/* Step header */}
       <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
-        <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand mb-2">
-          {currentConfig?.subtitle}
-        </p>
+        <div className="flex flex-wrap items-center gap-2.5 mb-2">
+          <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
+            {currentConfig?.subtitle}
+          </p>
+          {currentConfig && <StepKindBadge kind={currentConfig.kind} />}
+        </div>
         <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl text-forest leading-tight">
           {currentConfig?.title}
         </h2>
@@ -381,4 +385,33 @@ function buildStepPayload(step: number, data: Module1Data) {
     default:
       return {};
   }
+}
+
+// ── Step-kind badge ───────────────────────────────────────────────────────────
+
+function StepKindBadge({ kind }: { kind: "interactive" | "learning" | "review" }) {
+  const config = {
+    interactive: {
+      label: "Interaktiv",
+      Icon:  MousePointer2,
+      cls:   "bg-mint/20 text-forest border-mint/40",
+    },
+    learning: {
+      label: "Zum Lernen",
+      Icon:  BookOpen,
+      cls:   "bg-sand/20 text-[#8a6030] border-sand/50",
+    },
+    review: {
+      label: "Übersicht",
+      Icon:  Eye,
+      cls:   "bg-forest/10 text-forest border-forest/25",
+    },
+  }[kind];
+
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-sans font-medium uppercase tracking-wider ${config.cls}`}>
+      <config.Icon className="w-3 h-3" strokeWidth={1.75} />
+      {config.label}
+    </span>
+  );
 }

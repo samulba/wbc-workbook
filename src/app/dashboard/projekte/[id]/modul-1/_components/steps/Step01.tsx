@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { BrainCircuit, Heart, Sun, Sparkles, Coffee, Leaf, Moon, Flame } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import type { Module1Data } from "@/lib/types/module1";
@@ -95,11 +96,11 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
 
         <div className="flex flex-col gap-3">
           {([0, 1, 2] as const).map((i) => (
-            <div key={i} className="flex items-center gap-3">
-              <span className="w-5 h-5 shrink-0 rounded-full bg-mint/40 flex items-center justify-center">
+            <div key={i} className="flex items-start gap-3">
+              <span className="w-5 h-5 shrink-0 rounded-full bg-mint/40 flex items-center justify-center mt-3.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-forest/60" />
               </span>
-              <Input
+              <WishField
                 placeholder={
                   i === 0
                     ? "Mein erster Wunsch …"
@@ -108,8 +109,7 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
                     : "Mein dritter Wunsch …"
                 }
                 value={wishes[i]}
-                onChange={(e) => setWish(i, e.target.value)}
-                className="flex-1"
+                onChange={(v) => setWish(i, v)}
               />
             </div>
           ))}
@@ -245,5 +245,38 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
       </div>
 
     </div>
+  );
+}
+
+// ── Auto-growing single-wish textarea ────────────────────────────────────────
+// Uses a textarea so long text wraps into view instead of scrolling horizontally
+// out of sight like a single-line <input> would.
+
+function WishField({
+  placeholder, value, onChange,
+}: {
+  placeholder: string;
+  value:       string;
+  onChange:    (v: string) => void;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.max(48, el.scrollHeight)}px`;
+  }, [value]);
+
+  return (
+    <textarea
+      ref={ref}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={1}
+      maxLength={200}
+      className="flex-1 min-h-[48px] w-full resize-none rounded-lg border border-sand/60 bg-cream px-3 py-3 text-base text-forest leading-snug placeholder:text-gray/45 focus:outline-none focus:ring-2 focus:ring-mint focus:border-transparent transition-colors overflow-hidden"
+    />
   );
 }

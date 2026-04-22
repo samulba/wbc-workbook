@@ -91,18 +91,20 @@ export type Module1Data = {
 
 export type Module1Partial = Partial<Omit<Module1Data, "id" | "room_id">>;
 
+export type StepKind = "interactive" | "learning" | "review";
+
 export const STEP_CONFIG = [
-  { step: 1,  title: "Projekt-Steckbrief",        subtitle: "Deine Vision",           built: true  },
-  { step: 2,  title: "Warum verändern?",           subtitle: "Deine Motivation",       built: true  },
-  { step: 3,  title: "Raumwirkungen verstehen",    subtitle: "Atmosphäre & Gefühl",    built: true  },
-  { step: 4,  title: "Hauptwirkung festlegen",     subtitle: "Deine Wahl",             built: true  },
-  { step: 5,  title: "Exkurs: Farbwelten",         subtitle: "Farbsystem & Inspiration", built: true },
-  { step: 6,  title: "Deine Farbwelt",             subtitle: "Farben & Materialien",   built: true  },
-  { step: 7,  title: "Inspiration für deine Wirkung", subtitle: "Design-Merkmale",      built: true  },
-  { step: 8,  title: "Dein Raum-Briefing",         subtitle: "Zusammenfassung & Licht", built: true  },
-  { step: 9,  title: "Moodboard erstellen",          subtitle: "Dein Konzept",           built: true  },
-  { step: 10, title: "Moodboard-Prompt",            subtitle: "KI-Vorlage",             built: true  },
-  { step: 11, title: "Deine Raumidee steht!",       subtitle: "Modul 1 abgeschlossen",  built: true  },
+  { step: 1,  title: "Projekt-Steckbrief",            subtitle: "Deine Vision",             built: true, kind: "interactive" as StepKind },
+  { step: 2,  title: "Warum verändern?",              subtitle: "Deine Motivation",         built: true, kind: "interactive" as StepKind },
+  { step: 3,  title: "Raumwirkungen verstehen",       subtitle: "Atmosphäre & Gefühl",      built: true, kind: "learning"    as StepKind },
+  { step: 4,  title: "Hauptwirkung festlegen",        subtitle: "Deine Wahl",               built: true, kind: "interactive" as StepKind },
+  { step: 5,  title: "Exkurs: Farbwelten",            subtitle: "Farbsystem & Inspiration", built: true, kind: "learning"    as StepKind },
+  { step: 6,  title: "Deine Farbwelt",                subtitle: "Farben & Materialien",     built: true, kind: "interactive" as StepKind },
+  { step: 7,  title: "Inspiration für deine Wirkung", subtitle: "Design-Merkmale",          built: true, kind: "learning"    as StepKind },
+  { step: 8,  title: "Dein Raum-Briefing",            subtitle: "Zusammenfassung & Licht",  built: true, kind: "interactive" as StepKind },
+  { step: 9,  title: "Moodboard erstellen",           subtitle: "Dein Konzept",             built: true, kind: "review"      as StepKind },
+  { step: 10, title: "Moodboard-Prompt",              subtitle: "KI-Vorlage",               built: true, kind: "review"      as StepKind },
+  { step: 11, title: "Deine Raumidee steht!",         subtitle: "Modul 1 abgeschlossen",    built: true, kind: "review"      as StepKind },
 ] as const;
 
 export const TOTAL_STEPS = STEP_CONFIG.length;

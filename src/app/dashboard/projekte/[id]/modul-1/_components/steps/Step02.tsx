@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, Lightbulb } from "lucide-react";
 import { Textarea } from "@/components/ui/Textarea";
 import type { Module1Data } from "@/lib/types/module1";
 
@@ -53,7 +53,7 @@ function AutoTextarea({
     const el = ref.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.max(96, el.scrollHeight)}px`;
+    el.style.height = `${Math.max(120, el.scrollHeight)}px`;
   }
 
   useEffect(resize, [value]);
@@ -67,11 +67,31 @@ function AutoTextarea({
         maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
         rows={4}
-        className="resize-none transition-all duration-200 focus-within:shadow-[0_0_0_4px_rgba(148,193,164,0.15)]"
+        className="resize-none overflow-hidden transition-all duration-200 focus-within:shadow-[0_0_0_4px_rgba(148,193,164,0.15)]"
       />
       <p className="text-[11px] text-gray/40 font-mono mt-1 text-right tabular-nums">
         {value.length} / {maxLength}
       </p>
+    </div>
+  );
+}
+
+// ── Examples hint card ────────────────────────────────────────────────────────
+
+function ExamplesHint({ items }: { items: string[] }) {
+  return (
+    <div className="rounded-xl bg-sand/10 border border-sand/30 px-4 py-3 flex gap-3">
+      <Lightbulb className="w-4 h-4 text-sand shrink-0 mt-0.5" strokeWidth={1.75} />
+      <div className="flex flex-col gap-1.5 min-w-0 flex-1">
+        <p className="text-[11px] uppercase tracking-widest text-[#8a6030] font-semibold">
+          Beispiele
+        </p>
+        {items.map((s, i) => (
+          <p key={i} className="text-sm font-sans text-forest/75 italic leading-snug">
+            „{s}“
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -225,13 +245,17 @@ export function Step02({ data, onChange }: Props) {
             Schreibe frei – was stört, fehlt oder belastet dich in diesem Raum?
           </p>
         </div>
+        <ExamplesHint
+          items={[
+            "Ich fühle mich beengt, sobald ich reinkomme.",
+            "Das Licht ist zu hart, nichts erholt mich hier.",
+            "Die Farben wirken kühl – ich will nicht länger als nötig bleiben.",
+          ]}
+        />
         <AutoTextarea
           value={data.current_issues ?? ""}
           onChange={(v) => onChange({ current_issues: v })}
-          placeholder={`Beispiele:
-• „Ich fühle mich beengt, sobald ich reinkomme.“
-• „Das Licht ist zu hart, nichts erholt mich hier.“
-• „Die Farben wirken kühl – ich will nicht länger als nötig bleiben.“`}
+          placeholder="Schreibe frei – ein Satz oder mehrere, ganz wie du magst …"
           maxLength={COUNTER_MAX}
         />
       </section>
