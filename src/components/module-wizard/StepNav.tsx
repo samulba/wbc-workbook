@@ -1,20 +1,20 @@
 import { Button } from "@/components/ui/Button";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
-import { TOTAL_STEPS } from "@/lib/types/module1";
 import { cn } from "@/lib/utils";
 
 interface Props {
   currentStep: number;
-  saving: boolean;
-  savedAt: string | null;
-  nextLabel?: string;
-  editMode?: boolean;
-  onBack: () => void;
-  onNext: () => void;
+  totalSteps:  number;
+  saving:      boolean;
+  savedAt:     string | null;
+  nextLabel?:  string;
+  editMode?:   boolean;
+  onBack:      () => void;
+  onNext:      () => void;
 }
 
-export function StepNav({ currentStep, saving, savedAt, nextLabel, editMode, onBack, onNext }: Props) {
-  const isLast = currentStep === TOTAL_STEPS;
+export function StepNav({ currentStep, totalSteps, saving, savedAt, nextLabel, editMode, onBack, onNext }: Props) {
+  const isLast = currentStep === totalSteps;
 
   return (
     <div className={cn(

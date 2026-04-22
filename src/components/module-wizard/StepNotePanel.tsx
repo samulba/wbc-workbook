@@ -3,19 +3,20 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PenLine, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { saveStepNote } from "@/app/actions/module1";
+import type { SaveResult } from "./types";
 
 interface Props {
   moduleId:      string;
   stepNumber:    number;
   allNotes:      Record<string, string>;
   onNotesChange: (notes: Record<string, string>) => void;
+  saveNotes:     (moduleId: string, notes: Record<string, string>) => Promise<SaveResult>;
 }
 
 const DEBOUNCE_MS = 2000;
 const PREVIEW_LEN = 45;
 
-export function StepNotePanel({ moduleId, stepNumber, allNotes, onNotesChange }: Props) {
+export function StepNotePanel({ moduleId, stepNumber, allNotes, onNotesChange, saveNotes }: Props) {
   const key          = String(stepNumber);
   const initialText  = allNotes[key] ?? "";
 
@@ -72,7 +73,7 @@ export function StepNotePanel({ moduleId, stepNumber, allNotes, onNotesChange }:
     } else {
       delete updated[key];
     }
-    const result = await saveStepNote(moduleId, updated);
+    const result = await saveNotes(moduleId, updated);
     setSaving(false);
     if (result.ok) {
       lastSavedRef.current = value;
@@ -80,7 +81,7 @@ export function StepNotePanel({ moduleId, stepNumber, allNotes, onNotesChange }:
       onNotesChange(updated);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moduleId, key, allNotes, onNotesChange]);
+  }, [moduleId, key, allNotes, onNotesChange, saveNotes]);
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const val = e.target.value;

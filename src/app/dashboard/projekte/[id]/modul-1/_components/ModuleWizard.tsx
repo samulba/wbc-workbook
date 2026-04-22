@@ -1,18 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Pencil,
   Home, Sofa, Moon, Monitor, Star, Droplets,
   ChefHat, UtensilsCrossed, DoorOpen, Package,
   Briefcase, Leaf, Sparkles, Camera, ChevronsUpDown,
-  MousePointer2, BookOpen, Eye,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { ProgressBar } from "./ProgressBar";
-import { StepNav } from "./StepNav";
-import { StepNotePanel } from "./StepNotePanel";
+import { ModuleWizardShell } from "@/components/module-wizard";
+import type { Module1Partial } from "@/lib/types/module1";
 import { Step01 } from "./steps/Step01";
 import { Step02 } from "./steps/Step02";
 import { Step03 } from "./steps/Step03";
@@ -25,8 +22,8 @@ import { Step09 } from "./steps/Step09";
 import { Step10 } from "./steps/Step10";
 import { Step11 } from "./steps/Step11";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
-import { saveModule1Step } from "@/app/actions/module1";
-import { STEP_CONFIG, TOTAL_STEPS } from "@/lib/types/module1";
+import { saveModule1Step, saveStepNote } from "@/app/actions/module1";
+import { STEP_CONFIG } from "@/lib/types/module1";
 import type { Module1Data } from "@/lib/types/module1";
 
 // ── Room display config ────────────────────────────────────────────────────────
@@ -55,17 +52,17 @@ const ROOM_ICONS: Record<string, LucideIcon> = {
 type RoomSummary = { id: string; name: string; room_type: string };
 
 interface Props {
-  moduleId: string;
-  projectId: string;
-  projectName: string;
-  roomId: string;
-  roomName: string;
-  roomType: string;
-  allRooms: RoomSummary[];
-  initialData: Module1Data;
-  editMode?: boolean;
-  shareToken?: string | null;
-  isShared?: boolean;
+  moduleId:     string;
+  projectId:    string;
+  projectName:  string;
+  roomId:       string;
+  roomName:     string;
+  roomType:     string;
+  allRooms:     RoomSummary[];
+  initialData:  Module1Data;
+  editMode?:    boolean;
+  shareToken?:  string | null;
+  isShared?:    boolean;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -83,62 +80,13 @@ export function ModuleWizard({
   shareToken,
   isShared = false,
 }: Props) {
-  const router = useRouter();
-  const [step, setStep]       = useState(() => {
-    const saved = initialData.current_step ?? 1;
-    return Math.min(Math.max(saved, 1), TOTAL_STEPS);
-  });
-  const [visible, setVisible] = useState(true);
-  const [data, setData]       = useState<Module1Data>(initialData);
-  const [saving, setSaving]   = useState(false);
-  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const router   = useRouter();
+  const RoomIcon = ROOM_ICONS[roomType] ?? Home;
+  const roomLabel = ROOM_LABELS[roomType] ?? roomType;
 
-  const handleChange = useCallback((patch: Partial<Module1Data>) => {
-    setData((prev) => ({ ...prev, ...patch }));
-    setSavedAt(null);
-  }, []);
-
-  async function transition(nextStep: number) {
-    setSaving(true);
-
-    const stepPayload = buildStepPayload(step, data);
-    const payload = nextStep > step
-      ? { ...stepPayload, current_step: Math.min(nextStep, TOTAL_STEPS) }
-      : stepPayload;
-    const result  = await saveModule1Step(moduleId, payload);
-
-    setSaving(false);
-
-    if (!result.ok) {
-      setSavedAt(null);
-      return;
-    }
-
-    setSavedAt(result.savedAt);
-
-    if (nextStep < 1) return;
-
-    if (nextStep > TOTAL_STEPS) {
-      router.push(`/dashboard/projekte/${projectId}`);
-      return;
-    }
-
-    setVisible(false);
-    setTimeout(() => {
-      setStep(nextStep);
-      setVisible(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 180);
-  }
-
-  const currentConfig = STEP_CONFIG[step - 1];
-  const RoomIcon      = ROOM_ICONS[roomType] ?? Home;
-  const roomLabel     = ROOM_LABELS[roomType] ?? roomType;
-
-  return (
-    <div className="flex flex-col gap-6 sm:gap-8 pb-24 sm:pb-0">
-
-      {/* ── Room header ─────────────────────────────────── */}
+  const header = (
+    <>
+      {/* Room header */}
       <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200">
         <div className="flex items-center gap-2 min-w-0">
           <RoomIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" strokeWidth={1.5} />
@@ -178,32 +126,22 @@ export function ModuleWizard({
           </p>
         </div>
       )}
+    </>
+  );
 
-      {/* Sticky on mobile so progress stays visible while scrolling */}
-      <div className="sticky top-14 -mx-4 sm:-mx-0 sm:static z-10 bg-[var(--bg-page)]/95 backdrop-blur-md px-4 sm:px-0 py-2 sm:py-0 border-b border-[var(--border-page)] sm:border-0">
-        <ProgressBar
-          currentStep={step}
-          stepNotes={data.step_notes}
-          editMode={editMode}
-          onStepClick={(s) => transition(s)}
-        />
-      </div>
-
-      {/* Step header */}
-      <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
-        <div className="flex flex-wrap items-center gap-2.5 mb-2">
-          <p className="text-xs font-sans uppercase tracking-[0.2em] text-sand">
-            {currentConfig?.subtitle}
-          </p>
-          {currentConfig && <StepKindBadge kind={currentConfig.kind} />}
-        </div>
-        <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl text-forest leading-tight">
-          {currentConfig?.title}
-        </h2>
-      </div>
-
-      {/* Step content */}
-      <div className={`transition-all duration-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+  return (
+    <ModuleWizardShell<Module1Data>
+      moduleId={moduleId}
+      initialData={initialData}
+      steps={STEP_CONFIG}
+      editMode={editMode}
+      header={header}
+      saveStep={(id, payload) => saveModule1Step(id, payload as Module1Partial)}
+      saveNotes={saveStepNote}
+      buildStepPayload={buildStepPayload}
+      nextLabelFor={(step) => (step === 9 ? "Prompt generieren" : undefined)}
+      onComplete={() => router.push(`/dashboard/projekte/${projectId}`)}
+      renderStep={({ step, data, onChange }) => (
         <StepContent
           step={step}
           data={data}
@@ -215,26 +153,10 @@ export function ModuleWizard({
           editMode={editMode}
           shareToken={shareToken ?? null}
           isShared={isShared}
-          onChange={handleChange}
+          onChange={onChange}
         />
-        <StepNotePanel
-          moduleId={moduleId}
-          stepNumber={step}
-          allNotes={data.step_notes ?? {}}
-          onNotesChange={(notes) => handleChange({ step_notes: notes })}
-        />
-      </div>
-
-      <StepNav
-        currentStep={step}
-        saving={saving}
-        savedAt={savedAt}
-        editMode={editMode}
-        nextLabel={step === 9 ? "Prompt generieren" : undefined}
-        onBack={() => transition(step - 1)}
-        onNext={() => transition(step + 1)}
-      />
-    </div>
+      )}
+    />
   );
 }
 
@@ -252,17 +174,17 @@ function StepContent({
   isShared,
   onChange,
 }: {
-  step: number;
-  data: Module1Data;
-  projectId: string;
+  step:        number;
+  data:        Module1Data;
+  projectId:   string;
   projectName: string;
-  roomId: string;
-  roomName: string;
-  roomType: string;
-  editMode: boolean;
-  shareToken: string | null;
-  isShared: boolean;
-  onChange: (patch: Partial<Module1Data>) => void;
+  roomId:      string;
+  roomName:    string;
+  roomType:    string;
+  editMode:    boolean;
+  shareToken:  string | null;
+  isShared:    boolean;
+  onChange:    (patch: Partial<Module1Data>) => void;
 }) {
   switch (step) {
     case 1:
@@ -333,7 +255,7 @@ function StepContent({
 }
 
 // ── Payload builders ─────────────────────────────────────────────────────────
-function buildStepPayload(step: number, data: Module1Data) {
+function buildStepPayload(step: number, data: Module1Data): Record<string, unknown> {
   switch (step) {
     case 1:
       return {
@@ -385,33 +307,4 @@ function buildStepPayload(step: number, data: Module1Data) {
     default:
       return {};
   }
-}
-
-// ── Step-kind badge ───────────────────────────────────────────────────────────
-
-function StepKindBadge({ kind }: { kind: "interactive" | "learning" | "review" }) {
-  const config = {
-    interactive: {
-      label: "Interaktiv",
-      Icon:  MousePointer2,
-      cls:   "bg-mint/20 text-forest border-mint/40",
-    },
-    learning: {
-      label: "Zum Lernen",
-      Icon:  BookOpen,
-      cls:   "bg-sand/20 text-[#8a6030] border-sand/50",
-    },
-    review: {
-      label: "Übersicht",
-      Icon:  Eye,
-      cls:   "bg-forest/10 text-forest border-forest/25",
-    },
-  }[kind];
-
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-sans font-medium uppercase tracking-wider ${config.cls}`}>
-      <config.Icon className="w-3 h-3" strokeWidth={1.75} />
-      {config.label}
-    </span>
-  );
 }

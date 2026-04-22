@@ -1,15 +1,17 @@
-import { STEP_CONFIG } from "@/lib/types/module1";
 import { cn } from "@/lib/utils";
+import type { StepDefinition } from "./types";
 
 interface Props {
-  currentStep: number; // 1-based
-  stepNotes?:  Record<string, string>;
-  editMode?: boolean;
+  steps:        ReadonlyArray<StepDefinition>;
+  currentStep:  number; // 1-based
+  stepNotes?:   Record<string, string>;
+  editMode?:    boolean;
   onStepClick?: (step: number) => void;
 }
 
-export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: Props) {
-  const pct = Math.round((currentStep / STEP_CONFIG.length) * 100);
+export function ProgressBar({ steps, currentStep, stepNotes, editMode, onStepClick }: Props) {
+  const total = steps.length;
+  const pct   = Math.round((currentStep / total) * 100);
 
   return (
     <div className="w-full">
@@ -23,7 +25,7 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
             onChange={(e) => onStepClick?.(Number(e.target.value))}
             className="sm:hidden text-xs font-sans text-sand bg-transparent outline-none cursor-pointer border-b border-sand/35 py-0.5 max-w-[200px]"
           >
-            {STEP_CONFIG.map(({ step, title }) => (
+            {steps.map(({ step, title }) => (
               <option key={step} value={step}>
                 Schritt {step}: {title}
               </option>
@@ -31,7 +33,7 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
           </select>
         ) : (
           <span className="sm:hidden text-xs font-sans text-sand">
-            Schritt {currentStep}/{STEP_CONFIG.length}
+            Schritt {currentStep}/{total}
             <span className="mx-1.5 opacity-40">·</span>
             <span className="font-semibold">{pct}%</span>
           </span>
@@ -39,14 +41,14 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
 
         {/* Desktop left: step + percentage */}
         <span className="hidden sm:flex items-center gap-2 text-xs font-sans text-sand">
-          <span className="uppercase tracking-[0.2em]">Schritt {currentStep} / {STEP_CONFIG.length}</span>
+          <span className="uppercase tracking-[0.2em]">Schritt {currentStep} / {total}</span>
           <span className="opacity-40">·</span>
           <span className="font-semibold tabular-nums">{pct}%</span>
         </span>
 
         {/* Right: current step title (desktop only) */}
         <span className="text-xs font-sans text-gray/50 hidden sm:block truncate max-w-[200px]">
-          {STEP_CONFIG[currentStep - 1]?.title}
+          {steps[currentStep - 1]?.title}
         </span>
       </div>
 
@@ -63,7 +65,7 @@ export function ProgressBar({ currentStep, stepNotes, editMode, onStepClick }: P
 
       {/* Desktop: dot/segment track */}
       <div className="hidden sm:flex items-center gap-1">
-        {STEP_CONFIG.map(({ step, title }) => {
+        {steps.map(({ step, title }) => {
           const done    = step < currentStep;
           const active  = step === currentStep;
           const hasNote = Boolean(stepNotes?.[String(step)]?.trim());
