@@ -79,7 +79,7 @@ export default async function FeedbackPage({ params }: { params: { token: string
             Frag einen Freund
           </p>
           <h1 className="font-headline text-3xl sm:text-4xl leading-tight mb-3">
-            {row.asker_name} fragt dich um Rat 💭
+            {row.asker_name} fragt dich um Rat
           </h1>
           <p className="text-lg text-mint/90 italic border-l-2 border-mint pl-4">
             „{row.question}“

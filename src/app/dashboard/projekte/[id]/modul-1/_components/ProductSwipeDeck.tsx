@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { X, Star, Heart, Undo2, Check, ExternalLink } from "lucide-react";
+import { X, Star, Heart, Undo2, Check, ExternalLink, Sofa, PartyPopper } from "lucide-react";
 import type { Product } from "@/lib/types/product";
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -292,7 +292,9 @@ function DeckCard({
             className="w-full h-full object-cover pointer-events-none"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl opacity-30">🛋️</div>
+          <div className="w-full h-full flex items-center justify-center text-forest/25">
+            <Sofa className="w-16 h-16" strokeWidth={1.25} />
+          </div>
         )}
 
         {/* Direction overlays */}
@@ -424,7 +426,9 @@ function ActionButton({
 function DeckDone({ count, favs, onReset }: { count: number; favs: number; onReset: () => void }) {
   return (
     <div className="absolute inset-0 rounded-3xl border-2 border-dashed border-forest/20 bg-gradient-to-br from-cream to-white flex flex-col items-center justify-center p-6 text-center">
-      <div className="text-5xl mb-3 wbc-swipe-pop">🎉</div>
+      <div className="w-14 h-14 rounded-2xl bg-mint/20 flex items-center justify-center mb-3 wbc-swipe-pop">
+        <PartyPopper className="w-7 h-7 text-forest" strokeWidth={1.5} />
+      </div>
       <h3 className="font-headline text-xl text-forest mb-1">Alle Empfehlungen durch!</h3>
       <p className="text-xs text-gray/60 mb-4">
         {count} zur Liste &nbsp;·&nbsp; {favs} als Favorit

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { ShoppingBag, Plus, ArrowRight } from "lucide-react";
+import { ShoppingBag, Plus, ArrowRight, FolderOpen } from "lucide-react";
 import { NewListButton } from "./_components/NewListButton";
 
 export const metadata: Metadata = { title: "Shopping-Listen" };
@@ -95,7 +95,8 @@ function ListCard({ list }: { list: ListRow }) {
           </h3>
           {list.project && (
             <p className="text-xs text-mint-foreground mt-0.5 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-mint/15 text-forest dark:text-mint">
-              📁 {list.project.name}
+              <FolderOpen className="w-3 h-3" strokeWidth={1.5} />
+              {list.project.name}
             </p>
           )}
         </div>

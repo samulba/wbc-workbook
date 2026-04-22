@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquare, X, Star, Send, CheckCircle2 } from "lucide-react";
+import {
+  MessageSquare, X, Star, Send, CheckCircle2,
+  Bug, Lightbulb, Sparkles, HelpCircle,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -9,11 +13,11 @@ import { cn } from "@/lib/utils";
 const TYPES = ["Bug", "Vorschlag", "Lob", "Frage"] as const;
 type FeedbackType = typeof TYPES[number];
 
-const TYPE_EMOJIS: Record<FeedbackType, string> = {
-  Bug:       "🐛",
-  Vorschlag: "💡",
-  Lob:       "🌟",
-  Frage:     "❓",
+const TYPE_ICONS: Record<FeedbackType, LucideIcon> = {
+  Bug:       Bug,
+  Vorschlag: Lightbulb,
+  Lob:       Sparkles,
+  Frage:     HelpCircle,
 };
 
 // ── Star Picker ───────────────────────────────────────────────────────────────
@@ -179,21 +183,24 @@ export function FeedbackWidget() {
                 <div>
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Art des Feedbacks</p>
                   <div className="grid grid-cols-4 gap-1">
-                    {TYPES.map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setType(t)}
-                        className={cn(
-                          "flex flex-col items-center gap-1 px-2 py-2 rounded-xl text-xs font-medium border transition-all",
-                          type === t
-                            ? "border-forest bg-forest/5 dark:bg-forest/10 text-forest dark:text-mint"
-                            : "border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500"
-                        )}
-                      >
-                        <span className="text-base leading-none">{TYPE_EMOJIS[t]}</span>
-                        {t}
-                      </button>
-                    ))}
+                    {TYPES.map((t) => {
+                      const Icon = TYPE_ICONS[t];
+                      return (
+                        <button
+                          key={t}
+                          onClick={() => setType(t)}
+                          className={cn(
+                            "flex flex-col items-center gap-1.5 px-2 py-2 rounded-xl text-xs font-medium border transition-all",
+                            type === t
+                              ? "border-forest bg-forest/5 dark:bg-forest/10 text-forest dark:text-mint"
+                              : "border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500"
+                          )}
+                        >
+                          <Icon className="w-4 h-4" strokeWidth={1.75} />
+                          {t}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 

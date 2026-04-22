@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
+import { Trophy, X } from "lucide-react";
 import { AchievementIcon } from "./AchievementIcon";
 
 interface Unseen {
@@ -103,8 +104,9 @@ function Toast({ achievement, onDismiss }: { achievement: Unseen; onDismiss: () 
           <AchievementIcon name={a.icon} className="w-6 h-6 text-white" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-0.5">
-            🏆 Achievement freigeschaltet
+          <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-0.5">
+            <Trophy className="w-3 h-3" strokeWidth={2} />
+            Achievement freigeschaltet
           </p>
           <p className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight">
             {a.name}
@@ -119,10 +121,10 @@ function Toast({ achievement, onDismiss }: { achievement: Unseen; onDismiss: () 
         <button
           type="button"
           onClick={onDismiss}
-          className="shrink-0 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors text-xs"
+          className="shrink-0 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
           aria-label="Schließen"
         >
-          ✕
+          <X className="w-3.5 h-3.5" strokeWidth={1.75} />
         </button>
       </div>
 

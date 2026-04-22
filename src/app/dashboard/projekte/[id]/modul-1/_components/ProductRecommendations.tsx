@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition, useCallback, useRef } from "react";
-import { Heart, ExternalLink, ShoppingBag, Check, LayoutGrid, Layers } from "lucide-react";
+import { Heart, ExternalLink, ShoppingBag, Check, LayoutGrid, Layers, Sofa } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   getProductRecommendations,
@@ -87,8 +87,8 @@ function ProductCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-sand/10">
-            <span className="text-3xl opacity-40">🛋️</span>
+          <div className="w-full h-full flex items-center justify-center bg-sand/10 text-forest/30">
+            <Sofa className="w-8 h-8" strokeWidth={1.25} />
           </div>
         )}
 
@@ -288,7 +288,7 @@ export function ProductRecommendations({
       startTransition(async () => {
         await addProductToList({ listId: activeListId, productId: product.id }).catch(() => {});
       });
-      flashToast("🛒 Zur Liste");
+      flashToast("Zur Liste hinzugefügt");
     }
     // skip: no-op besides advancing
     // eslint-disable-next-line react-hooks/exhaustive-deps

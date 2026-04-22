@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, ExternalLink } from "lucide-react";
+import { ShoppingBag, ExternalLink, FolderOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PRIORITY_LABELS, type ShoppingPriority } from "@/lib/types/shopping";
 
@@ -44,7 +44,12 @@ export default async function SharedShoppingPage({ params }: { params: { token: 
         <div className="mx-auto max-w-4xl px-6 py-10">
           <p className="text-xs uppercase tracking-[0.25em] text-mint mb-3">Geteilte Shopping-Liste</p>
           <h1 className="font-headline text-4xl sm:text-5xl leading-none mb-2">{list.list_name}</h1>
-          {list.project_name && <p className="text-mint/80 mt-2 text-sm">📁 {list.project_name}</p>}
+          {list.project_name && (
+            <p className="inline-flex items-center gap-1.5 text-mint/80 mt-2 text-sm">
+              <FolderOpen className="w-3.5 h-3.5" strokeWidth={1.5} />
+              {list.project_name}
+            </p>
+          )}
 
           {list.budget_total && list.budget_total > 0 && (
             <div className="mt-6 max-w-md">

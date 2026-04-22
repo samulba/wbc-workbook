@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Lock, Trophy } from "lucide-react";
+import {
+  ArrowLeft, Lock, Trophy, Rocket, Palette, Camera, Star, Gem,
+  type LucideIcon,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin-client";
 import { redirect } from "next/navigation";
@@ -8,13 +11,13 @@ import { AchievementIcon } from "@/components/achievements/AchievementIcon";
 
 export const metadata: Metadata = { title: "Achievements" };
 
-const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {
-  erste_schritte: { label: "Erste Schritte", emoji: "🚀" },
-  design:         { label: "Design-Profi",   emoji: "🎨" },
-  visuell:        { label: "Visuell",        emoji: "📸" },
-  meisterklasse:  { label: "Meisterklasse",  emoji: "🏆" },
-  engagement:     { label: "Engagement",     emoji: "⭐" },
-  geheim:         { label: "Geheim",         emoji: "💎" },
+const CATEGORY_LABELS: Record<string, { label: string; Icon: LucideIcon }> = {
+  erste_schritte: { label: "Erste Schritte", Icon: Rocket  },
+  design:         { label: "Design-Profi",   Icon: Palette },
+  visuell:        { label: "Visuell",        Icon: Camera  },
+  meisterklasse:  { label: "Meisterklasse",  Icon: Trophy  },
+  engagement:     { label: "Engagement",     Icon: Star    },
+  geheim:         { label: "Geheim",         Icon: Gem     },
 };
 
 const CATEGORY_ORDER = [
@@ -114,12 +117,15 @@ export default async function AchievementsPage() {
         {CATEGORY_ORDER.map((cat) => {
           const items = byCategory.get(cat);
           if (!items || items.length === 0) return null;
-          const meta = CATEGORY_LABELS[cat] ?? { label: cat, emoji: "🏆" };
+          const meta = CATEGORY_LABELS[cat] ?? { label: cat, Icon: Trophy };
+          const CatIcon = meta.Icon;
 
           return (
             <section key={cat}>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">{meta.emoji}</span>
+              <div className="flex items-center gap-2.5 mb-4">
+                <span className="w-8 h-8 rounded-lg bg-forest/8 dark:bg-mint/10 border border-forest/10 dark:border-mint/15 flex items-center justify-center shrink-0">
+                  <CatIcon className="w-4 h-4 text-forest dark:text-mint" strokeWidth={1.75} />
+                </span>
                 <h2 className="font-headline text-2xl text-forest dark:text-mint">
                   {meta.label}
                 </h2>

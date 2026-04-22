@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { AlertTriangle } from "lucide-react";
 
 interface Props {
   children: React.ReactNode;
@@ -46,7 +47,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
       return (
         <div className="flex flex-col items-center justify-center min-h-[200px] p-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30">
-          <div className="text-red-500 dark:text-red-400 text-4xl mb-3">⚠️</div>
+          <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 flex items-center justify-center mb-3">
+            <AlertTriangle className="w-6 h-6" strokeWidth={1.75} />
+          </div>
           <h2 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-1">
             Etwas ist schiefgelaufen
           </h2>

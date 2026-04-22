@@ -102,9 +102,11 @@ export function Step04({ data, roomType, onChange }: Props) {
         {/* Gradient for legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent pointer-events-none" />
 
-        {/* Emoji bubble */}
-        <div className="absolute top-5 left-5 w-14 h-14 rounded-2xl bg-white/85 backdrop-blur-md flex items-center justify-center text-3xl shadow-md">
-          <span className="wbc-mood-bounce">{active.emoji}</span>
+        {/* Icon bubble */}
+        <div className="absolute top-5 left-5 w-14 h-14 rounded-2xl bg-white/85 backdrop-blur-md flex items-center justify-center shadow-md">
+          <span className="wbc-mood-bounce inline-flex text-forest">
+            <active.Icon className="w-7 h-7" strokeWidth={1.5} />
+          </span>
         </div>
 
         {/* Label overlay */}
@@ -162,11 +164,11 @@ export function Step04({ data, roomType, onChange }: Props) {
             />
             <span
               className={cn(
-                "text-[10px] sm:text-xs font-sans leading-tight text-center truncate max-w-full transition-colors",
+                "flex items-center gap-1 text-[10px] sm:text-xs font-sans leading-tight text-center truncate max-w-full transition-colors",
                 i === idx ? "font-medium text-forest" : "text-gray/50 group-hover:text-forest/70",
               )}
             >
-              {e.emoji}{" "}
+              <e.Icon className="w-3 h-3 shrink-0" strokeWidth={1.75} />
               <span className="hidden sm:inline">{e.label.split(" & ")[0]}</span>
             </span>
           </button>

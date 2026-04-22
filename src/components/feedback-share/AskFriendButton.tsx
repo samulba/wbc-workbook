@@ -170,7 +170,7 @@ function CreateLinkModal({
   const hasShare = typeof navigator !== "undefined" && "share" in navigator;
 
   return (
-    <ModalShell title={created ? "Link erstellt ✨" : "Feedback einholen"} onClose={onClose}>
+    <ModalShell title={created ? "Link erstellt" : "Feedback einholen"} onClose={onClose}>
       {!created ? (
         <form onSubmit={submit} className="space-y-4">
           <div>

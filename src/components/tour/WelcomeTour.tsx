@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   FolderOpen, Sparkles, Target, Lightbulb, ShoppingBag, Heart,
-  ArrowRight, X,
+  ArrowRight, X, Hand, PartyPopper,
 } from "lucide-react";
 import { markTourSeen } from "@/app/actions/tour";
 
@@ -18,7 +18,6 @@ type Step = {
   title:      string;
   description:string;
   target?:    string;
-  emoji?:     string;
   icon?:      React.ElementType;
   iconTint?:  "mint" | "forest" | "terracotta" | "sand";
   confetti?:  boolean;
@@ -32,7 +31,8 @@ const STEPS: Step[] = [
     kind:        "modal",
     title:       "Willkommen im Wellbeing Workbook",
     description: "In 60 Sekunden zeigen wir dir, wie du deinen Traumraum gestaltest.",
-    emoji:       "👋",
+    icon:        Hand,
+    iconTint:    "mint",
     confetti:    true,
     primary:     { label: "Los geht's", action: "next" },
   },
@@ -95,7 +95,8 @@ const STEPS: Step[] = [
     kind:        "modal",
     title:       "Du bist startklar",
     description: "Tipp: Starte mit einem kleinen Raum wie dem Bad — so lernst du die App am schnellsten kennen.",
-    emoji:       "🎉",
+    icon:        PartyPopper,
+    iconTint:    "terracotta",
     confetti:    true,
     primary:     { label: "Erstes Projekt erstellen", action: "nav", href: "/dashboard/projekte/neu" },
     secondary:   { label: "Erstmal umschauen", action: "close" },
@@ -525,12 +526,8 @@ function TourCard({
 
         {/* Body */}
         <div className={`${step.kind === "modal" ? "p-8 sm:p-10" : "p-6"} text-center`}>
-          {/* Icon / Emoji */}
-          {step.emoji ? (
-            <div className="mb-5 flex justify-center">
-              <span className="text-5xl sm:text-6xl wbc-tour-bounce">{step.emoji}</span>
-            </div>
-          ) : step.icon && step.iconTint ? (
+          {/* Icon */}
+          {step.icon && step.iconTint ? (
             <div className="mb-4 flex justify-center">
               <div className={`w-14 h-14 rounded-2xl ${iconBg[step.iconTint]} flex items-center justify-center wbc-tour-icon-pulse`}>
                 <step.icon className={`w-7 h-7 ${iconColor[step.iconTint]}`} strokeWidth={1.5} />

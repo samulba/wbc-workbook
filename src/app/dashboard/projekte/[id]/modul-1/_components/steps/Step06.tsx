@@ -52,12 +52,11 @@ const ACCENT_COLORS: ColorCard[] = [
   { name: "Goldgelb",      hex: "#c98d18", mood: "Optimistisch" },
 ];
 
-// ── Material catalog (CSS-driven "textures" + emoji) ─────────────────────────
+// ── Material catalog (CSS-driven gradient "textures") ────────────────────────
 
 type Material = {
   value:   string;
   label:   string;
-  emoji:   string;
   mood:    string;
   category:"natur" | "textil" | "modern" | "spezial";
   bg:      string;            // CSS gradient/background that evokes the material
@@ -65,47 +64,47 @@ type Material = {
 
 const MATERIALS: Material[] = [
   // Natur
-  { value:"holz_hell", label:"Holz hell", emoji:"🪵", mood:"Warm · natürlich", category:"natur",
+  { value:"holz_hell", label:"Holz hell", mood:"Warm · natürlich", category:"natur",
     bg:"linear-gradient(120deg, #e9d2a9 0%, #d6b98a 60%, #c9a572 100%)" },
-  { value:"holz_dunkel", label:"Holz dunkel", emoji:"🌰", mood:"Erdend · gemütlich", category:"natur",
+  { value:"holz_dunkel", label:"Holz dunkel", mood:"Erdend · gemütlich", category:"natur",
     bg:"linear-gradient(120deg, #6b4b34 0%, #523824 60%, #402b18 100%)" },
-  { value:"stein", label:"Stein", emoji:"🪨", mood:"Kühl · massiv", category:"natur",
+  { value:"stein", label:"Stein", mood:"Kühl · massiv", category:"natur",
     bg:"linear-gradient(120deg, #a19c92 0%, #7a756c 60%, #5a564f 100%)" },
-  { value:"marmor", label:"Marmor", emoji:"🏛", mood:"Elegant · edel", category:"natur",
+  { value:"marmor", label:"Marmor", mood:"Elegant · edel", category:"natur",
     bg:"linear-gradient(120deg, #f0ebe2 0%, #d9d2c6 40%, #e8e2d5 60%, #c8c0b2 100%)" },
-  { value:"kork", label:"Kork", emoji:"🟫", mood:"Weich · warm", category:"natur",
+  { value:"kork", label:"Kork", mood:"Weich · warm", category:"natur",
     bg:"linear-gradient(120deg, #c8a070 0%, #b48656 60%, #a2744a 100%)" },
-  { value:"bambus", label:"Bambus", emoji:"🎋", mood:"Leicht · luftig", category:"natur",
+  { value:"bambus", label:"Bambus", mood:"Leicht · luftig", category:"natur",
     bg:"linear-gradient(120deg, #d2c294 0%, #b8ad80 60%, #9e946d 100%)" },
 
   // Textil
-  { value:"leinen", label:"Leinen", emoji:"🧺", mood:"Natürlich · ruhig", category:"textil",
+  { value:"leinen", label:"Leinen", mood:"Natürlich · ruhig", category:"textil",
     bg:"linear-gradient(135deg, #ede4d1 0%, #d8ccb5 60%, #c5b79a 100%)" },
-  { value:"samt", label:"Samt", emoji:"✨", mood:"Luxuriös · weich", category:"textil",
+  { value:"samt", label:"Samt", mood:"Luxuriös · weich", category:"textil",
     bg:"linear-gradient(135deg, #7a4b5c 0%, #5a3245 60%, #3d1e2e 100%)" },
-  { value:"wolle", label:"Wolle", emoji:"🧶", mood:"Warm · dicht", category:"textil",
+  { value:"wolle", label:"Wolle", mood:"Warm · dicht", category:"textil",
     bg:"linear-gradient(135deg, #cec2b2 0%, #b2a591 60%, #998b78 100%)" },
-  { value:"baumwolle", label:"Baumwolle", emoji:"☁️", mood:"Leicht · alltäglich", category:"textil",
+  { value:"baumwolle", label:"Baumwolle", mood:"Leicht · alltäglich", category:"textil",
     bg:"linear-gradient(135deg, #f0ebe2 0%, #e2dace 60%, #d0c7b6 100%)" },
-  { value:"jute", label:"Jute", emoji:"🌾", mood:"Rustikal · grob", category:"textil",
+  { value:"jute", label:"Jute", mood:"Rustikal · grob", category:"textil",
     bg:"linear-gradient(135deg, #c9a46e 0%, #b08855 60%, #8e693d 100%)" },
 
   // Modern
-  { value:"glas", label:"Glas", emoji:"💎", mood:"Klar · modern", category:"modern",
+  { value:"glas", label:"Glas", mood:"Klar · modern", category:"modern",
     bg:"linear-gradient(135deg, rgba(183,210,220,0.85) 0%, rgba(213,229,233,0.75) 50%, rgba(155,185,200,0.85) 100%)" },
-  { value:"metall", label:"Metall", emoji:"⚙️", mood:"Industrial · kühl", category:"modern",
+  { value:"metall", label:"Metall", mood:"Industrial · kühl", category:"modern",
     bg:"linear-gradient(135deg, #9098a0 0%, #6a7178 50%, #4d535a 100%)" },
-  { value:"beton", label:"Beton", emoji:"🏗", mood:"Roh · minimal", category:"modern",
+  { value:"beton", label:"Beton", mood:"Roh · minimal", category:"modern",
     bg:"linear-gradient(135deg, #b9b6af 0%, #8f8c84 60%, #676560 100%)" },
-  { value:"leder", label:"Leder", emoji:"🏜", mood:"Warm · langlebig", category:"modern",
+  { value:"leder", label:"Leder", mood:"Warm · langlebig", category:"modern",
     bg:"linear-gradient(135deg, #7a4a28 0%, #5d3a1e 60%, #422815 100%)" },
 
   // Spezial
-  { value:"rattan", label:"Rattan", emoji:"🪴", mood:"Boho · luftig", category:"spezial",
+  { value:"rattan", label:"Rattan", mood:"Boho · luftig", category:"spezial",
     bg:"linear-gradient(135deg, #d4b082 0%, #bb9463 60%, #9c7a4b 100%)" },
-  { value:"keramik", label:"Keramik", emoji:"🏺", mood:"Handgemacht · warm", category:"spezial",
+  { value:"keramik", label:"Keramik", mood:"Handgemacht · warm", category:"spezial",
     bg:"linear-gradient(135deg, #d2b69a 0%, #b79a7c 60%, #98805f 100%)" },
-  { value:"papier", label:"Papier", emoji:"📜", mood:"Leicht · dezent", category:"spezial",
+  { value:"papier", label:"Papier", mood:"Leicht · dezent", category:"spezial",
     bg:"linear-gradient(135deg, #f4ead9 0%, #e6d9c1 60%, #d1bfa1 100%)" },
 ];
 
@@ -289,9 +288,6 @@ export function Step06({ data, roomType, onChange }: Props) {
                             backgroundSize:  "4px 4px",
                           }}
                         />
-                        <div className="absolute top-2 right-2 text-2xl drop-shadow-sm">
-                          {mat.emoji}
-                        </div>
                         {selected && (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <span className="w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow">

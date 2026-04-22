@@ -4,7 +4,10 @@ import { cn } from "@/lib/utils";
 import { EFFECTS } from "../effectsConfig";
 import type { Module1Data } from "@/lib/types/module1";
 import type { RoomEffect } from "../effectsConfig";
-import { Pencil, CheckCircle2 } from "lucide-react";
+import {
+  Pencil, CheckCircle2, Lightbulb, Flame, Sun, Sunrise, Sliders,
+  type LucideIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -35,14 +38,14 @@ const MATERIAL_BG: Record<string, string> = {
   papier:     "linear-gradient(135deg, #f4ead9, #d1bfa1)",
 };
 
-const LIGHT_PRESET_LABELS: Record<string, { label: string; emoji: string }> = {
-  gemuetlicher_abend:  { label: "Gemütlicher Abend",  emoji: "🔥" },
-  produktiver_morgen:  { label: "Produktiver Morgen", emoji: "🌅" },
-  romantisches_dinner: { label: "Romantisches Dinner",emoji: "🕯" },
-  fokus_arbeit:        { label: "Fokus-Arbeit",       emoji: "💡" },
-  warm_indirekt:       { label: "Warm & indirekt",    emoji: "🔥" },
-  hell_klar:           { label: "Hell & klar",        emoji: "☀️" },
-  beides_steuerbar:    { label: "Flexibel steuerbar", emoji: "🎛" },
+const LIGHT_PRESET_LABELS: Record<string, { label: string; Icon: LucideIcon }> = {
+  gemuetlicher_abend:  { label: "Gemütlicher Abend",  Icon: Flame     },
+  produktiver_morgen:  { label: "Produktiver Morgen", Icon: Sunrise   },
+  romantisches_dinner: { label: "Romantisches Dinner",Icon: Flame     },
+  fokus_arbeit:        { label: "Fokus-Arbeit",       Icon: Lightbulb },
+  warm_indirekt:       { label: "Warm & indirekt",    Icon: Flame     },
+  hell_klar:           { label: "Hell & klar",        Icon: Sun       },
+  beides_steuerbar:    { label: "Flexibel steuerbar", Icon: Sliders   },
 };
 
 export function Step09({ data, projectId, roomId }: Props) {
@@ -58,7 +61,7 @@ export function Step09({ data, projectId, roomId }: Props) {
   const materials = data.materials ?? [];
   const specialTags = data.special_tags ?? [];
   const light       = data.light_mood
-    ? LIGHT_PRESET_LABELS[data.light_mood] ?? { label: data.light_mood, emoji: "💡" }
+    ? LIGHT_PRESET_LABELS[data.light_mood] ?? { label: data.light_mood, Icon: Lightbulb }
     : null;
   const warmth = data.light_warmth;
   const brightness = data.light_brightness;
@@ -98,9 +101,9 @@ export function Step09({ data, projectId, roomId }: Props) {
         {effectMeta && (
           <RecapRow index={0} revealed={revealed} edit={`${editBase}?step=4&edit=true`}>
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-sm"
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm text-forest"
                    style={{ background: effectMeta.tint }}>
-                {effectMeta.emoji}
+                <effectMeta.Icon className="w-7 h-7" strokeWidth={1.5} />
               </div>
               <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-widest text-forest/50 mb-0.5">Hauptwirkung</p>
@@ -169,11 +172,14 @@ export function Step09({ data, projectId, roomId }: Props) {
         {(light || warmth !== null || brightness !== null) && (
           <RecapRow index={3} revealed={revealed} edit={`${editBase}?step=8&edit=true`}>
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-forest"
                    style={{
                      background: lightBgForValues(warmth ?? 50, brightness ?? 60),
                    }}>
-                {light?.emoji ?? "💡"}
+                {(() => {
+                  const LightIcon = light?.Icon ?? Lightbulb;
+                  return <LightIcon className="w-6 h-6" strokeWidth={1.5} />;
+                })()}
               </div>
               <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-widest text-forest/50 mb-0.5">Licht</p>

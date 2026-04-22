@@ -108,7 +108,7 @@ export function DashboardHeader({ email, favoriteCount, isAdmin = false }: Props
   return (
     <>
       <header className="sticky top-0 z-20 bg-[var(--bg-page)] border-b border-[var(--border-page)]">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3 sm:gap-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3 sm:gap-4">
 
           {/* ── Logo ──────────────────────────────────────────── */}
           <Link

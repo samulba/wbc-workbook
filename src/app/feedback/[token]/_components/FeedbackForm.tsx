@@ -40,7 +40,7 @@ export function FeedbackForm({ token }: { token: string }) {
           <CheckCircle2 className="w-7 h-7 text-forest" strokeWidth={1.5} />
         </div>
         <h2 className="font-headline text-2xl text-forest mb-2">
-          Danke, dein Feedback ist angekommen! 💚
+          Danke, dein Feedback ist angekommen!
         </h2>
         <p className="text-sm text-forest/70 mb-6 max-w-md mx-auto">
           Wir geben deine Meinung weiter. Lust, selbst dein Raumkonzept zu gestalten?

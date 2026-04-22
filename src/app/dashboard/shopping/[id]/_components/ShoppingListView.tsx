@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Pencil, Trash2, Share2, Download, ExternalLink,
-  Check, Sparkles, PackagePlus, ChevronDown,
+  Check, Sparkles, PackagePlus, ChevronDown, FolderOpen, ShoppingBag,
 } from "lucide-react";
 import {
   renameShoppingList, updateShoppingBudget, deleteShoppingList,
@@ -182,7 +182,8 @@ export function ShoppingListView({
               href={`/dashboard/projekte/${list.project.id}`}
               className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-mint/20 text-forest dark:text-mint text-xs font-medium"
             >
-              📁 {list.project.name}
+              <FolderOpen className="w-3 h-3" strokeWidth={1.5} />
+              {list.project.name}
             </Link>
           )}
         </div>
@@ -485,7 +486,9 @@ function ItemRow({
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-lg">🛍️</div>
+          <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
+          </div>
         )}
       </div>
 
