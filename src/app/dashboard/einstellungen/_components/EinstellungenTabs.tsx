@@ -73,7 +73,7 @@ export function EinstellungenTabs({ email, displayName, initials, isAdmin }: Pro
       </div>
 
       {/* ── Tab bar (desktop: horizontal tabs) ───────────────── */}
-      <div className="hidden sm:flex gap-0.5 mb-8 border-b border-gray-200 -mx-6 px-6 overflow-x-auto">
+      <div className="hidden sm:flex flex-wrap gap-0.5 mb-8 border-b border-gray-200 -mx-6 px-6">
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
