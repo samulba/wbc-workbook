@@ -1,0 +1,71 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import type { Module3Partial } from "@/lib/types/module3";
+
+export type SaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
+
+export async function saveModule3Step(
+  moduleId: string,
+  data: Module3Partial,
+): Promise<SaveResult> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("module3_analysis")
+    .update({ ...data, updated_at: new Date().toISOString() })
+    .eq("id", moduleId);
+
+  if (error) {
+    console.error("module3 save error:", error);
+    return { ok: false, error: "Speichern fehlgeschlagen. Bitte erneut versuchen." };
+  }
+
+  // If the module just transitioned to completed, stamp room_progress
+  if (data.status === "completed") {
+    const { data: m3 } = await supabase
+      .from("module3_analysis")
+      .select("room_id")
+      .eq("id", moduleId)
+      .single();
+
+    if (m3?.room_id) {
+      await supabase
+        .from("room_progress")
+        .update({ m3_completed_at: new Date().toISOString() })
+        .eq("room_id", m3.room_id);
+    }
+  }
+
+  return {
+    ok:      true,
+    savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
+  };
+}
+
+export async function saveModule3Note(
+  moduleId: string,
+  stepNotes: Record<string, string>,
+): Promise<SaveResult> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("module3_analysis")
+    .update({ step_notes: stepNotes, updated_at: new Date().toISOString() })
+    .eq("id", moduleId);
+
+  if (error) {
+    console.error("module3 note save error:", error);
+    return { ok: false, error: "Notiz konnte nicht gespeichert werden." };
+  }
+
+  return {
+    ok:      true,
+    savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
+  };
+}
