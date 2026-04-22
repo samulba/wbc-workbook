@@ -9,7 +9,6 @@ import {
   Database,
   Globe,
   Bot,
-  Image,
   Server,
   Info,
 } from "lucide-react";
@@ -28,10 +27,9 @@ interface Service {
 interface StatusData {
   checkedAt: string;
   services: {
-    supabase:   Service;
-    vercel:     Service;
-    anthropic:  Service;
-    stability:  Service;
+    supabase: Service;
+    vercel:   Service;
+    openai:   Service;
   };
   info: {
     appVersion:   string;
@@ -52,17 +50,15 @@ const STATUS_CONFIG: Record<ServiceStatus, { color: string; bg: string; border: 
 };
 
 const SERVICE_ICONS: Record<string, React.ElementType> = {
-  supabase:  Database,
-  vercel:    Globe,
-  anthropic: Bot,
-  stability: Image,
+  supabase: Database,
+  vercel:   Globe,
+  openai:   Bot,
 };
 
 const SERVICE_LABELS: Record<string, string> = {
-  supabase:  "Supabase (DB)",
-  vercel:    "Vercel",
-  anthropic: "Anthropic AI",
-  stability: "Stability AI",
+  supabase: "Supabase (DB)",
+  vercel:   "Vercel",
+  openai:   "OpenAI (Analyse & Rendering)",
 };
 
 function overallStatus(services: StatusData["services"]): ServiceStatus {

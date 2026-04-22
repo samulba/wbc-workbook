@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
 
 const DAILY_LIMIT = 3;
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Increment counter before calling Claude (prevents abuse from slow requests)
+  // Increment counter before calling the API (prevents abuse from slow requests)
   await supabase
     .from("profiles")
     .update({
@@ -76,15 +76,14 @@ export async function POST(req: NextRequest) {
     })
     .eq("id", user.id);
 
-  // ── 4. Claude Vision call ─────────────────────────────────────────────────
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  // ── 4. OpenAI Vision call (GPT-4o) ────────────────────────────────────────
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    // Refund the count if API key missing
     await supabase.from("profiles").update({ daily_analysis_count: currentCount }).eq("id", user.id);
     return NextResponse.json({ error: "KI-Analyse nicht konfiguriert." }, { status: 500 });
   }
 
-  const client = new Anthropic({ apiKey });
+  const client = new OpenAI({ apiKey });
   const roomLabel   = ROOM_LABELS[roomType] ?? roomType;
   const effectLabel = mainEffect ? (EFFECT_LABELS[mainEffect] ?? mainEffect) : "noch nicht festgelegt";
 
@@ -113,20 +112,16 @@ Antworte auf Deutsch. Sei motivierend, konkret und praxisnah. Vermeide allgemein
 
   let analysisText: string;
   try {
-    const response = await client.messages.create({
-      model: "claude-opus-4-6",
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 1500,
       messages: [
         {
           role: "user",
           content: [
             {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: mimeType as AllowedMime,
-                data: imageBase64,
-              },
+              type: "image_url",
+              image_url: { url: `data:${mimeType};base64,${imageBase64}` },
             },
             { type: "text", text: prompt },
           ],
@@ -134,13 +129,12 @@ Antworte auf Deutsch. Sei motivierend, konkret und praxisnah. Vermeide allgemein
       ],
     });
 
-    const content = response.content[0];
-    if (content.type !== "text") throw new Error("Unexpected response type");
-    analysisText = content.text;
+    const content = response.choices[0]?.message?.content;
+    if (!content) throw new Error("Leere Antwort von OpenAI");
+    analysisText = content;
   } catch (err) {
-    // Refund on Claude error
     await supabase.from("profiles").update({ daily_analysis_count: currentCount }).eq("id", user.id);
-    console.error("Claude error:", err);
+    console.error("OpenAI error:", err);
     return NextResponse.json({ error: "Analyse fehlgeschlagen. Bitte erneut versuchen." }, { status: 500 });
   }
 

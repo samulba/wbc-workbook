@@ -107,33 +107,21 @@ export default function DatenschutzPage() {
         </a>
       </p>
 
-      <h3>c) Anthropic (KI-Analyse)</h3>
+      <h3>c) OpenAI (KI-Analyse & Bildgenerierung)</h3>
       <p>
-        <strong>Anbieter:</strong> Anthropic PBC, 548 Market St PMB 90375, San
-        Francisco CA 94104, USA<br />
-        <strong>Zweck:</strong> Analyse von Raumfotos und Textantworten mit Claude
-        (nur auf deine ausdrückliche Anfrage hin).<br />
-        <strong>Zero-Data-Retention:</strong> Anthropic speichert API-Inhalte laut
-        aktuellen Nutzungsbedingungen nicht langfristig und nutzt sie nicht zum
-        Trainieren ihrer Modelle.<br />
-        <strong>Datenübermittlung:</strong> EU Standardvertragsklauseln (Art. 46 DSGVO)<br />
-        <strong>Datenschutz:</strong>{" "}
-        <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer">
-          anthropic.com/privacy
-        </a>
-      </p>
-
-      <h3>d) Stability AI (Bildgenerierung)</h3>
-      <p>
-        <strong>Anbieter:</strong> Stability AI Ltd., 86 — 90 Paul Street, London
-        EC2A 4NE, Vereinigtes Königreich<br />
-        <strong>Zweck:</strong> Generierung von Raumvisualisierungen auf Basis
+        <strong>Anbieter:</strong> OpenAI, L.L.C., 3180 18th Street, San Francisco,
+        CA 94110, USA<br />
+        <strong>Zweck:</strong> Analyse von Raumfotos und Textantworten mit GPT-4o
+        sowie Generierung von Raumvisualisierungen mit gpt-image-1 auf Basis
         deiner Angaben und hochgeladener Fotos (nur auf deine ausdrückliche
-        Anfrage).<br />
+        Anfrage hin).<br />
+        <strong>Datenverwendung:</strong> OpenAI nutzt API-Inhalte laut aktuellen
+        Nutzungsbedingungen nicht zum Trainieren ihrer Modelle; Eingaben werden
+        zur Missbrauchserkennung bis zu 30 Tage gespeichert.<br />
         <strong>Datenübermittlung:</strong> EU Standardvertragsklauseln (Art. 46 DSGVO)<br />
         <strong>Datenschutz:</strong>{" "}
-        <a href="https://stability.ai/privacy-policy" target="_blank" rel="noopener noreferrer">
-          stability.ai/privacy-policy
+        <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer">
+          openai.com/policies/privacy-policy
         </a>
       </p>
 

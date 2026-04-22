@@ -54,8 +54,7 @@ export async function GET() {
   }
 
   // 2. Env-var checks
-  const anthropicOk  = !!process.env.ANTHROPIC_API_KEY;
-  const stabilityOk  = !!process.env.STABILITY_API_KEY || !!process.env.NEXT_PUBLIC_STABILITY_API_KEY;
+  const openaiOk = !!process.env.OPENAI_API_KEY;
 
   // 3. App version
   const pkg = readPkg();
@@ -72,10 +71,9 @@ export async function GET() {
   return NextResponse.json({
     checkedAt,
     services: {
-      supabase:  { status: supabaseStatus,                  detail: supabaseDetail,              label: "Supabase" },
-      vercel:    { status: "ok" as const,                   detail: "Deployment aktiv",          label: "Vercel" },
-      anthropic: { status: anthropicOk ? "ok" : "warn" as "ok" | "warn", detail: anthropicOk ? "API Key gesetzt" : "Key nicht gesetzt", label: "Anthropic AI" },
-      stability: { status: stabilityOk ? "ok" : "warn" as "ok" | "warn", detail: stabilityOk ? "API Key gesetzt" : "Key nicht gesetzt", label: "Stability AI" },
+      supabase: { status: supabaseStatus,                detail: supabaseDetail,       label: "Supabase" },
+      vercel:   { status: "ok" as const,                 detail: "Deployment aktiv",   label: "Vercel" },
+      openai:   { status: openaiOk ? "ok" : "warn" as "ok" | "warn", detail: openaiOk ? "API Key gesetzt" : "Key nicht gesetzt", label: "OpenAI (Analyse & Rendering)" },
     },
     info: {
       appVersion:   pkg.version,

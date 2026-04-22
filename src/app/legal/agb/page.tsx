@@ -69,7 +69,7 @@ export default function AGBPage() {
 
       <h2>§ 6 KI-Funktionen</h2>
       <p>
-        Analysen und Visualisierungen durch KI (Anthropic Claude, Stability AI)
+        Analysen und Visualisierungen durch KI (OpenAI GPT-4o und gpt-image-1)
         werden auf Grundlage der vom Nutzer bereitgestellten Daten erstellt. Der
         Nutzer bestätigt, dass er die nötigen Rechte an hochgeladenen Bildern
         besitzt. KI-Ergebnisse sind als <strong>Vorschläge</strong> zu verstehen;

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import OpenAI, { toFile } from "openai";
 import { createClient } from "@/lib/supabase/server";
 
 const DAILY_LIMIT = 3;
@@ -50,21 +51,17 @@ function buildPrompt(body: {
 
   const materials = (body.materials ?? []).filter(Boolean);
 
-  let prompt = `Professional interior design photograph of a ${roomEn}. `;
-  prompt += `${effectEn.charAt(0).toUpperCase() + effectEn.slice(1)} atmosphere. `;
+  let prompt = `Redesign this exact ${roomEn} keeping the room architecture, perspective, windows and walls. `;
+  prompt += `Atmosphere: ${effectEn}. `;
 
-  if (colors.length > 0) {
-    prompt += `Color palette: ${colors.join(", ")}. `;
-  }
-  if (materials.length > 0) {
-    prompt += `Materials and textures: ${materials.join(", ")}. `;
-  }
+  if (colors.length > 0)    prompt += `Color palette: ${colors.join(", ")}. `;
+  if (materials.length > 0) prompt += `Materials and textures: ${materials.join(", ")}. `;
   prompt += `Lighting: ${lightEn}. `;
-  if (body.specialElements) {
-    prompt += `Special elements: ${body.specialElements}. `;
-  }
-  prompt += "Scandinavian wellness aesthetic, cozy and elegant, clean lines. ";
-  prompt += "Professional interior photography, realistic, high resolution, soft natural light, 8k quality.";
+  if (body.specialElements) prompt += `Special elements: ${body.specialElements}. `;
+
+  prompt += "Scandinavian wellness aesthetic, cozy yet elegant, clean lines. ";
+  prompt += "Professional interior photography, realistic, natural light, high detail. ";
+  prompt += "No people, no text, no watermark, no logos.";
 
   return prompt;
 }
@@ -144,69 +141,48 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Increment before calling API
   await supabase
     .from("profiles")
     .update({ daily_render_count: currentCount + 1, render_reset_date: today })
     .eq("id", user.id);
 
-  // ── 5. Check Stability API key ───────────────────────────────────────────────
-  const apiKey = process.env.STABILITY_API_KEY;
+  // ── 5. Check OpenAI API key ──────────────────────────────────────────────────
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     await supabase.from("profiles").update({ daily_render_count: currentCount }).eq("id", user.id);
     return NextResponse.json({ error: "Visualisierung nicht konfiguriert (API-Key fehlt)." }, { status: 500 });
   }
 
-  // ── 6. Call Stability AI SDXL img2img ────────────────────────────────────────
+  // ── 6. Call OpenAI gpt-image-1 (image edit from reference) ───────────────────
+  const client = new OpenAI({ apiKey });
   const prompt = buildPrompt(body);
-  const negativePrompt = "people, person, faces, text, watermark, logo, blurry, bad quality, cartoon, anime, illustration, painting, drawing";
-
-  const imageBuffer = Buffer.from(imageBase64, "base64");
-
-  const form = new FormData();
-  form.append("init_image", new Blob([imageBuffer], { type: mimeType }), "room.jpg");
-  form.append("text_prompts[0][text]", prompt);
-  form.append("text_prompts[0][weight]", "1");
-  form.append("text_prompts[1][text]", negativePrompt);
-  form.append("text_prompts[1][weight]", "-1");
-  form.append("image_strength", "0.65");
-  form.append("cfg_scale", "7");
-  form.append("steps", "30");
-  form.append("samples", "1");
+  const inputExt = mimeType === "image/png" ? "png" : mimeType === "image/webp" ? "webp" : "jpg";
 
   let renderedBase64: string;
   try {
-    const stabilityRes = await fetch(
-      "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          Accept: "application/json",
-        },
-        body: form,
-      }
+    const inputImage = await toFile(
+      Buffer.from(imageBase64, "base64"),
+      `room.${inputExt}`,
+      { type: mimeType },
     );
 
-    if (!stabilityRes.ok) {
-      const errBody = await stabilityRes.text().catch(() => "");
-      console.error("Stability AI error:", stabilityRes.status, errBody);
-      await supabase.from("profiles").update({ daily_render_count: currentCount }).eq("id", user.id);
-      return NextResponse.json(
-        { error: `Visualisierung fehlgeschlagen (${stabilityRes.status}). Bitte erneut versuchen.` },
-        { status: 502 }
-      );
-    }
+    const result = await client.images.edit({
+      model:   "gpt-image-1",
+      image:   inputImage,
+      prompt,
+      size:    "1024x1024",
+      quality: "medium",
+      n:       1,
+    });
 
-    const result = (await stabilityRes.json()) as { artifacts?: { base64: string; finishReason: string }[] };
-    const artifact = result.artifacts?.[0];
-    if (!artifact || artifact.finishReason !== "SUCCESS" || !artifact.base64) {
+    const b64 = result.data?.[0]?.b64_json;
+    if (!b64) {
       await supabase.from("profiles").update({ daily_render_count: currentCount }).eq("id", user.id);
       return NextResponse.json({ error: "Kein Ergebnis von der KI. Bitte erneut versuchen." }, { status: 502 });
     }
-    renderedBase64 = artifact.base64;
+    renderedBase64 = b64;
   } catch (err) {
-    console.error("Stability AI call error:", err);
+    console.error("OpenAI image edit error:", err);
     await supabase.from("profiles").update({ daily_render_count: currentCount }).eq("id", user.id);
     return NextResponse.json({ error: "Verbindung zur KI fehlgeschlagen. Bitte erneut versuchen." }, { status: 502 });
   }
