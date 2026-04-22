@@ -153,21 +153,22 @@ export function Step01({ data, projectName, roomName, roomType, projectId, roomI
       {projectId && roomId && (
         <Link
           href={`/dashboard/projekte/${projectId}/raum/${roomId}/analyse`}
-          className="flex items-center gap-3 rounded-xl border border-dashed border-forest/25 bg-forest/[0.02] px-4 py-3.5 hover:bg-forest/5 hover:border-forest/40 transition-all group"
+          className="flex items-center gap-3 rounded-xl border border-forest/30 bg-gradient-to-br from-forest/5 to-mint/10 px-4 py-3.5 hover:from-forest/10 hover:to-mint/20 hover:border-forest/50 hover:shadow-warm-sm transition-all group cursor-pointer"
         >
-          <div className="w-9 h-9 rounded-lg bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">
-            <BrainCircuit className="w-4 h-4 text-forest/60" strokeWidth={1.5} />
+          <div className="w-10 h-10 rounded-xl bg-forest text-cream flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+            <BrainCircuit className="w-5 h-5" strokeWidth={1.5} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-sans font-semibold text-forest/80 leading-snug">
+            <p className="text-sm font-sans font-semibold text-forest leading-snug">
               Lass deinen Raum analysieren
             </p>
-            <p className="text-xs font-sans text-gray-400 mt-0.5">
-              Claude analysiert ein Foto deines Raums und gibt konkrete Empfehlungen
+            <p className="text-xs font-sans text-forest/60 mt-0.5">
+              Die Wellbeing KI schaut sich ein Foto deines Raums an und gibt konkrete Empfehlungen
             </p>
           </div>
-          <span className="text-xs font-sans font-medium text-forest/50 group-hover:text-forest transition-colors shrink-0">
-            Starten →
+          <span className="inline-flex items-center gap-1.5 text-xs font-sans font-semibold text-forest shrink-0 bg-cream border border-forest/20 rounded-full px-3 py-1.5 group-hover:bg-forest group-hover:text-cream transition-colors">
+            Starten
+            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </Link>
       )}

@@ -332,7 +332,7 @@ export function AnalyseClient({
           <div className="absolute inset-0 rounded-full border-2 border-forest/20 border-t-forest animate-spin" />
         </div>
         <div className="text-center">
-          <p className="font-headline text-xl text-gray-900 mb-2">Claude analysiert deinen Raum …</p>
+          <p className="font-headline text-xl text-gray-900 mb-2">Wellbeing KI analysiert deinen Raum …</p>
           <p className="text-sm font-sans text-gray-400">Das dauert meist 10–20 Sekunden</p>
         </div>
         <div className="flex gap-1.5">
