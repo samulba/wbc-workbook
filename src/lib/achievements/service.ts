@@ -106,7 +106,7 @@ async function computeStats(userId: string): Promise<Stats> {
         id, before_image_url, after_image_url, rendered_images,
         projects!inner(user_id),
         module1_analysis(
-          current_step, moodboard_urls, color_preferences, material_preferences,
+          status, current_step, moodboard_urls, color_preferences, material_preferences,
           color_notes, material_notes, current_situation, moodboard_notes, notes
         )
       `)
@@ -122,6 +122,7 @@ async function computeStats(userId: string): Promise<Stats> {
     after_image_url:   string | null;
     rendered_images:   string[] | null;
     module1_analysis:  Array<{
+      status:              string | null;
       current_step:        number | null;
       moodboard_urls:      string[] | null;
       color_preferences:   string[] | null;
@@ -149,9 +150,10 @@ async function computeStats(userId: string): Promise<Stats> {
     (acc, r) => acc + (r.rendered_images?.length ?? 0),
     0,
   );
-  const module1Complete = roomsArr.some((r) => (m1(r)?.current_step ?? 0) >= 11)
-    ? 1
-    : 0;
+  const module1Complete = roomsArr.some((r) => {
+    const rec = m1(r);
+    return rec?.status === "completed" || (rec?.current_step ?? 0) >= 6;
+  }) ? 1 : 0;
   const colorPicks = roomsArr.reduce(
     (acc, r) => acc + (m1(r)?.color_preferences?.length ?? 0),
     0,

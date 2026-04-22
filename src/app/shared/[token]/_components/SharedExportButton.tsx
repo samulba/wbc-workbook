@@ -45,7 +45,7 @@ export function SharedExportButton({
     support_friends: false, support_external: false, support_person: "",
     current_issues: "", more_of: "", less_of: "", change_reason: "",
     special_elements: "", moodboard_prompt: "",
-    status: "completed", current_step: 11,
+    status: "completed", current_step: 6,
     desired_effects: [], current_situation: "",
     color_preferences: [], color_avoid: [], color_notes: "",
     material_preferences: [], material_avoid: [], material_notes: "",

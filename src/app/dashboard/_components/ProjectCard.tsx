@@ -38,7 +38,7 @@ const STATUS_CONFIG: Record<ProjectStatus, { label: string; dot: string; badge: 
   archiviert:    { label: "Archiviert",    dot: "bg-gray-300",   badge: "bg-gray-50 text-gray-400 border-gray-200"      },
 };
 
-const TOTAL_STEPS = 11;
+const TOTAL_STEPS = 6;
 
 export function ProjectCard({ project }: { project: ProjectCardProps }) {
   const router = useRouter();

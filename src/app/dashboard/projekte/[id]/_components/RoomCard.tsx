@@ -43,7 +43,7 @@ interface Props {
   canDelete: boolean;
 }
 
-const TOTAL_STEPS = 11;
+const TOTAL_STEPS = 6;
 
 export function RoomCard({ room, projectId, canDelete }: Props) {
   const router = useRouter();
@@ -68,10 +68,10 @@ export function RoomCard({ room, projectId, canDelete }: Props) {
 
   // Per-module status across all four modules
   const modules = [
-    { num: 1, total: 11, label: "Analyse",  slug: "modul-1", data: m1 },
-    { num: 2, total:  8, label: "Interior", slug: "modul-2", data: room.module2_analysis?.[0] },
-    { num: 3, total:  7, label: "Licht",    slug: "modul-3", data: room.module3_analysis?.[0] },
-    { num: 4, total:  6, label: "Sinne",    slug: "modul-4", data: room.module4_analysis?.[0] },
+    { num: 1, total: 6, label: "Analyse",  slug: "modul-1", data: m1 },
+    { num: 2, total: 8, label: "Interior", slug: "modul-2", data: room.module2_analysis?.[0] },
+    { num: 3, total: 7, label: "Licht",    slug: "modul-3", data: room.module3_analysis?.[0] },
+    { num: 4, total: 6, label: "Sinne",    slug: "modul-4", data: room.module4_analysis?.[0] },
   ] as const;
   const modulesDone = modules.filter((m) => m.data?.status === "completed").length;
 

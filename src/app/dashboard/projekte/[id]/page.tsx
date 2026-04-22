@@ -125,8 +125,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   const m3        = firstRoom?.module3_analysis?.[0];
 
   const m1Completed = m1?.status === "completed";
-  const m1Step      = m1Completed ? 11 : (m1?.current_step ?? 0);
-  const m1Pct       = Math.min(100, Math.round((m1Step / 11) * 100));
+  const m1Step      = m1Completed ? 6 : (m1?.current_step ?? 0);
+  const m1Pct       = Math.min(100, Math.round((m1Step / 6) * 100));
   const m1Started   = m1Step > 0;
 
   const m2Completed = m2?.status === "completed";
@@ -152,8 +152,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     rooms.reduce((sum, r) => {
       const ra = r.module1_analysis?.[0];
       const completed = ra?.status === "completed";
-      const step = completed ? 11 : (ra?.current_step ?? 0);
-      return sum + Math.min(100, Math.round((step / 11) * 100));
+      const step = completed ? 6 : (ra?.current_step ?? 0);
+      return sum + Math.min(100, Math.round((step / 6) * 100));
     }, 0) / rooms.length
   );
 
