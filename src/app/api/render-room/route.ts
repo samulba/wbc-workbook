@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI, { toFile } from "openai";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin-client";
+import { gptImage1CostMicros } from "@/lib/ai/pricing";
 
 const DAILY_LIMIT = 3;
 const BUCKET = "moodboards";
@@ -203,6 +205,20 @@ export async function POST(req: NextRequest) {
   }
 
   const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(uploadData.path);
+
+  // ── 8. Log usage (fire-and-forget) ──────────────────────────────────────────
+  const costMicros = gptImage1CostMicros("1024x1024", "medium", 1);
+  createAdminClient()
+    .from("ai_usage")
+    .insert({
+      user_id:     user.id,
+      endpoint:    "render-room",
+      model:       "gpt-image-1",
+      image_count: 1,
+      cost_micros: costMicros,
+      metadata:    { roomId, projectId, roomType, size: "1024x1024", quality: "medium" },
+    })
+    .then(({ error }) => { if (error) console.error("ai_usage insert (render):", error); });
 
   const remaining = DAILY_LIMIT - (currentCount + 1);
   return NextResponse.json({ imageUrl: publicUrl, remaining });

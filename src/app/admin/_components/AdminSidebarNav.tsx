@@ -18,6 +18,7 @@ import {
   Activity,
   AlertTriangle,
   DatabaseBackup,
+  Coins,
 } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -67,6 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/admin/analytics", label: "Analytics",    Icon: BarChart3,      enabled: true  },
       { href: "/admin/status",    label: "System-Status",Icon: Activity,       enabled: true  },
+      { href: "/admin/ai-usage",  label: "AI-Usage",     Icon: Coins,          enabled: true  },
       { href: "/admin/errors",    label: "Error-Logs",   Icon: AlertTriangle,  enabled: true  },
       { href: "/admin/backups",   label: "Backups",      Icon: DatabaseBackup, enabled: true  },
     ],

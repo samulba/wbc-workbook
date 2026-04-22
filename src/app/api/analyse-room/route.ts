@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin-client";
+import { gpt4oCostMicros } from "@/lib/ai/pricing";
 
 const DAILY_LIMIT = 3;
 
@@ -111,6 +113,8 @@ Gib eine strukturierte Analyse in genau diesem Format:
 Antworte auf Deutsch. Sei motivierend, konkret und praxisnah. Vermeide allgemeine Floskeln.`;
 
   let analysisText: string;
+  let inputTokens  = 0;
+  let outputTokens = 0;
   try {
     const response = await client.chat.completions.create({
       model: "gpt-4o",
@@ -132,11 +136,28 @@ Antworte auf Deutsch. Sei motivierend, konkret und praxisnah. Vermeide allgemein
     const content = response.choices[0]?.message?.content;
     if (!content) throw new Error("Leere Antwort von OpenAI");
     analysisText = content;
+    inputTokens  = response.usage?.prompt_tokens     ?? 0;
+    outputTokens = response.usage?.completion_tokens ?? 0;
   } catch (err) {
     await supabase.from("profiles").update({ daily_analysis_count: currentCount }).eq("id", user.id);
     console.error("OpenAI error:", err);
     return NextResponse.json({ error: "Analyse fehlgeschlagen. Bitte erneut versuchen." }, { status: 500 });
   }
+
+  // ── 5. Log usage (fire-and-forget; must not block response) ────────────────
+  const costMicros = gpt4oCostMicros(inputTokens, outputTokens);
+  createAdminClient()
+    .from("ai_usage")
+    .insert({
+      user_id:       user.id,
+      endpoint:      "analyse-room",
+      model:         "gpt-4o",
+      input_tokens:  inputTokens,
+      output_tokens: outputTokens,
+      cost_micros:   costMicros,
+      metadata:      { roomType, mainEffect },
+    })
+    .then(({ error }) => { if (error) console.error("ai_usage insert (analyse):", error); });
 
   const remaining = DAILY_LIMIT - (currentCount + 1);
   return NextResponse.json({ analysis: analysisText, remaining });
