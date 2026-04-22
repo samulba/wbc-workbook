@@ -37,13 +37,25 @@ export type ProjectForModal = {
   rooms: { id: string; name: string; room_type: string }[] | null;
 };
 
+export type ModuleNum = 1 | 2 | 3 | 4;
+
+const MODULE_TITLES: Record<ModuleNum, string> = {
+  1: "Modul 1 starten",
+  2: "Modul 2 starten",
+  3: "Modul 3 starten",
+  4: "Modul 4 starten",
+};
+
 interface Modul1CardButtonProps {
-  projects: ProjectForModal[];
-  children: React.ReactNode;
+  projects:      ProjectForModal[];
+  children:      React.ReactNode;
   cardClassName?: string;
+  moduleNum?:    ModuleNum;
 }
 
-export function Modul1CardButton({ projects, children, cardClassName }: Modul1CardButtonProps) {
+export function Modul1CardButton({
+  projects, children, cardClassName, moduleNum = 1,
+}: Modul1CardButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -57,7 +69,11 @@ export function Modul1CardButton({ projects, children, cardClassName }: Modul1Ca
       </button>
 
       {open && (
-        <Modul1Modal projects={projects} onClose={() => setOpen(false)} />
+        <Modul1Modal
+          projects={projects}
+          moduleNum={moduleNum}
+          onClose={() => setOpen(false)}
+        />
       )}
     </>
   );
@@ -65,10 +81,12 @@ export function Modul1CardButton({ projects, children, cardClassName }: Modul1Ca
 
 function Modul1Modal({
   projects,
+  moduleNum,
   onClose,
 }: {
-  projects: ProjectForModal[];
-  onClose: () => void;
+  projects:  ProjectForModal[];
+  moduleNum: ModuleNum;
+  onClose:   () => void;
 }) {
   return (
     <>
@@ -86,7 +104,7 @@ function Modul1Modal({
           {/* Header */}
           <div className="flex items-start justify-between px-6 pt-6 pb-4">
             <div>
-              <h2 className="font-headline text-xl text-gray-900">Modul 1 starten</h2>
+              <h2 className="font-headline text-xl text-gray-900">{MODULE_TITLES[moduleNum]}</h2>
               <p className="text-sm text-gray-500 font-sans mt-0.5">
                 Wähle ein Projekt oder starte neu
               </p>
@@ -132,7 +150,7 @@ function Modul1Modal({
                     return (
                       <Link
                         key={project.id}
-                        href={`/dashboard/projekte/${project.id}/modul-1`}
+                        href={`/dashboard/projekte/${project.id}/modul-${moduleNum}`}
                         onClick={onClose}
                         className="group flex items-center gap-3 p-3 rounded-xl border border-[var(--border-page)] hover:border-forest/30 hover:bg-forest/[0.02] transition-all duration-150"
                       >

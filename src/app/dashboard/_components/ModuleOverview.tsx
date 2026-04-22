@@ -1,66 +1,47 @@
 import { Modul1CardButton } from "./Modul1Modal";
-import type { ProjectForModal } from "./Modul1Modal";
+import type { ProjectForModal, ModuleNum } from "./Modul1Modal";
 
-const modules = [
+type ModuleDefinition = {
+  number:      string;
+  moduleNum:   ModuleNum;
+  title:       string;
+  subtitle:    string;
+  description: string;
+  topics:      string[];
+};
+
+const modules: ModuleDefinition[] = [
   {
-    number: "01",
-    title: "Analyse & Vorbereitung",
-    subtitle: "Modul 1",
-    description:
-      "Erkunde die gewünschte Raumwirkung, deine Farbwelt, Materialvorlieben und erste Inspirationen für dein Moodboard.",
-    topics: ["Raumwirkung", "Farbwelt", "Materialien", "Moodboard"],
-    available: true,
-    accentColor: "text-forest",
-    dotColor:    "bg-forest",
-    topicClass:  "bg-forest/5 text-forest/70 border-forest/10",
-    badgeClass:  "bg-forest/8 text-forest border-forest/15",
-    badgeLabel:  "Verfügbar",
-    numberColor: "text-forest",
+    number:      "01",
+    moduleNum:   1,
+    title:       "Analyse & Vorbereitung",
+    subtitle:    "Modul 1",
+    description: "Erkunde die gewünschte Raumwirkung, verstehe deine Motivation und entscheide, welche Atmosphäre dein Raum ausstrahlen soll.",
+    topics:      ["Wünsche", "Raumwirkung", "Hauptwirkung", "KI-Analyse"],
   },
   {
-    number: "02",
-    title: "Interior-Guide",
-    subtitle: "Modul 2",
-    description:
-      "Entwickle dein persönliches Einrichtungskonzept – von der Möbelauswahl bis zur stimmigen Gesamtkomposition.",
-    topics: ["Möbelauswahl", "Stilfindung", "Raumplanung", "Komposition"],
-    available: false,
-    accentColor: "text-gray-400",
-    dotColor:    "bg-gray-300",
-    topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeLabel:  "Demnächst",
-    numberColor: "text-gray-400",
+    number:      "02",
+    moduleNum:   2,
+    title:       "Interior-Guide",
+    subtitle:    "Modul 2",
+    description: "Entwickle dein persönliches Einrichtungskonzept – von der Stilfindung bis zur stimmigen Gesamtkomposition.",
+    topics:      ["Stil-Tinder", "Farbwelt", "Möbel", "Layout"],
   },
   {
-    number: "03",
-    title: "Licht-Guide",
-    subtitle: "Modul 3",
-    description:
-      "Gestalte ein durchdachtes Lichtkonzept, das Atmosphäre schafft und die Raumwirkung gezielt unterstützt.",
-    topics: ["Grundbeleuchtung", "Akzentlicht", "Stimmungslicht", "Lichtplanung"],
-    available: false,
-    accentColor: "text-gray-400",
-    dotColor:    "bg-gray-300",
-    topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeLabel:  "Demnächst",
-    numberColor: "text-gray-400",
+    number:      "03",
+    moduleNum:   3,
+    title:       "Licht-Guide",
+    subtitle:    "Modul 3",
+    description: "Gestalte ein durchdachtes Lichtkonzept, das Atmosphäre schafft und die Raumwirkung gezielt unterstützt.",
+    topics:      ["Tageslicht", "Presets", "Light Studio", "Szenarien"],
   },
   {
-    number: "04",
-    title: "Sinnes-Guide",
-    subtitle: "Modul 4",
-    description:
-      "Vervollständige dein Raumkonzept durch alle Sinne – Akustik, Duft, Haptik und das ganzheitliche Raumgefühl.",
-    topics: ["Akustik", "Duft", "Haptik", "Raumgefühl"],
-    available: false,
-    accentColor: "text-gray-400",
-    dotColor:    "bg-gray-300",
-    topicClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeClass:  "bg-gray-100 text-gray-400 border-gray-200",
-    badgeLabel:  "Demnächst",
-    numberColor: "text-gray-400",
+    number:      "04",
+    moduleNum:   4,
+    title:       "Sinnes-Guide",
+    subtitle:    "Modul 4",
+    description: "Vervollständige dein Raumkonzept durch alle Sinne – Akustik, Duft, Haptik und tägliche Rituale.",
+    topics:      ["Akustik", "Duft", "Haptik", "Rituale"],
   },
 ];
 
@@ -69,6 +50,8 @@ interface Props {
 }
 
 export function ModuleOverview({ projects }: Props) {
+  const hasProjects = projects.length > 0;
+
   return (
     <section data-tour="modul-overview">
       <div className="mb-6">
@@ -84,7 +67,7 @@ export function ModuleOverview({ projects }: Props) {
             <>
               {/* Watermark number */}
               <span
-                className={`absolute bottom-3 right-4 font-headline text-[5rem] font-bold leading-none select-none pointer-events-none transition-opacity duration-200 opacity-[0.07] group-hover:opacity-[0.12] ${mod.numberColor}`}
+                className="absolute bottom-3 right-4 font-headline text-[5rem] font-bold leading-none select-none pointer-events-none transition-opacity duration-200 opacity-[0.07] group-hover:opacity-[0.12] text-forest"
               >
                 {mod.number}
               </span>
@@ -92,20 +75,18 @@ export function ModuleOverview({ projects }: Props) {
               {/* Header row */}
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${mod.dotColor}`} />
+                  <span className="w-2 h-2 rounded-full bg-forest" />
                   <span className="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">
                     {mod.subtitle}
                   </span>
                 </div>
-                <span
-                  className={`text-[10px] font-sans font-medium px-2 py-0.5 rounded-full border ${mod.badgeClass}`}
-                >
-                  {mod.badgeLabel}
+                <span className="text-[10px] font-sans font-medium px-2 py-0.5 rounded-full border bg-forest/8 text-forest border-forest/15">
+                  Verfügbar
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className={`font-headline text-lg leading-snug mb-2 ${mod.accentColor}`}>
+              <h3 className="font-headline text-lg leading-snug mb-2 text-forest">
                 {mod.title}
               </h3>
 
@@ -119,7 +100,7 @@ export function ModuleOverview({ projects }: Props) {
                 {mod.topics.map((topic) => (
                   <span
                     key={topic}
-                    className={`text-[11px] font-sans px-2.5 py-1 rounded-full border ${mod.topicClass}`}
+                    className="text-[11px] font-sans px-2.5 py-1 rounded-full border bg-forest/5 text-forest/70 border-forest/10"
                   >
                     {topic}
                   </span>
@@ -128,11 +109,12 @@ export function ModuleOverview({ projects }: Props) {
             </>
           );
 
-          if (mod.available) {
+          if (hasProjects) {
             return (
               <Modul1CardButton
                 key={mod.number}
                 projects={projects}
+                moduleNum={mod.moduleNum}
                 cardClassName="group relative rounded-xl border bg-white p-5 text-left transition-all duration-200 border-[var(--border-page)] hover:border-forest/30 hover:shadow-warm-sm overflow-hidden block w-full"
               >
                 {inner}
@@ -140,11 +122,12 @@ export function ModuleOverview({ projects }: Props) {
             );
           }
 
+          // No projects yet — render as static card with hint
           return (
             <div
               key={mod.number}
-              className="group relative rounded-xl border bg-white p-5 overflow-hidden border-[var(--border-page)] opacity-55"
-              title="Demnächst verfügbar"
+              className="group relative rounded-xl border bg-white p-5 overflow-hidden border-[var(--border-page)] opacity-75"
+              title="Lege zuerst ein Projekt an"
             >
               {inner}
             </div>
