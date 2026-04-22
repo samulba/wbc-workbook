@@ -1,10 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Wand2, Camera, AlertCircle, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Wand2, Camera, AlertCircle, Sparkles, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Module3Data } from "@/lib/types/module3";
 import { approxKelvin, brightnessLabel, lightPreviewCss, warmthLabel } from "../lightPreview";
+
+// How long to wait after the user stops adjusting before firing a live render.
+const LIVE_DEBOUNCE_MS   = 800;
+// Only auto-render when at least one slider moved this many points since the
+// last rendered state — avoids tiny wiggles eating the daily budget.
+const LIVE_DELTA_TRIGGER = 10;
 
 interface Props {
   data:      Module3Data;
@@ -26,11 +32,15 @@ export function Step05({ data, moduleId, projectId, roomId, roomType, baseImage,
 
   const preview = useMemo(() => lightPreviewCss(warmth, brightness), [warmth, brightness]);
 
-  const [rendering,  setRendering]  = useState(false);
-  const [error,      setError]      = useState<string | null>(null);
-  const [remaining,  setRemaining]  = useState<number | null>(null);
+  const [rendering, setRendering] = useState(false);
+  const [error,     setError]     = useState<string | null>(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
 
-  async function handleRerender() {
+  const [liveMode, setLiveMode] = useState(false);
+  const [lastRendered, setLastRendered] = useState<{ w: number; b: number } | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const rerender = useCallback(async () => {
     if (!baseImage) return;
     setError(null);
     setRendering(true);
@@ -49,19 +59,53 @@ export function Step05({ data, moduleId, projectId, roomId, roomType, baseImage,
       const json = await res.json();
       if (!res.ok) {
         setError(json.error ?? "KI-Rendering fehlgeschlagen.");
+        if (json.rateLimited) setRemaining(0);
         return;
       }
 
-      onChange({
-        studio_render_urls: [...renders, json.imageUrl],
-      });
+      onChange({ studio_render_urls: [...renders, json.imageUrl] });
       setRemaining(json.remaining ?? null);
+      setLastRendered({ w: warmth, b: brightness });
     } catch {
       setError("Verbindung fehlgeschlagen. Bitte erneut versuchen.");
     } finally {
       setRendering(false);
     }
-  }
+  }, [baseImage, moduleId, projectId, roomId, roomType, displayImage, warmth, brightness, renders, onChange]);
+
+  // Snapshot current slider values when Live-Mode turns on, so the first render
+  // fires on the *next* user change rather than on toggle.
+  useEffect(() => {
+    if (liveMode && !lastRendered) {
+      setLastRendered({ w: warmth, b: brightness });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liveMode]);
+
+  // Debounced auto-render when sliders move in Live-Mode.
+  useEffect(() => {
+    if (!liveMode || rendering || !baseImage || !lastRendered) return;
+    if (remaining === 0) return;
+
+    const deltaW = Math.abs(warmth     - lastRendered.w);
+    const deltaB = Math.abs(brightness - lastRendered.b);
+    if (deltaW < LIVE_DELTA_TRIGGER && deltaB < LIVE_DELTA_TRIGGER) return;
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => { rerender(); }, LIVE_DEBOUNCE_MS);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [warmth, brightness, liveMode, baseImage, rendering, lastRendered, remaining, rerender]);
+
+  // Compute whether a live render is pending (delta crossed but still waiting for debounce)
+  const livePending =
+    liveMode &&
+    !rendering &&
+    lastRendered &&
+    (Math.abs(warmth - lastRendered.w) >= LIVE_DELTA_TRIGGER ||
+     Math.abs(brightness - lastRendered.b) >= LIVE_DELTA_TRIGGER);
 
   return (
     <div className="flex flex-col gap-8">
@@ -72,8 +116,8 @@ export function Step05({ data, moduleId, projectId, roomId, roomType, baseImage,
         </div>
         <p className="text-sm text-gray/60 font-sans leading-relaxed">
           Stelle Wärme und Helligkeit exakt so ein, wie du es dir für deinen Raum
-          vorstellst – und lass dir mit einem Klick ein fotorealistisches KI-Rendering
-          deiner Lichtstimmung erstellen.
+          vorstellst. Im Live-Modus rendert die KI automatisch jede Slider-Bewegung,
+          sobald du kurz pausierst.
         </p>
       </div>
 
@@ -126,39 +170,82 @@ export function Step05({ data, moduleId, projectId, roomId, roomType, baseImage,
         />
       </div>
 
-      {/* Rerender CTA */}
-      <div className="rounded-xl border border-forest/20 bg-gradient-to-br from-forest/5 to-mint/10 p-4 flex items-start gap-3">
-        <div className="w-9 h-9 rounded-lg bg-forest text-cream flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4" strokeWidth={1.5} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-sans font-semibold text-forest mb-0.5">
-            Mit KI rendern
-          </p>
-          <p className="text-xs text-forest/60 font-sans leading-relaxed">
-            Die Wellbeing KI nimmt dein Basis-Bild und rendert es mit deinen
-            aktuellen Licht-Einstellungen. Bis zu 10 Renderings pro Tag.
-          </p>
-          {remaining !== null && (
-            <p className="text-[11px] text-forest/50 font-sans mt-1">
-              Noch {remaining} {remaining === 1 ? "Rendering" : "Renderings"} heute verfügbar.
+      {/* Rerender CTA + Live toggle */}
+      <div className="rounded-xl border border-forest/20 bg-gradient-to-br from-forest/5 to-mint/10 p-4 flex flex-col gap-3">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-lg bg-forest text-cream flex items-center justify-center shrink-0">
+            <Sparkles className="w-4 h-4" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-sans font-semibold text-forest mb-0.5">
+              Mit KI rendern
             </p>
-          )}
-          {error && (
-            <div className="mt-2 flex items-start gap-1.5 text-xs text-red-600 font-sans">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" strokeWidth={1.5} />
-              <span>{error}</span>
-            </div>
-          )}
+            <p className="text-xs text-forest/60 font-sans leading-relaxed">
+              Bis zu 10 Renderings pro Tag. Im Live-Modus wird automatisch
+              nach {LIVE_DEBOUNCE_MS / 1000}s Pause neu gerendert, sobald
+              ein Slider um mindestens {LIVE_DELTA_TRIGGER} Punkte abweicht.
+            </p>
+            {remaining !== null && (
+              <p className="text-[11px] text-forest/50 font-sans mt-1">
+                Noch {remaining} {remaining === 1 ? "Rendering" : "Renderings"} heute verfügbar.
+              </p>
+            )}
+            {error && (
+              <div className="mt-2 flex items-start gap-1.5 text-xs text-red-600 font-sans">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" strokeWidth={1.5} />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={rerender}
+            disabled={rendering || !baseImage}
+            className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-forest text-cream text-sm font-sans font-medium hover:bg-forest/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {rendering ? "Rendert …" : "Rendern"}
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={handleRerender}
-          disabled={rendering || !baseImage}
-          className="shrink-0 inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-forest text-cream text-sm font-sans font-medium hover:bg-forest/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          {rendering ? "Rendert …" : "Rendern"}
-        </button>
+
+        {/* Live-Mode toggle */}
+        <div className="flex items-center gap-3 pt-3 border-t border-forest/10">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={liveMode}
+            onClick={() => setLiveMode((v) => !v)}
+            disabled={!baseImage || remaining === 0}
+            className={cn(
+              "relative w-9 h-5 rounded-full border transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed",
+              liveMode ? "bg-forest border-forest" : "bg-cream border-sand/50",
+            )}
+          >
+            <span
+              className={cn(
+                "absolute top-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-all",
+                liveMode ? "left-[18px]" : "left-0.5",
+              )}
+            />
+          </button>
+
+          <div className="flex-1 min-w-0 flex items-center gap-1.5">
+            <Zap className={cn("w-3.5 h-3.5 shrink-0", liveMode ? "text-forest" : "text-gray-400")} strokeWidth={1.75} />
+            <span className={cn("text-xs font-sans font-medium", liveMode ? "text-forest" : "text-gray-500")}>
+              Live-Modus
+            </span>
+            {livePending && (
+              <span className="inline-flex items-center gap-1 ml-auto text-[11px] font-sans text-forest/60">
+                <span className="w-2 h-2 rounded-full bg-forest animate-pulse" />
+                Rendert gleich …
+              </span>
+            )}
+            {liveMode && !livePending && !rendering && (
+              <span className="text-[11px] font-sans text-forest/45 ml-auto italic">
+                Slider bewegen für Auto-Render
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Render history */}
