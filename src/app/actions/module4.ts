@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import type { Module4Partial } from "@/lib/types/module4";
+import { checkAndUnlockAchievements } from "@/lib/achievements/service";
 
 export type SaveResult = { ok: true; savedAt: string } | { ok: false; error: string };
 
@@ -37,6 +38,8 @@ export async function saveModule4Step(
         .eq("room_id", m4.room_id);
     }
   }
+
+  await checkAndUnlockAchievements(user.id, "module4_updated").catch(() => {});
 
   return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
 }

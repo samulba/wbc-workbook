@@ -14,13 +14,8 @@ import { Step01 } from "./steps/Step01";
 import { Step02 } from "./steps/Step02";
 import { Step03 } from "./steps/Step03";
 import { Step04 } from "./steps/Step04";
-import { Step05 } from "./steps/Step05";
-import { Step06 } from "./steps/Step06";
 import { Step07 } from "./steps/Step07";
-import { Step08 } from "./steps/Step08";
-import { Step09 } from "./steps/Step09";
-import { Step10 } from "./steps/Step10";
-import { Step11 } from "./steps/Step11";
+import { StepKiAnalyse } from "./steps/StepKiAnalyse";
 import { StepPlaceholder } from "./steps/StepPlaceholder";
 import { saveModule1Step, saveStepNote } from "@/app/actions/module1";
 import { STEP_CONFIG } from "@/lib/types/module1";
@@ -61,8 +56,7 @@ interface Props {
   allRooms:     RoomSummary[];
   initialData:  Module1Data;
   editMode?:    boolean;
-  shareToken?:  string | null;
-  isShared?:    boolean;
+  hasAnalysis?: boolean;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -77,8 +71,7 @@ export function ModuleWizard({
   allRooms,
   initialData,
   editMode = false,
-  shareToken,
-  isShared = false,
+  hasAnalysis = false,
 }: Props) {
   const router   = useRouter();
   const RoomIcon = ROOM_ICONS[roomType] ?? Home;
@@ -139,8 +132,7 @@ export function ModuleWizard({
       saveStep={(id, payload) => saveModule1Step(id, payload as Module1Partial)}
       saveNotes={saveStepNote}
       buildStepPayload={buildStepPayload}
-      nextLabelFor={(step) => (step === 9 ? "Prompt generieren" : undefined)}
-      onComplete={() => router.push(`/dashboard/projekte/${projectId}`)}
+      onComplete={() => router.push(`/dashboard/projekte/${projectId}/raum/${roomId}/zusammenfassung`)}
       renderStep={({ step, data, onChange }) => (
         <StepContent
           step={step}
@@ -150,10 +142,8 @@ export function ModuleWizard({
           roomId={roomId}
           roomName={roomName}
           roomType={roomType}
-          editMode={editMode}
-          shareToken={shareToken ?? null}
-          isShared={isShared}
           onChange={onChange}
+          hasAnalysis={hasAnalysis}
         />
       )}
     />
@@ -169,10 +159,8 @@ function StepContent({
   roomId,
   roomName,
   roomType,
-  editMode,
-  shareToken,
-  isShared,
   onChange,
+  hasAnalysis,
 }: {
   step:        number;
   data:        Module1Data;
@@ -181,10 +169,8 @@ function StepContent({
   roomId:      string;
   roomName:    string;
   roomType:    string;
-  editMode:    boolean;
-  shareToken:  string | null;
-  isShared:    boolean;
   onChange:    (patch: Partial<Module1Data>) => void;
+  hasAnalysis: boolean;
 }) {
   switch (step) {
     case 1:
@@ -206,45 +192,13 @@ function StepContent({
     case 4:
       return <Step04 data={data} roomType={roomType} onChange={onChange} />;
     case 5:
-      return <Step05 data={data} />;
-    case 6:
-      return <Step06 data={data} roomType={roomType} onChange={onChange} />;
-    case 7:
       return <Step07 data={data} />;
-    case 8:
+    case 6:
       return (
-        <Step08
-          data={data}
-          roomType={roomType}
-          roomName={roomName}
-          onChange={onChange}
-        />
-      );
-    case 9:
-      return <Step09 data={data} projectId={projectId} roomId={roomId} />;
-    case 10:
-      return (
-        <Step10
-          data={data}
+        <StepKiAnalyse
           projectId={projectId}
           roomId={roomId}
-          roomType={roomType}
-          roomName={roomName}
-          onChange={onChange}
-        />
-      );
-    case 11:
-      return (
-        <Step11
-          data={data}
-          projectId={projectId}
-          projectName={projectName}
-          roomId={roomId}
-          roomType={roomType}
-          roomName={roomName}
-          editMode={editMode}
-          shareToken={shareToken}
-          isShared={isShared}
+          hasAnalysis={hasAnalysis}
         />
       );
     default: {
@@ -278,31 +232,6 @@ function buildStepPayload(step: number, data: Module1Data): Record<string, unkno
     case 5:
       return {};
     case 6:
-      return {
-        primary_colors:   data.primary_colors,
-        secondary_colors: data.secondary_colors,
-        accent_color:     data.accent_color,
-        materials:        data.materials,
-      };
-    case 7:
-      return {};
-    case 8:
-      return {
-        light_mood:       data.light_mood,
-        light_warmth:     data.light_warmth,
-        light_brightness: data.light_brightness,
-        special_elements: data.special_elements,
-        special_tags:     data.special_tags,
-      };
-    case 9:
-      return {};
-    case 10:
-      return {
-        moodboard_prompt: data.moodboard_prompt,
-        moodboard_urls:   data.moodboard_urls,
-        moodboard_canvas: data.moodboard_canvas,
-      };
-    case 11:
       return { status: "completed" };
     default:
       return {};

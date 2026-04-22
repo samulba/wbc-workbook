@@ -28,6 +28,20 @@ export async function saveModule1Step(
     return { ok: false, error: "Speichern fehlgeschlagen. Bitte erneut versuchen." };
   }
 
+  if (data.status === "completed") {
+    const { data: m1 } = await supabase
+      .from("module1_analysis")
+      .select("room_id")
+      .eq("id", moduleId)
+      .single();
+    if (m1?.room_id) {
+      await supabase
+        .from("room_progress")
+        .update({ m1_completed_at: new Date().toISOString() })
+        .eq("room_id", m1.room_id);
+    }
+  }
+
   await checkAndUnlockAchievements(user.id, "module1_updated").catch(() => {});
 
   return { ok: true, savedAt: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }) };
