@@ -190,21 +190,28 @@ export async function POST(req: NextRequest) {
   }
 
   // ── 7. Upload rendered image to Supabase Storage ─────────────────────────────
+  // Use the admin (service-role) client for the upload:
+  //  - bypasses Storage RLS (we already verified ownership above)
+  //  - avoids edge-case issues with cookies + streams in serverless runtimes
+  const admin = createAdminClient();
   const slug = Math.random().toString(36).slice(2, 8);
   const storagePath = `${user.id}/${projectId}/${roomId}/renders/${Date.now()}-${slug}.png`;
   const pngBuffer = Buffer.from(renderedBase64, "base64");
 
-  const { data: uploadData, error: uploadError } = await supabase.storage
+  const { data: uploadData, error: uploadError } = await admin.storage
     .from(BUCKET)
     .upload(storagePath, new Uint8Array(pngBuffer), { contentType: "image/png", upsert: false });
 
   if (uploadError || !uploadData) {
-    console.error("Storage upload error:", uploadError);
+    console.error("Storage upload error:", uploadError, "size:", pngBuffer.length);
     await supabase.from("profiles").update({ daily_render_count: currentCount }).eq("id", user.id);
-    return NextResponse.json({ error: "Bild konnte nicht gespeichert werden." }, { status: 500 });
+    return NextResponse.json(
+      { error: `Bild konnte nicht gespeichert werden (${uploadError?.message ?? "unbekannt"}).` },
+      { status: 500 },
+    );
   }
 
-  const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(uploadData.path);
+  const { data: { publicUrl } } = admin.storage.from(BUCKET).getPublicUrl(uploadData.path);
 
   // ── 8. Log usage (fire-and-forget) ──────────────────────────────────────────
   const costMicros = gptImage1CostMicros("1024x1024", "medium", 1);
