@@ -8,8 +8,13 @@
 --     Mediterran, Maximalism, Tropical
 --   · Alle fünf Wirkungen bekommen zusätzliche Karten
 --
--- Idempotent via UNIQUE(image_url) + ON CONFLICT DO NOTHING aus Migration 36.
+-- Self-contained: erzeugt den UNIQUE-Index selbst, falls Migration 36 noch
+-- nicht lief. ON CONFLICT (image_url) DO NOTHING macht den Insert idempotent.
 -- ============================================================================
+
+-- Stellt sicher, dass ON CONFLICT (image_url) einen Target-Constraint findet.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_inspiration_image_url_unique
+  ON public.inspiration_images (image_url);
 
 INSERT INTO public.inspiration_images
   (image_url, title, description, room_effect, room_type, colors, tags)
