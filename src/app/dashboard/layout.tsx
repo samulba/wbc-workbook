@@ -6,6 +6,10 @@ import { AchievementWatcher } from "@/components/achievements/AchievementWatcher
 import { WelcomeTour } from "@/components/tour/WelcomeTour";
 import { touchStreak, checkAndUnlockAchievements } from "@/lib/achievements/service";
 
+// Always render freshly per request — every dashboard page reads user-scoped
+// data from Supabase and must not be cached across navigations.
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
   children,
 }: {
