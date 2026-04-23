@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { AnalyseClient } from "./_components/AnalyseClient";
 
 export const metadata: Metadata = { title: "KI-Raumanalyse" };
+export const dynamic = "force-dynamic";
 
 export default async function AnalysePage({
   params,
@@ -16,40 +17,41 @@ export default async function AnalysePage({
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Load project + room + m1 data + existing analysis
+  // Load the room first — maybeSingle so 0 rows = null instead of throw
+  const { data: room } = await supabase
+    .from("rooms")
+    .select("id, name, room_type, project_id, ai_analysis, ai_analysis_at")
+    .eq("id", params.roomId)
+    .maybeSingle();
+
+  if (!room) notFound();
+
+  // Verify project ownership
   const { data: project } = await supabase
     .from("projects")
-    .select(`
-      id, name,
-      rooms (
-        id, name, room_type, ai_analysis, ai_analysis_at,
-        module1_analysis ( main_effect )
-      )
-    `)
+    .select("id, name")
     .eq("id", params.id)
+    .eq("id", room.project_id)
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (!project) notFound();
 
-  type RoomRow = {
-    id: string; name: string; room_type: string;
-    ai_analysis: string | null; ai_analysis_at: string | null;
-    module1_analysis: { main_effect: string | null }[] | null;
-  };
+  // Pull main_effect from module1 (optional)
+  const { data: m1 } = await supabase
+    .from("module1_analysis")
+    .select("main_effect")
+    .eq("room_id", room.id)
+    .maybeSingle();
 
-  const rooms = (project.rooms as RoomRow[]) ?? [];
-  const room = rooms.find((r) => r.id === params.roomId);
-  if (!room) notFound();
-
-  const mainEffect = room.module1_analysis?.[0]?.main_effect ?? null;
+  const mainEffect = m1?.main_effect ?? null;
 
   // Remaining analyses for today
   const { data: profile } = await supabase
     .from("profiles")
     .select("daily_analysis_count, analysis_reset_date")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   const today = new Date().toISOString().slice(0, 10);
   const isNewDay = !profile?.analysis_reset_date || profile.analysis_reset_date !== today;
