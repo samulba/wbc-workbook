@@ -21,17 +21,29 @@ export async function GET(req: NextRequest) {
 
   const admin = createAdminClient();
 
-  // Stats (lightweight – all rows, only needed columns)
-  const { data: allMeta } = await admin
-    .from("inspiration_images")
-    .select("id, is_active, user_id");
+  // Stats — separate count() queries so a missing optional column (is_active
+  // / user_id) can't nuke the whole total. count() with head:true never
+  // touches data, just returns row counts.
+  const [
+    { count: totalCount },
+    { count: activeCount },
+    { count: inactiveCount },
+    { count: userUploadCount },
+  ] = await Promise.all([
+    admin.from("inspiration_images").select("*", { count: "exact", head: true }),
+    admin.from("inspiration_images").select("*", { count: "exact", head: true })
+      .or("is_active.eq.true,is_active.is.null"),
+    admin.from("inspiration_images").select("*", { count: "exact", head: true })
+      .eq("is_active", false),
+    admin.from("inspiration_images").select("*", { count: "exact", head: true })
+      .not("user_id", "is", null),
+  ]);
 
-  const all = allMeta ?? [];
   const stats = {
-    total:        all.length,
-    active:       all.filter(i => i.is_active !== false).length,
-    inactive:     all.filter(i => i.is_active === false).length,
-    user_uploads: all.filter(i => i.user_id   != null).length,
+    total:        totalCount      ?? 0,
+    active:       activeCount     ?? 0,
+    inactive:     inactiveCount   ?? 0,
+    user_uploads: userUploadCount ?? 0,
   };
 
   // Filtered query (DB-level filters first)

@@ -210,6 +210,12 @@ export function InspirationAdmin() {
       .finally(() => setLoading(false));
   }, [search, effectFilter, roomFilter, statusFilter, page, tick]);
 
+  // Scroll to top when the user changes page so new results are immediately visible
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
   const totalPages   = Math.ceil(total / LIMIT);
   const hasFilters   = !!(search || effectFilter || roomFilter || statusFilter);
 
