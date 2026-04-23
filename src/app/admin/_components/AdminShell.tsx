@@ -44,10 +44,12 @@ export function AdminShell({ email, children }: Props) {
   const { theme, toggle } = useTheme();
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
+    // Full-viewport shell: outer is exactly h-screen so the sidebar never
+    // scrolls out of view. Inner main-column handles its own vertical overflow.
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
 
       {/* ── Desktop sidebar ─────────────────────────────────────────── */}
-      <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-forest sticky top-0 h-screen">
+      <aside className="hidden lg:flex w-60 shrink-0 flex-col bg-forest h-full">
         <div className="h-14 px-4 flex items-center border-b border-white/10 shrink-0">
           <SidebarBrand />
         </div>

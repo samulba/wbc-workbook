@@ -69,14 +69,14 @@ export function AdminBookingRow({ booking }: Props) {
   }
 
   return (
-    <div className="border-b border-slate-700/50 last:border-0">
+    <div className="border-b border-gray-200 dark:border-slate-700/50 last:border-0">
       {/* Main row */}
       <div className="px-5 py-4 flex items-start gap-4">
         {/* Date */}
-        <div className="w-14 shrink-0 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center py-2">
-          <span className="text-[9px] text-slate-500 uppercase">{WEEKDAY_SHORT[d.getDay()]}</span>
-          <span className="text-lg font-semibold text-white leading-tight">{d.getDate()}</span>
-          <span className="text-[9px] text-slate-500">{MONTH_SHORT[d.getMonth()]}</span>
+        <div className="w-14 shrink-0 rounded-xl bg-gray-50 border border-gray-200 dark:bg-white/5 dark:border-white/10 flex flex-col items-center py-2">
+          <span className="text-[9px] text-gray-400 dark:text-slate-500 uppercase">{WEEKDAY_SHORT[d.getDay()]}</span>
+          <span className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">{d.getDate()}</span>
+          <span className="text-[9px] text-gray-400 dark:text-slate-500">{MONTH_SHORT[d.getMonth()]}</span>
         </div>
 
         {/* Info */}
@@ -88,24 +88,24 @@ export function AdminBookingRow({ booking }: Props) {
             )}>
               {STATUS_LABELS[booking.status]}
             </span>
-            <span className="text-xs text-slate-300 font-medium">{booking.userName}</span>
+            <span className="text-xs text-gray-800 dark:text-slate-300 font-medium">{booking.userName}</span>
             {booking.roomName && (
-              <span className="text-xs text-slate-500">· {booking.roomName}</span>
+              <span className="text-xs text-gray-500 dark:text-slate-500">· {booking.roomName}</span>
             )}
             {booking.projectName && (
-              <span className="text-xs text-slate-600">({booking.projectName})</span>
+              <span className="text-xs text-gray-400 dark:text-slate-600">({booking.projectName})</span>
             )}
           </div>
-          <p className="text-sm text-slate-300">
+          <p className="text-sm text-gray-700 dark:text-slate-300">
             {date} · {booking.booking_time} Uhr · {booking.duration} Min
           </p>
           {booking.notes && (
-            <p className="text-xs text-slate-500 mt-1 line-clamp-1">
+            <p className="text-xs text-gray-500 dark:text-slate-500 mt-1 line-clamp-1">
               {booking.notes}
             </p>
           )}
           {error && (
-            <p className="text-xs text-red-400 mt-1">{error}</p>
+            <p className="text-xs text-red-600 dark:text-red-400 mt-1">{error}</p>
           )}
         </div>
 
@@ -127,7 +127,7 @@ export function AdminBookingRow({ booking }: Props) {
               type="button"
               disabled={pending}
               onClick={() => changeStatus("completed")}
-              className="flex items-center gap-1 text-[11px] font-medium text-white bg-slate-600 hover:bg-slate-500 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center gap-1 text-[11px] font-medium text-white bg-forest hover:bg-forest/90 dark:bg-slate-600 dark:hover:bg-slate-500 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
               <CheckCircle2 className="w-3 h-3" strokeWidth={1.5} />
               Abschließen
@@ -138,7 +138,7 @@ export function AdminBookingRow({ booking }: Props) {
               type="button"
               disabled={pending}
               onClick={() => changeStatus("cancelled")}
-              className="flex items-center gap-1 text-[11px] font-medium text-slate-300 hover:text-red-400 border border-slate-600 hover:border-red-400/40 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center gap-1 text-[11px] font-medium text-gray-600 hover:text-red-600 border border-gray-300 hover:border-red-300 dark:text-slate-300 dark:hover:text-red-400 dark:border-slate-600 dark:hover:border-red-400/40 px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-50"
             >
               <X className="w-3 h-3" strokeWidth={2} />
               Absagen
@@ -147,7 +147,7 @@ export function AdminBookingRow({ booking }: Props) {
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="w-7 h-7 rounded-lg flex items-center justify-center border border-slate-600 hover:bg-white/5 text-slate-400 transition-colors"
+            className="w-7 h-7 rounded-lg flex items-center justify-center border border-gray-300 hover:bg-gray-100 text-gray-500 dark:border-slate-600 dark:hover:bg-white/5 dark:text-slate-400 transition-colors"
           >
             {expanded
               ? <ChevronUp className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -161,19 +161,19 @@ export function AdminBookingRow({ booking }: Props) {
       {expanded && (
         <div className="px-5 pb-4 flex flex-col gap-3">
           {booking.notes && (
-            <div className="rounded-lg bg-white/5 border border-white/8 px-3 py-2.5">
-              <p className="text-[10px] font-sans font-medium text-slate-500 uppercase tracking-wider mb-1">
+            <div className="rounded-lg bg-gray-50 border border-gray-200 dark:bg-white/5 dark:border-white/8 px-3 py-2.5">
+              <p className="text-[10px] font-sans font-medium text-gray-500 dark:text-slate-500 uppercase tracking-wider mb-1">
                 User-Nachricht
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed">{booking.notes}</p>
+              <p className="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">{booking.notes}</p>
             </div>
           )}
 
           {/* Admin notes */}
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
-              <MessageSquare className="w-3 h-3 text-slate-500" strokeWidth={1.5} />
-              <p className="text-[10px] font-sans font-medium text-slate-500 uppercase tracking-wider">
+              <MessageSquare className="w-3 h-3 text-gray-500 dark:text-slate-500" strokeWidth={1.5} />
+              <p className="text-[10px] font-sans font-medium text-gray-500 dark:text-slate-500 uppercase tracking-wider">
                 Nachricht an User (sichtbar)
               </p>
             </div>
@@ -182,13 +182,13 @@ export function AdminBookingRow({ booking }: Props) {
               onChange={(e) => setAdminNotes(e.target.value)}
               rows={3}
               placeholder="Z. B. Ich freue mich auf unser Gespräch! Hier ist der Meeting-Link: …"
-              className="w-full rounded-lg bg-white/5 border border-white/10 text-xs text-slate-300 placeholder:text-slate-600 px-3 py-2 resize-none focus:outline-none focus:border-mint/30 transition-colors"
+              className="w-full rounded-lg bg-gray-50 border border-gray-300 text-xs text-gray-800 placeholder:text-gray-400 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 dark:placeholder:text-slate-600 px-3 py-2 resize-none focus:outline-none focus:border-forest/40 dark:focus:border-mint/30 transition-colors"
             />
             <button
               type="button"
               disabled={pending}
               onClick={saveNotes}
-              className="mt-1.5 text-[11px] font-medium text-mint hover:text-mint/80 transition-colors disabled:opacity-50"
+              className="mt-1.5 text-[11px] font-medium text-forest hover:text-forest/80 dark:text-mint dark:hover:text-mint/80 transition-colors disabled:opacity-50"
             >
               {pending ? "Speichern…" : "Notiz speichern"}
             </button>

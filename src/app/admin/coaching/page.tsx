@@ -93,12 +93,12 @@ export default async function AdminCoachingPage({
     <div className="p-6 max-w-5xl">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-lg bg-mint/15 border border-mint/20 flex items-center justify-center">
-          <PhoneCall className="w-4.5 h-4.5 text-mint" strokeWidth={1.5} />
+        <div className="w-9 h-9 rounded-lg bg-forest/10 border border-forest/20 dark:bg-mint/15 dark:border-mint/20 flex items-center justify-center">
+          <PhoneCall className="w-4 h-4 text-forest dark:text-mint" strokeWidth={1.5} />
         </div>
         <div>
-          <h1 className="text-lg font-semibold text-white">Coaching-Buchungen</h1>
-          <p className="text-xs text-slate-400">
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Coaching-Buchungen</h1>
+          <p className="text-xs text-gray-500 dark:text-slate-400">
             {(allBookings ?? []).length} Buchungen gesamt
           </p>
         </div>
@@ -111,8 +111,8 @@ export default async function AdminCoachingPage({
           className={cn(
             "text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors",
             !statusFilter
-              ? "bg-white/12 text-white border-white/15"
-              : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-white/5"
+              ? "bg-forest/8 text-forest border-forest/20 dark:bg-white/12 dark:text-white dark:border-white/15"
+              : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/5"
           )}
         >
           Alle ({(allBookings ?? []).length})
@@ -124,8 +124,8 @@ export default async function AdminCoachingPage({
             className={cn(
               "text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors",
               statusFilter === s
-                ? "bg-white/12 text-white border-white/15"
-                : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                ? "bg-forest/8 text-forest border-forest/20 dark:bg-white/12 dark:text-white dark:border-white/15"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/5"
             )}
           >
             {STATUS_LABELS[s]} ({counts[s]})
@@ -135,12 +135,12 @@ export default async function AdminCoachingPage({
 
       {/* Booking list */}
       {formatted.length === 0 ? (
-        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 p-10 text-center">
-          <CalendarDays className="w-8 h-8 text-slate-600 mx-auto mb-3" strokeWidth={1.5} />
-          <p className="text-slate-400 text-sm">Keine Buchungen gefunden.</p>
+        <div className="rounded-xl border border-gray-200 bg-white dark:border-slate-700/50 dark:bg-slate-800/50 p-10 text-center">
+          <CalendarDays className="w-8 h-8 text-gray-300 dark:text-slate-600 mx-auto mb-3" strokeWidth={1.5} />
+          <p className="text-gray-500 dark:text-slate-400 text-sm">Keine Buchungen gefunden.</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-700/50 bg-slate-800/50 overflow-hidden">
+        <div className="rounded-xl border border-gray-200 bg-white dark:border-slate-700/50 dark:bg-slate-800/50 overflow-hidden">
           {formatted.map((booking) => (
             <AdminBookingRow key={booking.id} booking={booking} />
           ))}
