@@ -325,6 +325,15 @@ html, body {
   /* Prevents horizontal overflow on any page */
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
+  /* Always reserve scrollbar space so the layout doesn't shift between pages
+     that do/don't scroll. Modern browsers first, legacy fallback. */
+  scrollbar-gutter: stable;
+}
+
+@supports not (scrollbar-gutter: stable) {
+  html {
+    overflow-y: scroll;
+  }
 }
 
 @media (max-width: 640px) {

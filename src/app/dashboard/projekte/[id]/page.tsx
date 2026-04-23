@@ -625,7 +625,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
       )}
 
       {/* ── Coaching CTA ──────────────────────────────────── */}
-      <div className="rounded-xl border border-sand/30 bg-white overflow-hidden">
+      <div className="mt-6 rounded-xl border border-sand/30 bg-white overflow-hidden">
         <div className="flex items-start gap-4 px-5 py-5">
           <div className="w-10 h-10 rounded-xl bg-forest/8 border border-forest/12 flex items-center justify-center shrink-0">
             <PhoneCall className="w-5 h-5 text-forest/60" strokeWidth={1.5} />
